@@ -1,0 +1,39 @@
+.container {
+	display: flex;
+	gap: 20px;
+	border-radius: 10px;
+}
+
+.container .list_heading {
+	margin: 0 0 10px 0;
+	font-size: 1rem;
+	font-weight: 500;
+	padding: 8px 0;
+}
+
+.container ul {
+	list-style: none;
+	height: 400px;
+	overflow-y: auto;
+	width: 250px;
+}
+
+.material_list_container {
+	border: solid 1px #ccc;
+}
+
+.transfer_buttons {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	align-items: center;
+	justify-content: center;
+}
+
+.list {
+	min-width: 200px;
+	padding: 10px;
+	background-color: white;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}

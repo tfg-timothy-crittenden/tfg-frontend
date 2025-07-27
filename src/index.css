@@ -66,3 +66,51 @@ hr {
 	max-width: 1080px;
 	width: 100%;
 }
+
+.scrollable_outer {
+	position: relative;
+	border: 1px solid #ccc;
+	background: white;
+	border-radius: 5px;
+}
+
+.scrollable_inner {
+	max-height: 400px;
+	padding: 10px 0;
+	overflow-y: scroll;
+	border-radius: 5px;
+}
+
+/* Scrollbar styling */
+.scrollable_inner::-webkit-scrollbar {
+	width: 8px;
+}
+
+.scrollable_inner::-webkit-scrollbar-thumb {
+	background-color: #bbb;
+	border-radius: 4px;
+	margin: 4px 0;
+}
+
+.scrollable_inner::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.action_button {
+	background-color: #3a95f7;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	margin: 10px 10px 0 0;
+	width: fit-content;
+	font-size: 1rem;
+}
+.action_button:hover {
+	background-color: #2a7bbf;
+}
+.action_button.save_button {
+	background-color: #4caf50;
+	color: white;
+}

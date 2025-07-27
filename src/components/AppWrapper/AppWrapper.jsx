@@ -1,21 +1,28 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logout } from "@/store/auth/authSlice";
-import { setLogoutHandler } from "@/api/httpClient";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, fetchMe, selectUserRole } from "@/store/auth/authSlice";
+import { setLogoutHandler, setAuthHeaders } from "@/api/httpClient";
 
-// Sets up an interceptor to handle 401 responses globally
 function AppWrapper({ children }) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const role = useSelector(selectUserRole);
 
 	useEffect(() => {
-		// Inject logout handler
+		// Set up global 401 logout
 		setLogoutHandler(() => {
 			dispatch(logout());
 			navigate("/login");
 		});
-	}, [dispatch, navigate]);
+
+		// Only fetch user if token exists and user isn't already loaded
+		const token = localStorage.getItem("token");
+		if (token && !role) {
+			setAuthHeaders(token);
+			dispatch(fetchMe());
+		}
+	}, [dispatch, navigate, role]);
 
 	return children;
 }

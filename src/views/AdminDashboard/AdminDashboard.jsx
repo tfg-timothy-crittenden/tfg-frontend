@@ -3,27 +3,48 @@ import styles from "./AdminDashboard.module.css";
 
 const AdminDashboard = () => {
 	return (
-		<div className={styles.container}>
+		<article className={styles.container}>
+			<h2 className={styles.admin_dashboard_heading}>Admin Panel</h2>
 			<nav className={styles.sidebar}>
-				<h2>Admin Panel</h2>
-				<ul>
+				<ul className={styles.navList}>
 					<li>
-						<NavLink to="">Overview</NavLink>
-					</li>
-					<li>
-						<NavLink to="users">Manage Users</NavLink>
+						<NavLink
+							to="teachers"
+							className={({ isActive }) =>
+								isActive ? styles.activeLink : styles.inactiveLink
+							}
+						>
+							Manage Teachers
+						</NavLink>
 					</li>
 
 					<li>
-						<NavLink to="classes">Manage Classes</NavLink>
+						<NavLink
+							to="classes"
+							className={({ isActive }) =>
+								isActive ? styles.activeLink : styles.inactiveLink
+							}
+						>
+							Manage Classes
+						</NavLink>
+					</li>
+					<li>
+						<NavLink
+							to="materials"
+							className={({ isActive }) =>
+								isActive ? styles.activeLink : styles.inactiveLink
+							}
+						>
+							Manage Materials
+						</NavLink>
 					</li>
 				</ul>
 			</nav>
 
-			<main className={styles.content}>
+			<article className={styles.content}>
 				<Outlet />
-			</main>
-		</div>
+			</article>
+		</article>
 	);
 };
 

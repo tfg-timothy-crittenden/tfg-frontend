@@ -23,7 +23,7 @@ const Login = () => {
 		dispatch(login(formData));
 	};
 
-	// 👇 Redirect after successful login
+	// Redirect after successful login
 	useEffect(() => {
 		if (status === "succeeded" && token) {
 			navigate("/part_1");

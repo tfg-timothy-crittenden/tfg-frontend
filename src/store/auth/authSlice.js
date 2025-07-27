@@ -1,6 +1,6 @@
 // src/store/authSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { loginRequest } from "@/api/auth/authAPI";
+import { loginRequest, meRequest } from "@/api/auth/authAPI";
 import { setAuthHeaders } from "@/api/httpClient";
 
 const initialToken = localStorage.getItem("token");
@@ -32,6 +32,16 @@ export const login = createAsyncThunk(
 	}
 );
 
+export const fetchMe = createAsyncThunk("auth/me", async (_, thunkAPI) => {
+	try {
+		const { user } = await meRequest(); // ✅ Destructure here
+		return user;
+	} catch (err) {
+		console.error("fetchMe failed:", err);
+		return thunkAPI.rejectWithValue("Failed to fetch user info");
+	}
+});
+
 export const authSlice = createSlice({
 	name: "auth",
 	initialState,
@@ -56,6 +66,21 @@ export const authSlice = createSlice({
 			})
 			.addCase(login.rejected, (state, action) => {
 				state.status = "failed";
+				state.error = action.payload;
+			})
+			.addCase(fetchMe.pending, (state) => {
+				state.status = "loading";
+			})
+			.addCase(fetchMe.fulfilled, (state, action) => {
+				state.status = "succeeded";
+				state.user = action.payload;
+				state.error = null;
+			})
+			.addCase(fetchMe.rejected, (state, action) => {
+				state.status = "failed";
+				state.user = null;
+				state.token = null;
+				localStorage.removeItem("token");
 				state.error = action.payload;
 			});
 	},

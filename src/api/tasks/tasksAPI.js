@@ -51,3 +51,15 @@ export const getSpeakingTaskFourById = async (id) => {
 	const response = await httpClient.get(`/speaking-tasks/4/${id}`);
 	return response.data;
 };
+
+// Speaking tests API functions
+
+export const getAllSpeakingTests = async () => {
+	const response = await httpClient.get("/admin/tests");
+	return response.data;
+};
+
+export const getTestsByClassId = async (classId) => {
+	const response = await httpClient.get(`/classrooms/${classId}/tests`);
+	return response.data;
+};

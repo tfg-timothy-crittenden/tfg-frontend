@@ -1,0 +1,67 @@
+.btn {
+	margin: 20px auto;
+	margin-right: 10px;
+	padding: 10px;
+	border: none;
+	border-radius: 5px;
+	color: white;
+	cursor: pointer;
+}
+
+.addClassBtn {
+	background-color: rgb(127, 142, 255);
+}
+
+.saveClassesBtn {
+	background-color: rgb(76, 130, 1);
+}
+
+.textInput {
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 1rem;
+	height: 38px; /* set explicit height for alignment */
+	box-sizing: border-box;
+}
+.textInput:focus {
+	outline: none;
+	border-color: rgb(127, 148, 255);
+	box-shadow: 0 0 5px rgba(127, 148, 255, 0.5);
+}
+
+.addClassFormRow {
+	display: flex;
+	align-items: center;
+	margin-top: 10px;
+}
+
+.removeRowButton {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+
+	height: 38px;
+	width: 38px;
+}
+
+.deleteRowIcon {
+	fill: currentColor;
+	stroke: currentColor;
+	width: 20px;
+	height: 20px;
+}
+
+.removeRowButton:hover {
+	background-color: #ffbdad;
+	color: #de350b;
+}
+
+.removeRowButton:hover .deleteRowIcon {
+	fill: red;
+	stroke: red;
+}

@@ -1,0 +1,28 @@
+.container {
+	margin: 10px;
+	cursor: pointer;
+	padding: 10px;
+}
+
+.label {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.checkbox {
+	margin-right: 0.5rem;
+	cursor: pointer;
+}
+
+.selected {
+	background-color: #e0f7fa;
+	border-radius: 5px;
+}
+
+.disabled {
+	opacity: 0.5;
+	pointer-events: none;
+	cursor: not-allowed;
+}

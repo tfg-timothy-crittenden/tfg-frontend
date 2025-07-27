@@ -3,7 +3,7 @@ import BatchCreateClasses from "./BatchCreateClasses";
 import {
 	fetchAllTeachers,
 	assignTeachersToClass,
-	fetchAllClassesWithTeachers,
+	fetchAllClassesAndTeachers,
 	deleteClass,
 } from "@/api/admin/admin";
 
@@ -28,8 +28,9 @@ const AdminClasses = () => {
 
 	const loadClasses = async () => {
 		try {
-			const res = await fetchAllClassesWithTeachers();
+			const res = await fetchAllClassesAndTeachers();
 			setClasses(res.data);
+			console.log("Loaded classes in adminClasses:", res.data);
 		} catch (err) {
 			console.error("Error loading classes:", err);
 		} finally {
@@ -42,15 +43,7 @@ const AdminClasses = () => {
 	}, []);
 
 	return (
-		<div>
-			<h1>Admin – Manage Classes</h1>
-
-			<BatchCreateClasses onClassCreated={loadClasses} />
-
-			<hr />
-
-			<h2>All Classes</h2>
-
+		<section>
 			{loading ? (
 				<p>Loading...</p>
 			) : classes.length === 0 ? (
@@ -132,7 +125,8 @@ const AdminClasses = () => {
 					</tbody>
 				</table>
 			)}
-		</div>
+			<BatchCreateClasses onClassCreated={loadClasses} />
+		</section>
 	);
 };
 

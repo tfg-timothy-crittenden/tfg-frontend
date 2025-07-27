@@ -12,7 +12,7 @@ export const deleteClass = (classId) => {
 	return httpClient.delete(`/admin/classes/${classId}`);
 };
 
-export const fetchAllClassesWithTeachers = () => {
+export const fetchAllClassesAndTeachers = () => {
 	return httpClient.get("/admin/classes");
 };
 

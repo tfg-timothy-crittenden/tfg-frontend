@@ -1,0 +1,88 @@
+.container {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	border: 1px solid #ccc;
+	background-color: white;
+	border-radius: 10px;
+}
+
+.class_container {
+	border-right: 1px #ccc solid;
+
+	padding: 20px 20px;
+}
+
+.class_list {
+	max-height: 400px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	min-width: 250px;
+
+	background-color: white;
+
+	/* Ensures children (scrollbar) obey border-radius */
+	/* overflow: hidden; */
+}
+
+.container h2 {
+	font-size: 1.5rem;
+	color: #333;
+	text-align: left;
+	margin-bottom: 20px;
+}
+
+.listItem {
+	cursor: pointer;
+	padding: 10px;
+
+	border: 1px solid white;
+
+	list-style: none;
+}
+
+.selectedClass {
+	background-color: rgb(200, 217, 255);
+}
+
+.search_input {
+	padding: 8px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 1rem;
+}
+
+.search_input:focus {
+	outline: none;
+	border-color: #3a95f7;
+}
+
+.materials_container {
+	padding: 20px;
+}
+
+.tab_container {
+	display: flex;
+	margin-bottom: 20px;
+	border-bottom: 2px solid lightgrey;
+	list-style: none;
+}
+.tab {
+	cursor: pointer;
+	padding: 10px 0px 10px 0;
+	border-bottom: 2px solid transparent;
+	font-weight: 500;
+	color: #adadad;
+	margin-right: 20px;
+}
+
+.active_tab {
+	background-color: white;
+	color: black;
+	border-bottom: 2px solid #3a95f7;
+	padding-bottom: 11.75px;
+}
+
+.tab_text {
+	font-size: 1rem;
+}

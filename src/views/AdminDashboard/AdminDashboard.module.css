@@ -1,0 +1,37 @@
+.container {
+	max-width: 1080px;
+	margin: 0 auto;
+
+	padding: 10px;
+}
+
+.admin_dashboard_heading {
+	color: #333;
+	text-align: left;
+	margin-bottom: 60px;
+}
+
+.navList {
+	list-style: none;
+	padding-bottom: 10px;
+	display: flex;
+	justify-content: start;
+	margin-bottom: 60px;
+	border-bottom: solid 2px lightgrey;
+}
+
+.navList li {
+	margin-right: 20px;
+}
+
+.navList a {
+	text-decoration: none;
+	color: #333;
+	padding-bottom: 10px;
+}
+
+.navList .activeLink {
+	font-weight: bold;
+	color: bold;
+	border-bottom: solid 2px darkblue;
+}

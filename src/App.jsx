@@ -11,9 +11,9 @@ import SpeakingPart3Container from "@/views/SpeakingPart3/SpeakingPart3Container
 import SpeakingPart4Container from "@/views/SpeakingPart4/SpeakingPart4Container";
 
 import AdminDashboard from "@/views/AdminDashboard/AdminDashboard";
-import AdminOverview from "@/views/AdminDashboard/AdminOverview";
-import AdminUsers from "@/views/AdminDashboard/AdminUsers";
+import AdminTeachers from "@/views/AdminDashboard/AdminTeachers";
 import AdminClasses from "@/views/AdminDashboard/AdminClasses";
+import AdminMaterial from "@/views/AdminDashboard/AdminMaterial";
 
 import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
 import RoleRoute from "@/components/RoleRoute/RoleRoute";
@@ -37,9 +37,9 @@ function App() {
 					{/* ADMIN: protected nested dashboard */}
 					<Route element={<RoleRoute allowedRoles={["admin"]} />}>
 						<Route path="/admin_dashboard" element={<AdminDashboard />}>
-							<Route index element={<AdminOverview />} />
-							<Route path="users" element={<AdminUsers />} />
+							<Route path="teachers" element={<AdminTeachers />} />
 							<Route path="classes" element={<AdminClasses />} />
+							<Route path="materials" element={<AdminMaterial />} />
 						</Route>
 					</Route>
 				</Route>

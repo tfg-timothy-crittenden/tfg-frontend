@@ -1,8 +1,7 @@
-/* AdminClasses.module.css */
-
 .classesTable {
-	width: 50%;
+	width: 100%;
 	border-collapse: collapse;
+	margin: auto;
 	margin-top: 1rem;
 	font-size: 0.95rem;
 	background-color: #fff;
