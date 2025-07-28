@@ -2,27 +2,67 @@
 	margin: 10px;
 	cursor: pointer;
 	padding: 10px;
+	border: 1px solid grey;
+	border-radius: 5px;
+	transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.container:hover {
+	background-color: #efffea;
+	transform: translate(1px, 1px);
 }
 
 .label {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 	gap: 0.5rem;
-}
-
-.checkbox {
-	margin-right: 0.5rem;
-	cursor: pointer;
+	width: 100%;
 }
 
 .selected {
-	background-color: #e0f7fa;
 	border-radius: 5px;
+}
+
+.selected:hover {
+	background-color: #fff8f8;
+	transform: translate(1px, 1px);
 }
 
 .disabled {
 	opacity: 0.5;
 	pointer-events: none;
 	cursor: not-allowed;
+}
+
+/* Arrow for unselected items */
+.arrow {
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.container:hover .arrow {
+	opacity: 1;
+}
+
+.arrow::after {
+	content: "+";
+	color: green;
+}
+
+/* X for selected items */
+.removeIcon {
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.selected:hover .removeIcon {
+	opacity: 1;
+}
+
+.removeIcon::after {
+	content: "×";
+	color: #c00;
+	font-weight: bold;
 }

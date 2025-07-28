@@ -71,14 +71,13 @@ hr {
 	position: relative;
 	border: 1px solid #ccc;
 	background: white;
-	border-radius: 5px;
+	border-radius: 10px;
 }
 
 .scrollable_inner {
-	max-height: 400px;
 	padding: 10px 0;
 	overflow-y: scroll;
-	border-radius: 5px;
+	border-radius: 10px;
 }
 
 /* Scrollbar styling */
@@ -97,20 +96,26 @@ hr {
 }
 
 .action_button {
-	background-color: #3a95f7;
+	background-color: #3b97ff;
 	color: white;
 	border: none;
-	padding: 10px 20px;
+	padding: 5px 10px;
 	border-radius: 5px;
 	cursor: pointer;
 	margin: 10px 10px 0 0;
 	width: fit-content;
-	font-size: 1rem;
+	font-size: 0.9rem;
 }
+
 .action_button:hover {
 	background-color: #2a7bbf;
 }
 .action_button.save_button {
 	background-color: #4caf50;
 	color: white;
+}
+
+.action_button:disabled {
+	background-color: #ccc;
+	cursor: not-allowed;
 }

@@ -4,24 +4,13 @@
 	border: 1px solid #ccc;
 	background-color: white;
 	border-radius: 10px;
+	padding: 20px;
 }
 
 .class_container {
 	border-right: 1px #ccc solid;
 
 	padding: 20px 20px;
-}
-
-.class_list {
-	max-height: 400px;
-	overflow-y: auto;
-	overflow-x: hidden;
-	min-width: 250px;
-
-	background-color: white;
-
-	/* Ensures children (scrollbar) obey border-radius */
-	/* overflow: hidden; */
 }
 
 .container h2 {
@@ -38,6 +27,10 @@
 	border: 1px solid white;
 
 	list-style: none;
+}
+
+.listItem:hover:not(.selectedClass) {
+	background-color: #f2f8ff;
 }
 
 .selectedClass {
@@ -85,4 +78,19 @@
 
 .tab_text {
 	font-size: 1rem;
+}
+
+.disabled {
+	opacity: 0;
+	pointer-events: none;
+	filter: grayscale(0.2);
+	position: relative;
+}
+
+.class_list {
+	height: 450px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	min-width: 250px;
+	background-color: white;
 }

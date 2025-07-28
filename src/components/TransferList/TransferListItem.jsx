@@ -10,7 +10,10 @@ const TransferListItem = ({ item, onToggle, isChecked, disabled }) => {
 				if (!disabled) onToggle(item.id);
 			}}
 		>
-			<span className={styles.label}>{item.name}</span>
+			<span className={styles.label}>
+				{item.name}
+				<span className={isChecked ? styles.removeIcon : styles.arrow}></span>
+			</span>
 		</li>
 	);
 };

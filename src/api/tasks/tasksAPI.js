@@ -59,7 +59,20 @@ export const getAllSpeakingTests = async () => {
 	return response.data;
 };
 
-export const getTestsByClassId = async (classId) => {
-	const response = await httpClient.get(`/classrooms/${classId}/tests`);
-	return response.data;
+export const getTestsByClassId = async (classroomId) => {
+	try {
+		const response = await httpClient.get(
+			`/material/classrooms/${classroomId}/tests`
+		);
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching classroom tests:", error);
+		throw error;
+	}
+};
+
+export const assignTestsToClassroom = async (classroomId, assignments) => {
+	return httpClient.post(`/material/classrooms/${classroomId}/tests`, {
+		assignments,
+	});
 };
