@@ -16,7 +16,7 @@ const SpeakingPart4Presentation = ({
 }) => {
 	return (
 		<>
-			<SideNavBar tests={tests} loadTest={loadTest} currentTest={currentTest} />
+			{/* <SideNavBar tests={tests} loadTest={loadTest} currentTest={currentTest} /> */}
 			<ToggleSwitch
 				mode={mode}
 				setMode={setMode}

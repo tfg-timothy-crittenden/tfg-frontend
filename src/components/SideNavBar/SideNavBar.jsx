@@ -1,33 +1,32 @@
+import { useLocation } from "react-router-dom";
 import styles from "./SideNavBar.module.css";
 import SideNavBarWrapper from "./SideNavBarWrapper";
+import QuestionToggleSwitch from "@/components/QuestionToggleSwitch/QuestionToggleSwitch";
 
-const SideNavBar = ({ tests, loadTest, currentTest }) => {
-	const handleTestClick = (testId) => {
-		if (testId) {
-			console.log("Loading test:", testId);
-			loadTest(testId);
-		} else {
-			console.warn("Tried to load an invalid test:", testId);
-		}
-	};
+const SideNavBar = ({ taskSummaries, currentTest, loadTest }) => {
+	const location = useLocation();
+	const partMatch = location.pathname.match(/part_(\d)/);
+	const activePart = partMatch ? `part${partMatch[1]}` : "part2"; // fallback to part2
+
+	const currentList = taskSummaries[activePart] || [];
 
 	return (
 		<SideNavBarWrapper>
+			<QuestionToggleSwitch />
+
 			<ul className={styles.test_list}>
-				{Object.entries(tests).map(([key, value], index) => (
+				{currentList.map((item, index) => (
 					<li
-						key={key}
+						key={item.testId}
 						className={`${styles.list_item} ${
-							value.title === currentTest?.title ? styles.active : ""
+							currentTest?.id === item.testId ? styles.active : ""
 						}`}
-						style={{ animationDelay: `${index * 0.05}s` }} // Stagger delay
-						onClick={() => handleTestClick(value.id)}
+						style={{ animationDelay: `${index * 0.05}s` }}
+						onClick={() => loadTest(item.testId)}
 					>
-						{value.title && (
-							<span className={styles.test_title}>{value.title}</span>
-						)}
-						{value.readingTitle && (
-							<span className={styles.reading_title}>{value.readingTitle}</span>
+						<span className={styles.test_title}>{item.title}</span>
+						{item.readingTitle && (
+							<span className={styles.reading_title}>{item.readingTitle}</span>
 						)}
 					</li>
 				))}

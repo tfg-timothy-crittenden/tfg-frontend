@@ -1,4 +1,3 @@
-import SideNavBar from "@/components/SideNavBar/SideNavBar";
 import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
 import Read from "@/components/Read/Read";
 import Part3ListenContainer from "@/components/Listen/ListenLectureContainer";
@@ -6,19 +5,18 @@ import PrepareSpeak from "@/components/PrepareSpeak/PrepareSpeak";
 import image from "@/assets/male_professor.png";
 
 const SpeakingPart3Presentation = ({
-	tests,
-	loadTest,
-	currentTest,
 	mode,
-	setTime,
 	setMode,
 	modeEnum,
+	currentTest,
 	time,
+	setTime,
 	modeTimes,
 }) => {
+	if (!currentTest) return <p>Loading test...</p>;
+
 	return (
 		<>
-			<SideNavBar tests={tests} loadTest={loadTest} currentTest={currentTest} />
 			<ToggleSwitch
 				mode={mode}
 				setMode={setMode}
@@ -27,15 +25,15 @@ const SpeakingPart3Presentation = ({
 				modeTimeEnum={modeTimes}
 			/>
 
-			{mode === modeEnum.READ && currentTest && (
+			{mode === modeEnum.READ && (
 				<Read
 					title={currentTest.readingTitle}
 					body={currentTest.readingBody}
 					author={currentTest.author}
 				/>
 			)}
-			{mode === modeEnum.LISTEN && currentTest && (
-				//Key needed here to force re-render of audio element when new test selected
+
+			{mode === modeEnum.LISTEN && (
 				<Part3ListenContainer
 					key={currentTest.listeningAudio}
 					audio={currentTest.listeningAudio}
@@ -43,17 +41,17 @@ const SpeakingPart3Presentation = ({
 					voiceGender={currentTest.voiceGender}
 				/>
 			)}
-			{(mode === modeEnum.PREPARE || mode === modeEnum.SPEAK) &&
-				currentTest && (
-					<PrepareSpeak
-						question_audio={currentTest.questionAudio}
-						question={currentTest.questionText}
-						mode={mode}
-						time={time}
-						modeEnum={modeEnum}
-						modeTimes={modeTimes}
-					/>
-				)}
+
+			{(mode === modeEnum.PREPARE || mode === modeEnum.SPEAK) && (
+				<PrepareSpeak
+					question_audio={currentTest.questionAudio}
+					question={currentTest.questionText}
+					mode={mode}
+					time={time}
+					modeEnum={modeEnum}
+					modeTimes={modeTimes}
+				/>
+			)}
 		</>
 	);
 };

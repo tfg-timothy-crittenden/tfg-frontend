@@ -1,43 +1,27 @@
-import { NavLink } from "react-router-dom";
+// QuestionToggleSwitch.jsx
+import { NavLink, useParams } from "react-router-dom";
 import styles from "./QuestionToggleSwitch.module.css";
 
+const TASK_PARTS = [1, 2, 3, 4];
+
 const QuestionToggleSwitch = () => {
+	const { id } = useParams();
+
 	return (
 		<nav className={styles.container}>
 			<span className={styles.toggle_group_label}>Task:</span>
 			<div className={styles.toggle_group}>
-				<NavLink
-					to="/part_1"
-					className={({ isActive }) =>
-						isActive ? styles.activeLink : styles.inactiveLink
-					}
-				>
-					1
-				</NavLink>
-				<NavLink
-					to="/part_2"
-					className={({ isActive }) =>
-						isActive ? styles.activeLink : styles.inactiveLink
-					}
-				>
-					2
-				</NavLink>
-				<NavLink
-					to="/part_3"
-					className={({ isActive }) =>
-						isActive ? styles.activeLink : styles.inactiveLink
-					}
-				>
-					3
-				</NavLink>
-				<NavLink
-					to="/part_4"
-					className={({ isActive }) =>
-						isActive ? styles.activeLink : styles.inactiveLink
-					}
-				>
-					4
-				</NavLink>
+				{TASK_PARTS.map((part) => (
+					<NavLink
+						key={part}
+						to={`/classroom/${id}/part_${part}`}
+						className={({ isActive }) =>
+							isActive ? styles.activeLink : styles.inactiveLink
+						}
+					>
+						{part}
+					</NavLink>
+				))}
 			</div>
 		</nav>
 	);

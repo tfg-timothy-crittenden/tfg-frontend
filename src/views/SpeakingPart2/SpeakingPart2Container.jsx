@@ -1,10 +1,11 @@
+import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import SpeakingPart2Presentation from "./SpeakingPart2Presentation";
-import usePart from "@/hooks/usePart";
-import { getSpeakingTaskTwoSummaries } from "../../api/tasks/tasksAPI";
-import { getSpeakingTaskTwoById } from "../../api/tasks/tasksAPI";
+import { getSpeakingTaskTwoById } from "@/api/tasks/tasksAPI";
 
 const SpeakingPart2Container = () => {
-	//The possible modes for the Speaking Part 2 component
+	const { currentTest, setCurrentTest } = useOutletContext();
+
 	const modeEnum = Object.freeze({
 		READ: "READ",
 		LISTEN: "LISTEN",
@@ -17,32 +18,22 @@ const SpeakingPart2Container = () => {
 		[modeEnum.SPEAK]: 60,
 	};
 
-	//Fetch tests, handle test selection, handle switching between parts
-	const {
-		mode,
-		setMode,
-		tests,
-		currentTest,
-		setCurrentTest,
-		loadTest,
-		time,
-		setTime,
-	} = usePart(
-		modeEnum,
-		modeEnum.READ,
-		getSpeakingTaskTwoSummaries,
-		getSpeakingTaskTwoById
-	);
+	const [mode, setMode] = useState(modeEnum.READ);
+	const [time, setTime] = useState(0);
+	const [testData, setTestData] = useState(null);
+
+	useEffect(() => {
+		if (!currentTest?.id) return;
+		getSpeakingTaskTwoById(currentTest.id).then(setTestData);
+	}, [currentTest]);
 
 	return (
 		<SpeakingPart2Presentation
 			mode={mode}
 			setMode={setMode}
 			modeEnum={modeEnum}
-			currentTest={currentTest}
+			currentTest={testData}
 			setCurrentTest={setCurrentTest}
-			tests={tests}
-			loadTest={loadTest}
 			time={time}
 			setTime={setTime}
 			modeTimes={modeTimes}

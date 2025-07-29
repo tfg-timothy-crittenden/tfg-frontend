@@ -16,6 +16,7 @@ const initialState = {
 	error: null,
 };
 
+// Thunk for login
 export const login = createAsyncThunk(
 	"auth/login",
 	async (credentials, thunkAPI) => {
@@ -32,9 +33,10 @@ export const login = createAsyncThunk(
 	}
 );
 
+// Thunk for rehydrating authenticated user
 export const fetchMe = createAsyncThunk("auth/me", async (_, thunkAPI) => {
 	try {
-		const { user } = await meRequest(); // ✅ Destructure here
+		const { user } = await meRequest();
 		return user;
 	} catch (err) {
 		console.error("fetchMe failed:", err);
@@ -42,7 +44,7 @@ export const fetchMe = createAsyncThunk("auth/me", async (_, thunkAPI) => {
 	}
 });
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
 	name: "auth",
 	initialState,
 	reducers: {
@@ -87,6 +89,23 @@ export const authSlice = createSlice({
 });
 
 export const { logout } = authSlice.actions;
+
+// Selectors
 export const selectIsAuthenticated = (state) => !!state.auth.token;
-export const selectUserRole = (state) => state.auth.user?.role;
+export const selectUser = (state) => state.auth.user;
+export const selectUserRoles = (state) => {
+	return state.auth.user?.roles || [];
+};
+
+export const selectUserRole = (state) => selectUserRoles(state)[0] || null; // For backwards compatibility
+
 export default authSlice.reducer;
+
+//Decouples role checking from the component logic.
+export const selectHasRole = (roles) => (state) => {
+	console.log("Checking if has roles:", roles);
+
+	const userRoles = selectUserRoles(state);
+	console.log("Current user roles:", userRoles);
+	return roles.some((r) => userRoles.includes(r));
+};

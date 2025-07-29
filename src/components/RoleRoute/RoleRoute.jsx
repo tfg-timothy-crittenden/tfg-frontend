@@ -1,14 +1,13 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
-import { selectUserRole } from "@/store/auth/authSlice";
+import { selectIsAuthenticated, selectHasRole } from "@/store/auth/authSlice";
 
-const RoleRoute = ({ allowedRoles }) => {
-	const role = useSelector(selectUserRole);
+const RoleRoute = ({ allowedRoles = [] }) => {
+	const isAuthenticated = useSelector(selectIsAuthenticated);
+	const hasRole = useSelector(selectHasRole(allowedRoles));
 
-	if (!role) return <Navigate to="/login" replace />;
-	if (!allowedRoles.includes(role))
-		return <Navigate to="/unauthorised" replace />;
+	if (!isAuthenticated) return <Navigate to="/login" replace />;
+	if (!hasRole) return <Navigate to="/unauthorised" replace />;
 
 	return <Outlet />;
 };

@@ -88,12 +88,12 @@ const SpeakingPart2Presentation = ({
 
 	return (
 		<article className={styles.container}>
-			<SideNavBar
+			{/* <SideNavBar
 				navTitle={"Question 2"}
 				tests={tests}
 				loadTest={loadTest}
 				currentTest={currentTest}
-			/>
+			/> */}
 
 			<div>{renderContent()}</div>
 		</article>

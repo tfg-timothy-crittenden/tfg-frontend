@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	logout,
 	selectIsAuthenticated,
-	selectUserRole,
+	selectHasRole,
 } from "@/store/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +13,8 @@ const Header = () => {
 	const navigate = useNavigate();
 
 	const isAuthenticated = useSelector(selectIsAuthenticated);
-	const role = useSelector(selectUserRole);
+	const isAdmin = useSelector(selectHasRole(["admin"]));
+	console.log("isAdmin:", isAdmin);
 
 	const handleLogout = () => {
 		dispatch(logout());
@@ -22,13 +23,11 @@ const Header = () => {
 
 	return (
 		<header className={styles.header}>
-			{isAuthenticated && <QuestionToggleSwitch />}
-
 			<p className={styles.title}>TOEFL Speaking</p>
 
 			{isAuthenticated && (
 				<div className={styles.buttonGroup}>
-					{role === "admin" && (
+					{isAdmin && (
 						<button
 							className={styles.adminDashboard}
 							onClick={() => navigate("/admin_dashboard")}
@@ -38,6 +37,12 @@ const Header = () => {
 					)}
 					<button className={styles.logout} onClick={handleLogout}>
 						Logout
+					</button>
+					<button
+						className={styles.classrooms}
+						onClick={() => navigate("/my/classrooms")}
+					>
+						Classrooms
 					</button>
 				</div>
 			)}
