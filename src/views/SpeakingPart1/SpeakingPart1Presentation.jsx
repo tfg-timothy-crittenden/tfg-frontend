@@ -22,19 +22,6 @@ const SpeakingPart1Presentation = ({
 }) => {
 	return (
 		<>
-			<SideNavBarWrapper>
-				<aside className={styles.tags_container}>
-					<p className={styles.instruction}>Random question by topic</p>
-					{topics.map((topic) => (
-						<Tag
-							key={topic}
-							tagName={topic}
-							handleSetTag={handleTopicChange}
-							selected={currentTopic === topic}
-						/>
-					))}
-				</aside>
-			</SideNavBarWrapper>
 			<ToggleSwitch
 				mode={mode}
 				setMode={setMode}

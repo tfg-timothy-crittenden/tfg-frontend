@@ -3,24 +3,22 @@
 	width: 350px;
 	padding: 20px;
 	position: absolute;
-	top: 60px; /* Below the header */
+	top: 60px;
 	left: 0;
 	height: calc(100% - 60px);
 	background-color: white;
-	transform: translateX(-320px); /* Mostly hidden */
+	transform: translateX(-320px);
 	transition: transform 0.3s ease;
 	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 	overflow: hidden;
 	z-index: 1000;
 }
 
-/* When pinned or hovered */
 .expandedVisible {
 	transform: translateX(0);
 	overflow-y: scroll;
 }
 
-/* === Hamburger-style Edge Icon === */
 .expanded::before {
 	content: "☰";
 	position: absolute;
@@ -36,7 +34,6 @@
 	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* === Pin Button === */
 .pin_button {
 	position: absolute;
 	top: 10px;
@@ -48,7 +45,6 @@
 	z-index: 10;
 }
 
-/* === Minimal Dot Indicator === */
 .pin_dot {
 	width: 12px;
 	height: 12px;
@@ -68,76 +64,92 @@
 	background-color: #ccc;
 }
 
-/* === Test List === */
+.test_menu {
+	margin-top: 30px;
+}
+
+.test_menu_section {
+	margin-bottom: 20px;
+	background: #fff;
+	border-radius: 8px;
+	border: 1px solid #e5e7eb;
+	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.accordion_wrapper {
+	overflow: hidden;
+	transition: max-height 0.3s ease, opacity 0.3s ease;
+	max-height: 0;
+	opacity: 0;
+}
+
+.accordion_wrapper.open {
+	max-height: 1000px; /* large enough to fit contents */
+	opacity: 1;
+}
+
+.accordion_header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 12px 16px;
+	font-weight: 600;
+	font-size: 15px;
+	background-color: #f9fafb;
+	cursor: pointer;
+	border-bottom: 1px solid #e5e7eb;
+	user-select: none;
+}
+
+.chevron {
+	transition: transform 0.3s ease;
+	font-size: 12px;
+}
+
+.chevron.open {
+	transform: rotate(180deg);
+}
+
+.accordion_content {
+	padding: 0;
+	margin: 0;
+}
+
 .test_list {
 	list-style: none;
-	margin: 60px 0 0 0; /* Leaves space for pin button */
 	padding: 0;
-	pointer-events: none;
-	opacity: 0;
-	transform: translateX(-10px);
-	transition: opacity 0.3s ease, transform 0.3s ease;
+	margin: 0;
 }
 
-.expandedVisible .test_list {
-	opacity: 1;
-	transform: translateX(0);
-	pointer-events: auto;
-}
-
-/* === Test List Items === */
 .list_item {
+	padding: 12px 16px;
+	border-bottom: 1px solid #f3f4f6;
+	background: white;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	border-left: 4px solid transparent;
 	display: flex;
 	flex-direction: column;
-	padding: 10px 20px;
-	margin: 5px 0;
-	background-color: white;
-	border-radius: 5px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	transition: background-color 0.3s ease, color 0.3s ease;
-	cursor: pointer;
 }
 
-.reading_title {
-	font-size: 14px;
-	color: #666;
-	margin-top: 5px;
+.list_item:hover {
+	background-color: #f9fafb;
+}
+
+.active {
+	background-color: #e0f2fe;
+	border-left-color: #3b82f6;
 }
 
 .test_title {
-	font-size: 16px;
-	color: #565656;
-	font-weight: bold;
+	font-weight: 600;
+	font-size: 15px;
+	color: #111827;
 }
 
-/* Hover effect for unselected list items */
-.list_item:not(.active):hover {
-	background-color: #f0f0f0;
-	color: black;
-}
-
-/* Highlighted task background */
-.active {
-	background-color: #5d92c0;
-}
-
-/* Highlighted task text is white */
-.active > span {
-	color: white;
-}
-
-/* === Animation: Fade + Slide In === */
-@keyframes fadeSlideIn {
-	from {
-		opacity: 0;
-		transform: translateX(-10px);
-	}
-	to {
-		opacity: 1;
-		transform: translateX(0);
-	}
-}
-
-.expandedVisible .list_item {
-	animation: fadeSlideIn 0.3s ease forwards;
+.reading_title {
+	font-size: 13px;
+	color: #6b7280;
+	margin-top: 4px;
 }

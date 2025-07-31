@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import SpeakingPart1Presentation from "./SpeakingPart1Presentation";
 
 const SpeakingPart1Container = () => {
+	const { currentTopic, handleTopicChange, topics, topicData } =
+		useOutletContext();
+
 	const modeEnum = Object.freeze({
 		PREPARE: "PREPARE",
 		SPEAK: "SPEAK",
@@ -12,58 +16,29 @@ const SpeakingPart1Container = () => {
 		[modeEnum.SPEAK]: 45,
 	};
 
-	const [time, setTime] = useState(modeTimeEnum.PREPARE * 1000); // Time in milliseconds
-	const [topics, setTopics] = useState([]); // List of topic names
-	const [topicData, setTopicData] = useState({}); // Full JSON object
-	const [currentTopic, setCurrentTopic] = useState("Education");
-	const [question, setQuestion] = useState("");
-
+	const [time, setTime] = useState(modeTimeEnum.PREPARE * 1000);
 	const [mode, setMode] = useState(modeEnum.PREPARE);
+	const [question, setQuestion] = useState(null);
+	const [questionKey, setQuestionKey] = useState(0);
 
-	const getTopics = async () => {
-		try {
-			const response = await fetch("/questions_part_1_and_officials.json");
-			if (!response.ok)
-				throw new Error(`HTTP error! status: ${response.status}`);
-
-			const data = await response.json();
-			console.log("Fetched data:", data);
-
-			setTopicData(data);
-			const keys = Object.keys(data);
-			setTopics(keys);
-
-			if (keys.length > 0) {
-				setCurrentTopic(keys[0]); // Set current topic to the first one
-				setQuestion(data[keys[0]][0]); // Set the first question directly
-			}
-		} catch (error) {
-			console.error("Failed to load JSON:", error);
-		}
-	};
-
-	const getQuestion = (topic) => {
-		console.log("Getting question for topic:", topic);
-		const questions = topicData[topic];
-		if (!questions || questions.length === 0) {
-			console.log("No questions found for this topic.");
-			setQuestion("No questions available.");
-			return;
-		}
-
-		const randomIndex = Math.floor(Math.random() * questions.length);
-		const selected = questions[randomIndex];
-		setQuestion(selected);
-	};
-
-	const handleTopicChange = (topic) => {
-		setCurrentTopic(topic);
-		getQuestion(topic);
+	const handleTopicClick = (topic) => {
+		handleTopicChange(topic); // Updates currentTopic in parent
+		setQuestionKey(Date.now()); //
 	};
 
 	useEffect(() => {
-		getTopics();
-	}, []);
+		if (!currentTopic || !topicData[currentTopic]) return;
+
+		const questions = topicData[currentTopic];
+		if (!questions || questions.length === 0) {
+			setQuestion({ question: "No questions available." });
+			return;
+		}
+
+		// Randomly pick a new question on every key change
+		const randomIndex = Math.floor(Math.random() * questions.length);
+		setQuestion(questions[randomIndex]);
+	}, [currentTopic, topicData, questionKey]);
 
 	return (
 		<SpeakingPart1Presentation
@@ -75,7 +50,7 @@ const SpeakingPart1Container = () => {
 			modeTimeEnum={modeTimeEnum}
 			time={time}
 			setTime={setTime}
-			handleTopicChange={handleTopicChange}
+			handleTopicChange={handleTopicClick}
 			currentTopic={currentTopic}
 		/>
 	);

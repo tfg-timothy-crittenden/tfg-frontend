@@ -31,9 +31,15 @@ export const assignTestsToClassroom = async (classroomId, assignments) => {
 	});
 };
 
-export const getClassroomTaskSummaries = async (classroomId) => {
+export const getClassroomStudentTaskSummaries = async (classroomId) => {
 	const { data } = await httpClient.get(
-		`material/classrooms/${classroomId}/task-summaries`
+		`material/classrooms/${classroomId}/student-task-summaries`
+	);
+	return data; // Expected shape: { part2: [...], part3: [...], part4: [...] }
+};
+export const getClassroomTeacherTaskSummaries = async (classroomId) => {
+	const { data } = await httpClient.get(
+		`material/classrooms/${classroomId}/teacher-task-summaries`
 	);
 	return data; // Expected shape: { part2: [...], part3: [...], part4: [...] }
 };
