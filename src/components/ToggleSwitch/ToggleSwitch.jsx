@@ -1,7 +1,17 @@
 import React from "react";
+import { BookOpen, Headphones, Mic } from "lucide-react";
+import { Brain } from "lucide-react";
+
 import styles from "./ToggleSwitch.module.css";
 
 const ToggleSwitch = ({ mode, modeEnum, setMode, setTime, modeTimeEnum }) => {
+	const modeIcons = {
+		READ: <BookOpen size={24} />,
+		LISTEN: <Headphones size={24} />,
+		PREPARE: <Brain size={24} />,
+		SPEAK: <Mic size={24} />,
+	};
+
 	return (
 		<div className={styles.toggle_group}>
 			{Object.entries(modeEnum).map(([key, value]) => {
@@ -27,9 +37,7 @@ const ToggleSwitch = ({ mode, modeEnum, setMode, setTime, modeTimeEnum }) => {
 							checked={mode === value}
 							onChange={handleChange}
 						/>
-						<label htmlFor={id}>
-							{key.charAt(0) + key.slice(1).toLowerCase()}
-						</label>
+						<label htmlFor={id}>{modeIcons[key]}</label>
 					</React.Fragment>
 				);
 			})}

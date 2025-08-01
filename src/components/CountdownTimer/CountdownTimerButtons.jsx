@@ -1,7 +1,9 @@
 import React from "react";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import StopOutlinedIcon from "@mui/icons-material/StopOutlined";
-import RotateLeftOutlinedIcon from "@mui/icons-material/RotateLeftOutlined";
+import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
+
+import { Timer as PlayButton } from "lucide-react";
+import { TimerReset as ResetButton } from "lucide-react";
 
 import styles from "./CountdownTimerButtons.module.css";
 
@@ -13,11 +15,11 @@ const CountdownTimerButtons = ({ ticking, onStartStop, onReset, disabled }) => {
 				onClick={onStartStop}
 				disabled={disabled}
 			>
-				{ticking ? <StopOutlinedIcon /> : <PlayArrowOutlinedIcon />}
+				{ticking ? <PauseOutlinedIcon /> : <PlayButton />}
 			</button>
 
 			<button className={`${styles.btn} ${styles.reset}`} onClick={onReset}>
-				<RotateLeftOutlinedIcon />
+				<ResetButton />
 			</button>
 		</div>
 	);

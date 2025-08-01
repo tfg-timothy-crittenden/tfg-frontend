@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import styles from "./SideNavBar.module.css";
+import { PanelLeft } from "lucide-react";
 
 const SideNavBarWrapper = ({ children }) => {
 	const [isPinned, setIsPinned] = useState(false);
@@ -34,7 +36,9 @@ const SideNavBarWrapper = ({ children }) => {
 				}`}
 				onClick={() => setIsPinned(!isPinned)}
 				title={isPinned ? "Unpin sidebar" : "Pin sidebar"}
-			/>
+			>
+				<PanelLeft />
+			</div>
 
 			{children}
 		</nav>

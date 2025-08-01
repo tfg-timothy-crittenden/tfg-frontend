@@ -8,10 +8,10 @@
 .time_instructions {
 	font-size: 1rem;
 	margin: 1em 0;
-	background-color: black;
-	color: white;
+
+	color: black;
 	margin: 0;
 	width: 320px;
-	border: 1px solid white;
+	border: 1px solid darkgrey;
 	padding: 3px 45px;
 }

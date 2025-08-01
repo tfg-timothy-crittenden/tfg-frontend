@@ -11,7 +11,7 @@ body {
 }
 
 body {
-	background-color: #e9eded;
+	background-color: #f8f8f8;
 }
 
 .announcement {
@@ -33,14 +33,13 @@ h2 {
 	margin: 20px 0;
 }
 p {
-	font-size: 1.6em;
 	margin: 10px 0;
 }
 audio {
 	display: block;
 	margin: 20px auto;
 	width: 100%;
-	max-width: 1080px;
+	max-width: 600px;
 }
 
 .timer_container {
@@ -52,19 +51,10 @@ audio {
 }
 
 hr {
-	border: 2px solid darkgray;
+	border: 1px solid darkgray;
 	margin: 50px auto;
 	width: 100%;
-	max-width: 1080px;
-}
-
-.instruction {
-	display: block;
-	font-size: 1.6em;
-	margin: 20px auto;
-	text-align: center;
-	max-width: 1080px;
-	width: 100%;
+	max-width: 600px;
 }
 
 .scrollable_outer {

@@ -1,11 +1,7 @@
 .timer_wrapper {
 	max-width: 1080px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+
 	margin: 20px auto;
-	background-color: white;
-	padding: 20px;
-	border-radius: 10px;
+	display: flex;
+	justify-content: center;
 }

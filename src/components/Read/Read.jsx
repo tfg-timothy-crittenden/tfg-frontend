@@ -8,7 +8,7 @@ const Read = ({ title, body, author }) => {
 		<>
 			<TestWrapper>
 				<h2>{title}</h2>
-				<p>{body}</p>
+				<p className={styles.body}>{body}</p>
 				{author && (
 					<>
 						<p>Sincerely,</p>
@@ -16,6 +16,7 @@ const Read = ({ title, body, author }) => {
 					</>
 				)}
 			</TestWrapper>
+			<hr></hr>
 
 			<TimerWrapper>
 				<CountdownContainer initialTime={45000} />

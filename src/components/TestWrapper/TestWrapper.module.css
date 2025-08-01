@@ -19,3 +19,12 @@
 	animation: fadeSlideIn 0.4s ease;
 	transition: all 0.4s ease;
 }
+
+.test_wrapper_container p {
+	font-size: 1.3rem;
+	line-height: 1.5;
+	color: #333;
+	margin: 10px 0;
+	max-width: 700px;
+	margin: 0 auto;
+}

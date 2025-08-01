@@ -34,7 +34,7 @@ const CountdownContainer = ({ initialTime }) => {
 
 	const formatTime = (ms) => {
 		const totalSeconds = Math.round(ms / 1000);
-		const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+		const minutes = String(Math.floor(totalSeconds / 60)).padStart(1, "0");
 		const seconds = String(totalSeconds % 60).padStart(2, "0");
 		return `${minutes}:${seconds}`;
 	};
@@ -47,16 +47,9 @@ const CountdownContainer = ({ initialTime }) => {
 
 	return (
 		<div className={styles.container}>
-			<h2 className={styles.time_display}>
-				{currentTime > 0 ? formatTime(currentTime) : "Time Up!"}
-			</h2>
-
+			{/* Exports no visual elements. Handles countdown logic */}
+			{/* Controls are exposed via handleRefImperative */}
 			<CountdownTimer ref={timerRef} time={totalTime} />
-
-			<CountdownTimerBar
-				currentTime={currentTime} // ✅ elapsed time
-				totalTime={totalTime}
-			/>
 
 			<CountdownTimerButtons
 				ticking={ticking}
@@ -67,6 +60,11 @@ const CountdownContainer = ({ initialTime }) => {
 				onReset={handleReset}
 				disabled={currentTime === 0}
 			/>
+			<span className={styles.time_display}>
+				{currentTime > 0 ? formatTime(currentTime) : formatTime(0)}/
+				{formatTime(totalTime)}
+			</span>
+			<CountdownTimerBar currentTime={currentTime} totalTime={totalTime} />
 		</div>
 	);
 };

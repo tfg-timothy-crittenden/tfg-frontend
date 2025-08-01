@@ -2,10 +2,11 @@
 .expanded {
 	width: 350px;
 	padding: 20px;
-	position: absolute;
-	top: 60px;
+	padding-top: 50px;
+	position: fixed;
+	top: 0px;
 	left: 0;
-	height: calc(100% - 60px);
+	height: 100%;
 	background-color: white;
 	transform: translateX(-320px);
 	transition: transform 0.3s ease;
@@ -72,7 +73,7 @@
 	margin-bottom: 20px;
 	background: #fff;
 	border-radius: 8px;
-	border: 1px solid #e5e7eb;
+
 	overflow: hidden;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }

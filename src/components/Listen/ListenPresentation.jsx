@@ -5,6 +5,7 @@ const Listen = ({ audio, image }) => {
 	return (
 		<TestWrapper>
 			<img src={image} className={styles.image} />
+			<hr></hr>
 			<audio controls>
 				<source src={audio} type="audio/wav" />
 			</audio>

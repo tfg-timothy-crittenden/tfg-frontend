@@ -6,30 +6,33 @@
 }
 
 .toggle_group {
-	border: 1px solid #ccc;
-	border-radius: 10px;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+
 	overflow: hidden;
 	background-color: white;
 	font-size: 1rem;
-	padding: 7px 0;
+}
+
+.toggle_group a {
+	text-decoration: none;
+	transition: all 0.3s ease;
+	flex: 1;
+	text-align: center;
+	padding: 10px;
 }
 
 .toggle_group_label {
-	margin-right: 10px;
+	margin-right: 5px;
 }
 
 .activeLink {
-	background-color: #5d92c0;
-	color: white;
-	padding: 18px 20px;
-	text-decoration: none;
-	transition: all 0.3s ease;
+	border-bottom: solid 2px #007bff;
 }
 
 .inactiveLink {
 	background-color: white;
 	color: grey;
-	padding: 18px 20px;
-	text-decoration: none;
-	transition: all 0.3s ease;
+	border-bottom: 2px solid rgb(237, 237, 237);
 }

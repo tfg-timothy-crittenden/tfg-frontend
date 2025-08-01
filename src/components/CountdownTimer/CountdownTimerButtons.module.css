@@ -1,5 +1,4 @@
 .button_container {
-	margin-top: 20px;
 	display: flex;
 	align-content: center;
 	align-items: center;
@@ -8,11 +7,11 @@
 .btn {
 	font-size: small;
 	padding: 0.2rem 0.2rem 0rem 0.2rem;
-	width: 4rem;
+
 	margin: 2px;
-	color: #dbdbdb;
+	color: #555555;
 	cursor: pointer;
-	border: solid #dbdbdb 2px;
+	border: none;
 	background-color: transparent;
 	transition: all 0.25s ease-out;
 }
@@ -31,7 +30,7 @@
 }
 
 .stop:hover {
-	color: #c82333;
+	color: blue;
 }
 
 .stop:focus {
@@ -54,7 +53,7 @@
 }
 
 .reset:hover {
-	color: blue;
+	color: #c82333;
 }
 
 .reset:focus {

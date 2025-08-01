@@ -1,11 +1,12 @@
-.announcement {
-	background-color: #f9f9f9;
-	border: 1px solid #ccc;
-	padding: 10px;
-	margin: 10px auto;
-
-	max-width: 1080px;
+.body {
+	font-size: 1.3rem;
+	line-height: 1.5;
+	color: #333;
+	margin: 10px 0;
+	max-width: 700px;
+	margin: 0 auto;
 }
+
 .timer_container {
 	max-width: 1080px;
 	display: flex;

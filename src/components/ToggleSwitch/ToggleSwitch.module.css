@@ -1,10 +1,7 @@
 .toggle_group {
-	border: 1px solid #ccc;
-	border-radius: 10px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-
 	max-width: max-content;
 	margin: 10px auto;
 	background-color: white;
@@ -18,17 +15,29 @@
 	position: absolute;
 }
 
+.toggle_label {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: -webkit-fill-available;
+}
+
 /* Style the radio icon */
 .toggle_group input[type="radio"] + label {
 	cursor: pointer;
 	padding: 10px 20px;
-	background-color: #5d92c0;
-	color: white;
+	border-bottom: 2px solid #5d92c0;
+	color: #5d92c0;
 	transition: all 0.3s ease;
 }
 
 /* Change the color of the label when the icon is selected */
 .toggle_group input[type="radio"]:not(:is(:checked)) + label {
-	background-color: white;
-	color: grey;
+	border-bottom: rgb(237, 237, 237) 2px solid;
+	color: gray;
+}
+
+.toggle_icon {
+	width: 24px;
+	height: 24px;
 }

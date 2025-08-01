@@ -9,6 +9,8 @@ import {
 import { useSelector } from "react-redux";
 import { selectHasRole } from "@/store/auth/authSlice";
 
+import styles from "./Classroom.module.css";
+
 const Classroom = () => {
 	const { id: classroomId } = useParams();
 	const [studentTaskSummaries, setStudentTaskSummaries] = useState({});
@@ -71,7 +73,7 @@ const Classroom = () => {
 				handleTopicChange={handleTopicChange}
 			/>
 
-			<div style={{ flex: 1 }}>
+			<div className={styles.container}>
 				<Outlet
 					context={{
 						currentTest,

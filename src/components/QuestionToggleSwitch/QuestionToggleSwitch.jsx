@@ -9,7 +9,6 @@ const QuestionToggleSwitch = () => {
 
 	return (
 		<nav className={styles.container}>
-			<span className={styles.toggle_group_label}>Task:</span>
 			<div className={styles.toggle_group}>
 				{TASK_PARTS.map((part) => (
 					<NavLink
@@ -19,7 +18,7 @@ const QuestionToggleSwitch = () => {
 							isActive ? styles.activeLink : styles.inactiveLink
 						}
 					>
-						{part}
+						Q{part}
 					</NavLink>
 				))}
 			</div>

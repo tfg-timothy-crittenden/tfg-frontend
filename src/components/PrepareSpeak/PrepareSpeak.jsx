@@ -1,11 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import CountdownContainer from "@/components/CountdownTimer/CountdownContainer";
 import styles from "./PrepareSpeak.module.css";
 import TestWrapper from "@/components/TestWrapper/TestWrapper";
 import TimeInformation from "@/components/TimeInformation/TimeInformation";
 import TimerWrapper from "../TimerWrapper/TimerWrapper";
-import pauseIcon from "@/assets/icons/pause-button.png";
-import playIcon from "@/assets/icons/play-button.png";
+
+import { Play as PlayButton } from "lucide-react";
+import { Square as StopButton } from "lucide-react";
 
 const PrepareSpeak = ({
 	question,
@@ -26,6 +27,7 @@ const PrepareSpeak = ({
 			audio.play();
 		} else {
 			audio.pause();
+			audio.currentTime = 0; // Reset to start
 		}
 	};
 	useEffect(() => {
@@ -62,25 +64,23 @@ const PrepareSpeak = ({
 			<TestWrapper>
 				{question_audio && <audio ref={audioRef} src={question_audio}></audio>}
 				<div className={styles.question_container}>
-					<p>Question</p>
+					<h3>Question</h3>
 					<button className={styles.play_button} onClick={handleAudioToggle}>
-						<img
-							className={styles.play_button_icon}
-							src={isPlaying ? pauseIcon : playIcon}
-						/>
+						{isPlaying ? <StopButton size="12" /> : <PlayButton size="12" />}
 					</button>
 				</div>
 				<p>{question}</p>
 
 				<TimeInformation modeTimes={modeTimes} />
 			</TestWrapper>
+			{mode === modeEnum.PREPARE && (
+				<p className={styles.instruction}>Prepare your response</p>
+			)}
+			{mode === modeEnum.SPEAK && (
+				<span className={styles.instruction}>Give your response</span>
+			)}
+			<hr></hr>
 			<TimerWrapper>
-				{mode === modeEnum.PREPARE && (
-					<span className={styles.instruction}>Prepare your response</span>
-				)}
-				{mode === modeEnum.SPEAK && (
-					<span className={styles.instruction}>Give your response</span>
-				)}
 				<CountdownContainer initialTime={time} />
 			</TimerWrapper>
 		</>

@@ -4,6 +4,7 @@ import styles from "./SideNavBar.module.css";
 import SideNavBarWrapper from "./SideNavBarWrapper";
 import QuestionToggleSwitch from "@/components/QuestionToggleSwitch/QuestionToggleSwitch";
 import SpeakingPart1QuestionSelector from "@/components/SpeakingPart1QuestionSelector/SpeakingPart1QuestionSelector";
+import { ChevronUp, ChevronDown, PanelLeftOpen } from "lucide-react";
 
 const SideNavBar = ({
 	studentTaskSummaries,
@@ -44,7 +45,7 @@ const SideNavBar = ({
 						>
 							<span>Teacher Material</span>
 							<span className={styles.chevron}>
-								{showTeacherList ? "˄" : "˅"}
+								{showTeacherList ? <ChevronUp /> : <ChevronDown />}
 							</span>
 						</div>
 
@@ -83,7 +84,7 @@ const SideNavBar = ({
 						>
 							<span>Student Material</span>
 							<span className={styles.chevron}>
-								{showStudentList ? "˄" : "˅"}
+								{showStudentList ? <ChevronUp /> : <ChevronDown />}
 							</span>
 						</div>
 
