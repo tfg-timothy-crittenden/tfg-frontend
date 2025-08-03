@@ -1,0 +1,10 @@
+.classroomHeader_container {
+	height: 70px;
+	width: 100%;
+	background-color: white;
+	display: flex;
+	align-items: center;
+	justify-content: left;
+	padding: 20px;
+	font-size: 1.8rem;
+}

@@ -1,91 +1,37 @@
-import { Outlet, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import SideNavBar from "@/components/SideNavBar/SideNavBar";
-import {
-	getClassroomStudentTaskSummaries,
-	getClassroomTeacherTaskSummaries,
-} from "@/api/tasks/tasksAPI";
+import { useParams } from "react-router-dom";
+import SpeakingPart1Container from "@/views/SpeakingPart1/SpeakingPart1Container";
+import SpeakingPart2Container from "@/views/SpeakingPart2/SpeakingPart2Container";
+import SpeakingPart3Container from "@/views/SpeakingPart3/SpeakingPart3Container";
+import SpeakingPart4Container from "@/views/SpeakingPart4/SpeakingPart4Container";
+import QuestionToggleSwitch from "../../components/QuestionToggleSwitch/QuestionToggleSwitch";
 
-import { useSelector } from "react-redux";
-import { selectHasRole } from "@/store/auth/authSlice";
-
-import styles from "./Classroom.module.css";
+import style from "./Classroom.module.css";
 
 const Classroom = () => {
-	const { id: classroomId } = useParams();
-	const [studentTaskSummaries, setStudentTaskSummaries] = useState({});
-	const [teacherTaskSummaries, setTeacherTaskSummaries] = useState({});
-	const [currentTest, setCurrentTest] = useState(null);
-	const [selectedSource, setSelectedSource] = useState(null); // ✅ Track the origin
+	const { partNumber } = useParams();
 
-	const hasTeacherRole = useSelector(selectHasRole(["teacher"]));
-
-	const [topics, setTopics] = useState([]);
-	const [topicData, setTopicData] = useState({});
-	const [currentTopic, setCurrentTopic] = useState(null);
-
-	useEffect(() => {
-		getClassroomStudentTaskSummaries(classroomId)
-			.then(setStudentTaskSummaries)
-			.catch((err) => console.error("Failed to load student summaries:", err));
-
-		if (!hasTeacherRole) return;
-		getClassroomTeacherTaskSummaries(classroomId)
-			.then(setTeacherTaskSummaries)
-			.catch((err) => console.error("Failed to load teacher summaries:", err));
-	}, [classroomId, hasTeacherRole]);
-
-	const loadTest = (testId, source) => {
-		setCurrentTest({ id: testId });
-		setSelectedSource(source);
+	const renderPart = () => {
+		switch (partNumber) {
+			case "1":
+				return <SpeakingPart1Container />;
+			case "2":
+				return <SpeakingPart2Container />;
+			case "3":
+				return <SpeakingPart3Container />;
+			case "4":
+				return <SpeakingPart4Container />;
+			default:
+				return <p>Invalid part</p>;
+		}
 	};
-
-	const handleTopicChange = (topic) => {
-		setCurrentTopic(topic);
-	};
-
-	useEffect(() => {
-		const loadTopics = async () => {
-			try {
-				const response = await fetch("/questions_part_1_and_officials.json");
-				const data = await response.json();
-				setTopicData(data);
-				const keys = Object.keys(data);
-				setTopics(keys);
-				if (keys.length > 0) setCurrentTopic(keys[0]);
-			} catch (err) {
-				console.error("Error loading Part 1 topics:", err);
-			}
-		};
-		loadTopics();
-	}, []);
 
 	return (
-		<div style={{ display: "flex" }}>
-			<SideNavBar
-				studentTaskSummaries={studentTaskSummaries}
-				teacherTaskSummaries={teacherTaskSummaries}
-				currentTest={currentTest}
-				selectedSource={selectedSource} // ✅ Pass selected source
-				loadTest={loadTest}
-				topics={topics}
-				currentTopic={currentTopic}
-				handleTopicChange={handleTopicChange}
-			/>
-
-			<div className={styles.container}>
-				<Outlet
-					context={{
-						currentTest,
-						setCurrentTest,
-						currentTopic,
-						handleTopicChange,
-						topics,
-						topicData,
-					}}
-				/>
+		<>
+			<div className={style.test_wrapper}>
+				<QuestionToggleSwitch />
+				<div className={style.part_wrapper}>{renderPart()}</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

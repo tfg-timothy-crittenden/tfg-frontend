@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SpeakingPart3Presentation from "./SpeakingPart3Presentation";
 import { getSpeakingTaskThreeById } from "@/api/tasks/tasksAPI";
 
 const SpeakingPart3Container = () => {
-	const { currentTest, setCurrentTest } = useOutletContext();
+	const { testId } = useParams();
 
 	const modeEnum = Object.freeze({
 		READ: "READ",
@@ -22,9 +22,9 @@ const SpeakingPart3Container = () => {
 	const [testData, setTestData] = useState(null);
 
 	useEffect(() => {
-		if (!currentTest?.id) return;
-		getSpeakingTaskThreeById(currentTest.id).then(setTestData);
-	}, [currentTest]);
+		if (!testId) return;
+		getSpeakingTaskThreeById(testId).then(setTestData);
+	}, [testId]);
 
 	return (
 		<SpeakingPart3Presentation
@@ -32,7 +32,6 @@ const SpeakingPart3Container = () => {
 			setMode={setMode}
 			modeEnum={modeEnum}
 			currentTest={testData}
-			setCurrentTest={setCurrentTest}
 			time={time}
 			setTime={setTime}
 			modeTimes={modeTimes}

@@ -1,7 +1,12 @@
-.container {
+.test_wrapper {
 	margin: 0 auto;
+	margin-top: 40px;
 	background-color: white;
 	width: 1080px;
 	padding: 30px 0 60px 0;
 	height: 100vh;
+}
+
+.part_wrapper {
+	margin-top: 60px;
 }

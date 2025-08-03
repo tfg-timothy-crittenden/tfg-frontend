@@ -27,7 +27,7 @@ const UserClassrooms = () => {
 	}, []);
 
 	const handleClassroomClick = (classroomId) => {
-		navigate(`/classroom/${classroomId}`);
+		navigate(`/classroom/${classroomId}/test/1/part/2`);
 	};
 
 	return (

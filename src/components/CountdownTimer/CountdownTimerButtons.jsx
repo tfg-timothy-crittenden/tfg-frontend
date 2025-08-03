@@ -14,11 +14,17 @@ const CountdownTimerButtons = ({ ticking, onStartStop, onReset, disabled }) => {
 				className={`${styles.btn} ${ticking ? styles.stop : styles.start}`}
 				onClick={onStartStop}
 				disabled={disabled}
+				title={ticking ? "Pause Timer" : "Start Timer"}
 			>
 				{ticking ? <PauseOutlinedIcon /> : <PlayButton />}
 			</button>
 
-			<button className={`${styles.btn} ${styles.reset}`} onClick={onReset}>
+			<button
+				className={`${styles.btn} ${styles.reset}`}
+				onClick={onReset}
+				title="Reset Timer"
+				disabled={disabled}
+			>
 				<ResetButton />
 			</button>
 		</div>

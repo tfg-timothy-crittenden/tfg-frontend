@@ -28,7 +28,8 @@
 }
 
 .activeLink {
-	border-bottom: solid 2px #007bff;
+	border-bottom: solid 2px #5d92c0;
+	color: #5d92c0;
 }
 
 .inactiveLink {

@@ -5,7 +5,8 @@
 	height: 60px;
 	position: relative;
 	border-bottom: 1px solid #ccc;
-	background-color: white;
+	background-color: #6080ac;
+	color: white;
 }
 
 .header nav {

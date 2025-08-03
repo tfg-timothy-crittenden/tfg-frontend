@@ -1,47 +1,43 @@
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
 import styles from "./SideNavBar.module.css";
-import { PanelLeft } from "lucide-react";
+import { PanelLeftOpen, PanelLeftClose } from "lucide-react";
 
 const SideNavBarWrapper = ({ children }) => {
-	const [isPinned, setIsPinned] = useState(false);
-	const [isHovered, setIsHovered] = useState(false);
+	const [isOpen, setIsOpen] = useState(true);
 
-	// Load pin state on first render
-	useEffect(() => {
-		const stored = localStorage.getItem("sidebarPinned");
-		if (stored === "true") {
-			setIsPinned(true);
-		}
-	}, []);
-
-	//Save pin state when it changes
-	useEffect(() => {
-		localStorage.setItem("sidebarPinned", isPinned.toString());
-	}, [isPinned]);
-
-	const shouldExpand = isPinned || isHovered;
+	const toggleSidebar = () => setIsOpen((prev) => !prev);
 
 	return (
-		<nav
-			className={`${styles.expanded} ${
-				shouldExpand ? styles.expandedVisible : ""
-			}`}
-			onMouseEnter={() => !isPinned && setIsHovered(true)}
-			onMouseLeave={() => !isPinned && setIsHovered(false)}
-		>
-			<div
-				className={`${styles.pin_dot} ${
-					isPinned ? styles.pinned : styles.unpinned
-				}`}
-				onClick={() => setIsPinned(!isPinned)}
-				title={isPinned ? "Unpin sidebar" : "Pin sidebar"}
-			>
-				<PanelLeft />
-			</div>
+		<>
+			{/* Always-visible vertical toggle bar when closed */}
+			{!isOpen && (
+				<div
+					className={styles.sidebar_bar}
+					onClick={toggleSidebar}
+					title="Open sidebar"
+				>
+					<button className={`${styles.sidebar_toggle} `}>
+						<PanelLeftOpen size={36} strokeWidth={1} />
+					</button>
+				</div>
+			)}
 
-			{children}
-		</nav>
+			{/* Sidebar itself */}
+			<nav
+				className={`${styles.expanded} ${isOpen ? styles.expandedVisible : ""}`}
+			>
+				{isOpen && (
+					<button
+						className={`${styles.sidebar_toggle} ${styles.align_right}`}
+						onClick={toggleSidebar}
+						title="Close sidebar"
+					>
+						<PanelLeftClose size={36} strokeWidth={1} />
+					</button>
+				)}
+				{children}
+			</nav>
+		</>
 	);
 };
 

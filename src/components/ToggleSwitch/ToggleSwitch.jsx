@@ -36,6 +36,7 @@ const ToggleSwitch = ({ mode, modeEnum, setMode, setTime, modeTimeEnum }) => {
 							value={id}
 							checked={mode === value}
 							onChange={handleChange}
+							title="Toggle Mode"
 						/>
 						<label htmlFor={id}>{modeIcons[key]}</label>
 					</React.Fragment>

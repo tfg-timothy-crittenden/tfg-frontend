@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SpeakingPart4Presentation from "./SpeakingPart4Presentation";
 import { getSpeakingTaskFourById } from "@/api/tasks/tasksAPI";
 
 const SpeakingPart4Container = () => {
-	const { currentTest, setCurrentTest } = useOutletContext();
+	const { testId } = useParams();
 
 	const modeEnum = Object.freeze({
 		LISTEN: "LISTEN",
@@ -22,9 +22,9 @@ const SpeakingPart4Container = () => {
 	const [testData, setTestData] = useState(null);
 
 	useEffect(() => {
-		if (!currentTest?.id) return;
-		getSpeakingTaskFourById(currentTest.id).then(setTestData);
-	}, [currentTest]);
+		if (!testId) return;
+		getSpeakingTaskFourById(testId).then(setTestData);
+	}, [testId]);
 
 	return (
 		<SpeakingPart4Presentation
@@ -32,7 +32,6 @@ const SpeakingPart4Container = () => {
 			setMode={setMode}
 			modeEnum={modeEnum}
 			currentTest={testData}
-			setCurrentTest={setCurrentTest}
 			time={time}
 			setTime={setTime}
 			modeTimes={modeTimes}
