@@ -40,26 +40,12 @@ function App() {
 
 				{/* Private Routes */}
 				<Route element={<PrivateRoute />}>
-					<Route path="/my/classrooms" element={<UserClassrooms />} />
-
-					<Route
-						path="/classroom/:id/test/:testId/part/:partNumber"
-						element={
-							<div
-								style={{
-									display: "flex",
-									flexDirection: "column",
-									position: "relative",
-								}}
-							>
-								<ClassroomHeader />
-								<div style={{ display: "flex", flex: 1, position: "relative" }}>
-									<SideNavBar />
-									<Classroom /> {/* Decides internally which part to render */}
-								</div>
-							</div>
-						}
-					/>
+					<Route path="/my/classrooms" element={<UserClassrooms />}>
+						<Route
+							path=":id/test/:testId/part/:partNumber"
+							element={<Classroom />}
+						/>
+					</Route>
 				</Route>
 
 				{/* Admin Routes */}
@@ -72,16 +58,6 @@ function App() {
 				</Route>
 			</Routes>
 		</>
-	);
-}
-
-// 👇 Este componente renderiza el layout sin inventar wrappers
-function MainClassroomView() {
-	return (
-		<div style={{ display: "flex" }}>
-			<SideNavBar />
-			<Outlet />
-		</div>
 	);
 }
 

@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // if using react-router-dom
+import { Outlet, useMatch, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { getUserClassrooms } from "@/api/user/user";
 import styles from "./UserClassrooms.module.css";
 
@@ -9,6 +9,7 @@ const UserClassrooms = () => {
 	const [error, setError] = useState(null);
 
 	const navigate = useNavigate();
+	const atRoot = useMatch("/my/classrooms");
 
 	useEffect(() => {
 		const fetchClassrooms = async () => {
@@ -26,38 +27,39 @@ const UserClassrooms = () => {
 		fetchClassrooms();
 	}, []);
 
-	const handleClassroomClick = (classroomId) => {
-		navigate(`/classroom/${classroomId}/test/1/part/2`);
-	};
+	if (loading) return <p className={styles.loading}>Loading classrooms...</p>;
+	if (error) return <p className={styles.error}>{error}</p>;
+	if (classrooms.length === 0)
+		return (
+			<p className={styles.emptyState}>
+				You’re not enrolled in any classrooms yet.
+			</p>
+		);
 
-	return (
-		<>
+	// If at /my/classrooms — show classroom list
+	if (atRoot) {
+		return (
 			<div className={styles.classroomsContainer}>
 				<h2>Your Classrooms</h2>
-
-				{loading && <p>Loading...</p>}
-				{error && <p className={styles.error}>{error}</p>}
-
-				{!loading && classrooms.length === 0 && (
-					<p className={styles.emptyState}>
-						You’re not enrolled in any classrooms yet.
-					</p>
-				)}
-
 				<ul className={styles.classroomsList}>
 					{classrooms.map((classroom) => (
 						<li
 							key={classroom.id}
 							className={styles.classroomItem}
-							onClick={() => handleClassroomClick(classroom.id)}
+							onClick={() =>
+								navigate(`/my/classrooms/${classroom.id}/test/1/part/1`)
+							}
 						>
 							{classroom.name}
 						</li>
 					))}
 				</ul>
 			</div>
-		</>
-	);
+		);
+	}
+
+	// Otherwise render the slected classroom's outlet
+	return <Outlet context={{ classrooms }} />;
 };
 
 export default UserClassrooms;

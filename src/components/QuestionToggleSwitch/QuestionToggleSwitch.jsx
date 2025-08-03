@@ -13,7 +13,7 @@ const QuestionToggleSwitch = () => {
 				{TASK_PARTS.map((part) => (
 					<NavLink
 						key={part}
-						to={`/classroom/${id}/test/${testId}/part/${part}`}
+						to={`/my/classrooms/${id}/test/${testId}/part/${part}`}
 						className={({ isActive }) =>
 							isActive ? styles.activeLink : styles.inactiveLink
 						}

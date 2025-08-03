@@ -1,5 +1,5 @@
 .classroomHeader_container {
-	height: 70px;
+	height: 90px;
 	width: 100%;
 	background-color: white;
 	display: flex;
@@ -7,4 +7,16 @@
 	justify-content: left;
 	padding: 20px;
 	font-size: 1.8rem;
+}
+
+.classroom_selector {
+	font-size: 1.3rem;
+	margin-left: 15px;
+	margin-top: 0.2rem;
+	cursor: pointer;
+	padding: 5px 15px 5px 5px;
+	border: solid 1px #eaeaea;
+	border-radius: 5px;
+	background: #f9fafb;
+	color: #525252;
 }
