@@ -58,7 +58,6 @@ const CountdownContainer = ({ initialTime }) => {
 					else timerRef.current.start();
 				}}
 				onReset={handleReset}
-				disabled={currentTime === 0}
 			/>
 			<span className={styles.time_display}>
 				{currentTime > 0 ? formatTime(currentTime) : formatTime(0)}/

@@ -2,7 +2,7 @@ import httpClient from "@/api/httpClient";
 
 export const getSpeakingTaskTwoSummaries = async () => {
 	const response = await httpClient.get("/speaking-tasks/2/summary");
-	console.log("getSpeakingTaskTwoSummaries response:", response.data);
+
 	return response.data; // just an array of { id, title, readingTitle }
 };
 

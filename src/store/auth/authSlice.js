@@ -103,9 +103,7 @@ export default authSlice.reducer;
 
 //Decouples role checking from the component logic.
 export const selectHasRole = (roles) => (state) => {
-	console.log("Checking if has roles:", roles);
-
 	const userRoles = selectUserRoles(state);
-	console.log("Current user roles:", userRoles);
+
 	return roles.some((r) => userRoles.includes(r));
 };
