@@ -42,7 +42,7 @@ function App() {
 				<Route element={<PrivateRoute />}>
 					<Route path="/my/classrooms" element={<UserClassrooms />}>
 						<Route
-							path=":id/test/:testId/part/:partNumber"
+							path=":id/test/:testId/part/:partNumber/*" /*Wildcard allows for the addition of "topic" at end of url when part 1 is selected*/
 							element={<Classroom />}
 						/>
 					</Route>

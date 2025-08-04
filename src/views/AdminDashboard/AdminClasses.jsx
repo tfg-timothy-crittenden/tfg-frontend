@@ -30,7 +30,6 @@ const AdminClasses = () => {
 		try {
 			const res = await fetchAllClassesAndTeachers();
 			setClasses(res.data);
-			console.log("Loaded classes in adminClasses:", res.data);
 		} catch (err) {
 			console.error("Error loading classes:", err);
 		} finally {

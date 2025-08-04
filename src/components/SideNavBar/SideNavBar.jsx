@@ -7,6 +7,7 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 import {
 	getClassroomStudentTaskSummaries,
 	getClassroomTeacherTaskSummaries,
+	getSpeakingTaskOneTopics,
 } from "@/api/tasks/tasksAPI";
 import { useSelector } from "react-redux";
 import { selectHasRole } from "@/store/auth/authSlice";
@@ -17,16 +18,19 @@ const SideNavBar = () => {
 
 	const activePart = partNumber ? `part${partNumber}` : "part1";
 
+	// State for task summaries for speaking parts 2, 3, and 4
 	const [studentTaskSummaries, setStudentTaskSummaries] = useState({});
 	const [teacherTaskSummaries, setTeacherTaskSummaries] = useState({});
+
+	// State for topics and current topic for Speaking Part 1
 	const [topics, setTopics] = useState([]);
-	const [topicData, setTopicData] = useState({});
 	const [currentTopic, setCurrentTopic] = useState(null);
 	const [showStudentList, setShowStudentList] = useState(true);
 	const [showTeacherList, setShowTeacherList] = useState(false);
 
 	const hasTeacherRole = useSelector(selectHasRole(["teacher"]));
 
+	//Load the titles of the parts of the tests assinged to the classroom
 	useEffect(() => {
 		getClassroomStudentTaskSummaries(classroomId)
 			.then(setStudentTaskSummaries)
@@ -41,21 +45,54 @@ const SideNavBar = () => {
 		}
 	}, [classroomId, hasTeacherRole]);
 
+	//Load the topics for speaking part 1
 	useEffect(() => {
 		const loadTopics = async () => {
 			try {
-				const response = await fetch("/questions_part_1_and_officials.json");
-				const data = await response.json();
-				setTopicData(data);
-				const keys = Object.keys(data);
-				setTopics(keys);
-				if (keys.length > 0) setCurrentTopic(keys[0]);
+				const topics = await getSpeakingTaskOneTopics();
+				console.log("Loaded topics:", topics);
+				setTopics(topics);
 			} catch (err) {
 				console.error("Error loading Part 1 topics:", err);
 			}
 		};
 		loadTopics();
 	}, []);
+
+	// Set the current topic based on the URL on initial render
+	useEffect(() => {
+		//Without this check, the component redirects back to part 1 when changing part
+		if (partNumber !== "1") return;
+
+		if (!Array.isArray(topics) || topics.length === 0) return;
+
+		let selectedTopic = topics[0]; // fallback default
+
+		if (partNumber === "1") {
+			const pathSegments = location.pathname.split("/");
+			const topicIndex = pathSegments.indexOf("topic");
+			const topicFromUrl =
+				topicIndex !== -1
+					? decodeURIComponent(pathSegments[topicIndex + 1])
+					: null;
+
+			if (topics.includes(topicFromUrl)) {
+				selectedTopic = topicFromUrl;
+			}
+		}
+
+		setCurrentTopic(selectedTopic);
+		navigate(
+			`/my/classrooms/${classroomId}/test/${testId}/part/1/topic/${selectedTopic}`
+		);
+	}, [topics, location.pathname]);
+
+	const handleTopicClick = (topic) => {
+		setCurrentTopic(topic);
+		navigate(
+			`/my/classrooms/${classroomId}/test/${testId}/part/1/topic/${topic}`
+		);
+	};
 
 	const studentCurrentList = studentTaskSummaries?.[activePart] || [];
 	const teacherCurrentList = teacherTaskSummaries?.[activePart] || [];
@@ -104,7 +141,7 @@ const SideNavBar = () => {
 				<SpeakingPart1QuestionSelector
 					topics={topics}
 					currentTopic={currentTopic}
-					handleTopicChange={setCurrentTopic}
+					handleTopicChange={handleTopicClick}
 				/>
 			) : (
 				<div className={styles.test_menu}>

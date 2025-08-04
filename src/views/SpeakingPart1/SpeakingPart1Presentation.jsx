@@ -7,7 +7,6 @@ import TimerWrapper from "@/components/TimerWrapper/TimerWrapper";
 import CountdownContainer from "@/components/CountdownTimer/CountdownContainer";
 
 const SpeakingPart1Presentation = ({
-	topics,
 	question,
 	mode,
 	setMode,
@@ -15,8 +14,6 @@ const SpeakingPart1Presentation = ({
 	modeTimeEnum,
 	time,
 	setTime,
-	handleTopicChange,
-	currentTopic,
 }) => {
 	return (
 		<>

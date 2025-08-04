@@ -20,8 +20,7 @@ const AdminTeachers = () => {
 				fetchInvitedTeachers(),
 				fetchActiveTeachers(),
 			]);
-			console.log("Invited teachers:", invitedRes.data);
-			console.log("Active teachers:", activeRes.data);
+
 			setInvited(invitedRes.data);
 			setActiveTeachers(activeRes.data);
 		} catch (err) {

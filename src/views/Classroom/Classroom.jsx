@@ -13,7 +13,8 @@ import style from "./Classroom.module.css";
 
 const Classroom = () => {
 	const { partNumber, testId } = useParams();
-	const { classrooms } = useOutletContext();
+
+	const { classrooms, partOneTopic } = useOutletContext();
 	const navigate = useNavigate();
 
 	const renderPart = () => {

@@ -25,7 +25,6 @@ const usePart = (customModeEnum, initialMode, fetchAllTasks, fetchTaskById) => {
 		if (testId) {
 			const result = await fetchTaskById(testId);
 			setCurrentTest(result);
-			console.log("Loaded test:", result);
 		} else {
 			console.warn("Tried to load an invalid test:", testId);
 		}
@@ -39,11 +38,10 @@ const usePart = (customModeEnum, initialMode, fetchAllTasks, fetchTaskById) => {
 				// Sort by id (assuming id is a string — adjust if it's numeric)
 				const sorted = [...data].sort((a, b) => Number(a.id) - Number(b.id));
 
-				console.log("Sorted tests:", sorted);
 				setTests(sorted);
 
 				const firstTest = sorted?.[0];
-				console.log("First test:", firstTest.id);
+
 				if (firstTest) loadTest(firstTest.id);
 			} catch (err) {
 				console.error("Error fetching tests:", err);

@@ -39,20 +39,28 @@ const UserClassrooms = () => {
 	// If at /my/classrooms — show classroom list
 	if (atRoot) {
 		return (
-			<div className={styles.classroomsContainer}>
+			<div className={styles.classrooms_container}>
 				<h2>Your Classrooms</h2>
-				<ul className={styles.classroomsList}>
-					{classrooms.map((classroom) => (
-						<li
-							key={classroom.id}
-							className={styles.classroomItem}
-							onClick={() =>
-								navigate(`/my/classrooms/${classroom.id}/test/1/part/1`)
-							}
-						>
-							{classroom.name}
-						</li>
-					))}
+				<ul className={styles.classrooms_list}>
+					{classrooms.map(
+						(classroom) => (
+							console.log(classroom),
+							(
+								<li
+									key={classroom.id}
+									className={styles.classroom_item}
+									onClick={() =>
+										navigate(`/my/classrooms/${classroom.id}/test/1/part/1`)
+									}
+								>
+									{classroom.name}
+									{classroom.description}
+									{classroom.teacher}
+									{classroom.joincode}
+								</li>
+							)
+						)
+					)}
 				</ul>
 			</div>
 		);

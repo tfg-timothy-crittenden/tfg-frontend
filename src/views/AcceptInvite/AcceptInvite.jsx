@@ -27,7 +27,7 @@ function AcceptInvitePage() {
 
 			try {
 				const data = await checkInviteToken(token);
-				console.log("Invite data:", data);
+
 				setInviteData(data); // contains name and email
 			} catch (err) {
 				const status = err?.response?.status;

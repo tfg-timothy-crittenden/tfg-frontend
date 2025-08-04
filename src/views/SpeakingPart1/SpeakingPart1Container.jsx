@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import SpeakingPart1Presentation from "./SpeakingPart1Presentation";
+import { getRandomSpeakingTaskOneByTopic } from "@/api/tasks/tasksAPI";
 
 const SpeakingPart1Container = () => {
-	const { currentTopic, handleTopicChange, topics, topicData } =
-		useOutletContext();
+	const location = useLocation();
+
+	// Extract the wildcard portion of the path
+	// Expected format: ".../part/1/topic/<topicName>"
+	const pathSegments = location.pathname.split("/");
+	const topicIndex = pathSegments.indexOf("topic");
+	const currentTopic =
+		topicIndex !== -1 ? decodeURIComponent(pathSegments[topicIndex + 1]) : null;
 
 	const modeEnum = Object.freeze({
 		PREPARE: "PREPARE",
@@ -19,30 +26,26 @@ const SpeakingPart1Container = () => {
 	const [time, setTime] = useState(modeTimeEnum.PREPARE * 1000);
 	const [mode, setMode] = useState(modeEnum.PREPARE);
 	const [question, setQuestion] = useState(null);
-	const [questionKey, setQuestionKey] = useState(0);
-
-	const handleTopicClick = (topic) => {
-		handleTopicChange(topic); // Updates currentTopic in parent
-		setQuestionKey(Date.now()); //
-	};
 
 	useEffect(() => {
-		if (!currentTopic || !topicData[currentTopic]) return;
+		if (!currentTopic) return;
 
-		const questions = topicData[currentTopic];
-		if (!questions || questions.length === 0) {
-			setQuestion({ question: "No questions available." });
-			return;
-		}
+		const asyncGetRandomQuestion = async () => {
+			try {
+				const newRandomQuestion = await getRandomSpeakingTaskOneByTopic(
+					currentTopic
+				);
+				setQuestion(newRandomQuestion);
+			} catch (error) {
+				console.error("Error fetching random question:", error);
+			}
+		};
 
-		// Randomly pick a new question on every key change
-		const randomIndex = Math.floor(Math.random() * questions.length);
-		setQuestion(questions[randomIndex]);
-	}, [currentTopic, topicData, questionKey]);
+		asyncGetRandomQuestion();
+	}, [currentTopic]);
 
 	return (
 		<SpeakingPart1Presentation
-			topics={topics}
 			question={question}
 			mode={mode}
 			setMode={setMode}
@@ -50,7 +53,6 @@ const SpeakingPart1Container = () => {
 			modeTimeEnum={modeTimeEnum}
 			time={time}
 			setTime={setTime}
-			handleTopicChange={handleTopicClick}
 			currentTopic={currentTopic}
 		/>
 	);

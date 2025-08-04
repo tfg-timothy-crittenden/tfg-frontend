@@ -14,7 +14,6 @@ const Header = () => {
 
 	const isAuthenticated = useSelector(selectIsAuthenticated);
 	const isAdmin = useSelector(selectHasRole(["admin"]));
-	console.log("isAdmin:", isAdmin);
 
 	const handleLogout = () => {
 		dispatch(logout());
