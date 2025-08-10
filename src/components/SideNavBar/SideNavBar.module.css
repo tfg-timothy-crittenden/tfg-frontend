@@ -12,7 +12,6 @@
 	transition: transform 0.3s ease;
 	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 	overflow: hidden;
-	z-index: 1000;
 }
 
 .expandedVisible {
@@ -155,7 +154,7 @@
 	display: flex;
 	justify-content: center;
 	cursor: pointer;
-	z-index: 1001;
+	z-index: 2;
 	transition: background-color 0.2s ease;
 	padding: 10px 5px;
 }

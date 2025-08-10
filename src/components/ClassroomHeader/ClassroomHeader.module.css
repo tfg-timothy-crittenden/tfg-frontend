@@ -20,3 +20,69 @@
 	background: #f9fafb;
 	color: #525252;
 }
+
+.classroomHeader_title {
+	color: #6080ac;
+}
+
+.classroom_nav_group_right {
+	align-self: center;
+	display: flex;
+	gap: 20px;
+	align-items: center;
+	margin-left: auto;
+	color: #6080ac;
+}
+
+.classroom_nav_group_right > div {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	cursor: pointer;
+}
+
+.classroom_join_code_container {
+	color: #6080ac;
+	font-size: 1.2rem;
+	margin-left: 30px;
+	display: flex;
+	align-items: center;
+}
+
+.classroom_join_code {
+	color: #6080ac;
+	font-weight: 550;
+	cursor: pointer;
+}
+
+.classroom_join_code_card {
+	border: solid 1px #eaeaea;
+	border-radius: 5px;
+	padding: 5px 10px;
+	display: flex;
+	align-items: center;
+	margin-left: 10px;
+}
+
+.classroom_join_code_card:hover {
+	background-color: #f9fafb;
+}
+
+.classroom_join_code_card:hover .maximize {
+	color: green;
+	transform: scale(1.1);
+}
+
+.maximize {
+	cursor: pointer;
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	margin-left: 10px;
+}
+
+/* Class code modal */
+.classroom_join_code_big {
+	font-size: 5rem;
+	font-weight: 550;
+}

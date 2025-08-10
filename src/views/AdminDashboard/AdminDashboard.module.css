@@ -1,8 +1,8 @@
 .container {
 	max-width: 1080px;
 	margin: 0 auto;
-
-	padding: 10px;
+	background-color: white;
+	padding: 20px;
 }
 
 .admin_dashboard_heading {
@@ -31,7 +31,6 @@
 }
 
 .navList .activeLink {
-	font-weight: bold;
-	color: bold;
+	color: darkblue;
 	border-bottom: solid 2px darkblue;
 }

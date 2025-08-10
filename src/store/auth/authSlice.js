@@ -4,10 +4,7 @@ import { loginRequest, meRequest } from "@/api/auth/authAPI";
 import { setAuthHeaders } from "@/api/httpClient";
 
 const initialToken = localStorage.getItem("token");
-
-if (initialToken) {
-	setAuthHeaders(initialToken);
-}
+if (initialToken) setAuthHeaders(initialToken);
 
 const initialState = {
 	user: null,
@@ -16,7 +13,7 @@ const initialState = {
 	error: null,
 };
 
-// Thunk for login
+// --- thunks (unchanged) ---
 export const login = createAsyncThunk(
 	"auth/login",
 	async (credentials, thunkAPI) => {
@@ -33,7 +30,6 @@ export const login = createAsyncThunk(
 	}
 );
 
-// Thunk for rehydrating authenticated user
 export const fetchMe = createAsyncThunk("auth/me", async (_, thunkAPI) => {
 	try {
 		const { user } = await meRequest();
@@ -48,6 +44,20 @@ const authSlice = createSlice({
 	name: "auth",
 	initialState,
 	reducers: {
+		// ✅ new: lets us set token+user directly (used after email verification)
+		setCredentials: (state, action) => {
+			const { token, user } = action.payload || {};
+			state.token = token || null;
+			state.user = user || null;
+			state.error = null;
+			if (token) {
+				localStorage.setItem("token", token);
+				setAuthHeaders(token);
+			} else {
+				localStorage.removeItem("token");
+				setAuthHeaders(null);
+			}
+		},
 		logout: (state) => {
 			state.user = null;
 			state.token = null;
@@ -88,22 +98,17 @@ const authSlice = createSlice({
 	},
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setCredentials } = authSlice.actions;
 
-// Selectors
+// selectors (unchanged)
 export const selectIsAuthenticated = (state) => !!state.auth.token;
 export const selectUser = (state) => state.auth.user;
-export const selectUserRoles = (state) => {
-	return state.auth.user?.roles || [];
-};
-
-export const selectUserRole = (state) => selectUserRoles(state)[0] || null; // For backwards compatibility
-
-export default authSlice.reducer;
-
-//Decouples role checking from the component logic.
+export const selectUsername = (state) => state.auth.user?.username || "Guest";
+export const selectUserRoles = (state) => state.auth.user?.roles || [];
+export const selectUserRole = (state) => selectUserRoles(state)[0] || null;
 export const selectHasRole = (roles) => (state) => {
 	const userRoles = selectUserRoles(state);
-
 	return roles.some((r) => userRoles.includes(r));
 };
+
+export default authSlice.reducer;

@@ -5,26 +5,19 @@ import Login from "@/views/Login/Login";
 import Unauthorised from "@/views/Unauthorised/Unauthorised";
 import AcceptInvite from "@/views/AcceptInvite/AcceptInvite";
 
-import Read from "@/components/Read/Read";
-import Listen from "@/components/Listen/ListenLectureContainer";
-import PrepareSpeak from "@/components/PrepareSpeak/PrepareSpeak";
-
-import SpeakingPart2Container from "@/views/SpeakingPart2/SpeakingPart2Container";
-
 import UserClassrooms from "@/views/UserClassrooms/UserClassrooms";
 
 import AdminDashboard from "@/views/AdminDashboard/AdminDashboard";
 import AdminTeachers from "@/views/AdminDashboard/AdminTeachers";
 import AdminClasses from "@/views/AdminDashboard/AdminClasses";
 import AdminMaterial from "@/views/AdminDashboard/AdminMaterial";
+import StudentSignup from "@/views/StudentSignup/StudentSignup";
+import EmailVerification from "@/views/EmailVerification/EmailVerification";
 
 import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
 import RoleRoute from "@/components/RoleRoute/RoleRoute";
 
-import SideNavBar from "@/components/SideNavBar/SideNavBar";
 import Classroom from "@/views/Classroom/Classroom";
-
-import ClassroomHeader from "./components/ClassroomHeader/ClassroomHeader";
 
 function App() {
 	return (
@@ -37,7 +30,10 @@ function App() {
 				<Route path="/login" element={<Login />} />
 				<Route path="/unauthorised" element={<Unauthorised />} />
 				<Route path="/invite/accept" element={<AcceptInvite />} />
-
+				<Route path="/signup" element={<StudentSignup />} />{" "}
+				{/* classCode provided in the URL */}
+				<Route path="/signup/:classCode" element={<StudentSignup />} />
+				<Route path="/verify-email/:token" element={<EmailVerification />} />
 				{/* Private Routes */}
 				<Route element={<PrivateRoute />}>
 					<Route path="/my/classrooms" element={<UserClassrooms />}>
@@ -47,7 +43,6 @@ function App() {
 						/>
 					</Route>
 				</Route>
-
 				{/* Admin Routes */}
 				<Route element={<RoleRoute allowedRoles={["admin"]} />}>
 					<Route path="/admin_dashboard" element={<AdminDashboard />}>

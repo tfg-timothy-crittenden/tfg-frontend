@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/store/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
+import styles from "./Login.module.css";
+
 const Login = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -26,14 +28,14 @@ const Login = () => {
 	// Redirect after successful login
 	useEffect(() => {
 		if (status === "succeeded" && token) {
-			navigate("/part_1");
+			navigate("/my/classrooms");
 		}
 	}, [status, token, navigate]);
 
 	return (
-		<div>
+		<div className={styles.login_container}>
 			<h2>Login</h2>
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit} className={styles.login_form}>
 				<input
 					type="text"
 					name="username"
@@ -50,11 +52,11 @@ const Login = () => {
 					onChange={handleChange}
 					required
 				/>
+				<span className={styles.forgot_password}>Forgot password?</span>
 				<button type="submit" disabled={status === "loading"}>
 					{status === "loading" ? "Logging in..." : "Login"}
 				</button>
 			</form>
-			{error && <p style={{ color: "red" }}>{error}</p>}
 		</div>
 	);
 };

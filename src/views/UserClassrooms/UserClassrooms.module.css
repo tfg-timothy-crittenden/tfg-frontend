@@ -1,34 +1,89 @@
-.classrooms_container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	background-color: white;
-	max-width: 1080px;
-	margin: 0 auto;
-	padding: 20px;
-}
-
-.classrooms_list {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: start;
-	gap: 20px;
-}
-
-.classroom_item {
-	cursor: pointer;
-	padding: 10px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	margin-bottom: 10px;
-	width: 100%;
-	text-align: center;
-	transition: background-color 0.3s ease;
+.classrooms_grid {
 	list-style: none;
-	width: 300px;
-	height: 200px;
+	margin: 0 auto;
+	padding: 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 16px;
+	max-width: 1080px;
 }
 
-.classroom_item:hover {
-	background-color: #f0f0f0;
+.classroom_card {
+	background: #fff;
+	border: 1px solid #e8e8ef;
+	border-radius: 14px;
+	padding: 16px;
+	cursor: pointer;
+	transition: box-shadow 0.2s ease, transform 0.06s ease;
+}
+.classroom_card:hover {
+	box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+}
+.classroom_card:active {
+	transform: translateY(1px);
+}
+
+.card_header {
+	margin-bottom: 8px;
+}
+.card_title {
+	font-weight: 700;
+	font-size: 1.05rem;
+}
+.card_subject {
+	color: #6b7280;
+	font-size: 0.9rem;
+}
+
+.card_meta {
+	margin: 8px 0 12px;
+}
+.meta_row {
+	display: flex;
+	gap: 8px;
+	font-size: 0.9rem;
+	margin-top: 4px;
+}
+.meta_label {
+	color: #6b7280;
+	min-width: 90px;
+}
+.meta_value {
+	color: #111827;
+}
+.meta_code {
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.materials_row {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 12px;
+}
+.badge {
+	display: inline-block;
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: #eef2ff;
+	color: #3730a3;
+	font-size: 0.85rem;
+	font-weight: 600;
+}
+.badge_alt {
+	background: #ecfeff;
+	color: #155e75;
+}
+
+.card_cta {
+	margin-top: 4px;
+	color: #3b82f6;
+	font-weight: 600;
+	font-size: 0.95rem;
+}
+.loading,
+.error,
+.emptyState {
+	text-align: center;
+	margin-top: 24px;
 }

@@ -23,7 +23,6 @@ const UserClassrooms = () => {
 				setLoading(false);
 			}
 		};
-
 		fetchClassrooms();
 	}, []);
 
@@ -31,42 +30,76 @@ const UserClassrooms = () => {
 	if (error) return <p className={styles.error}>{error}</p>;
 	if (classrooms.length === 0)
 		return (
-			<p className={styles.emptyState}>
-				You’re not enrolled in any classrooms yet.
-			</p>
+			<div className={styles.emptyWrap}>
+				<h2>Your Classrooms</h2>
+				<p className={styles.emptyState}>
+					You’re not enrolled in any classrooms yet.
+				</p>
+			</div>
 		);
 
-	// If at /my/classrooms — show classroom list
 	if (atRoot) {
 		return (
 			<div className={styles.classrooms_container}>
 				<h2>Your Classrooms</h2>
-				<ul className={styles.classrooms_list}>
-					{classrooms.map(
-						(classroom) => (
-							console.log(classroom),
-							(
-								<li
-									key={classroom.id}
-									className={styles.classroom_item}
-									onClick={() =>
-										navigate(`/my/classrooms/${classroom.id}/test/1/part/1`)
+
+				<ul className={styles.classrooms_grid}>
+					{classrooms.map((c) => {
+						const teacherLabel =
+							c.teachers && c.teachers.length
+								? c.teachers.join(", ")
+								: "Unassigned";
+
+						const showTeacherCount =
+							c.materials && typeof c.materials.teacher === "number";
+
+						return (
+							<li
+								key={c.id}
+								className={styles.classroom_card}
+								onClick={() => navigate(`/my/classrooms/${c.id}/test/1/part/1`)}
+								role="button"
+								tabIndex={0}
+								onKeyDown={(e) => {
+									if (e.key === "Enter" || e.key === " ") {
+										navigate(`/my/classrooms/${c.id}/test/1/part/1`);
 									}
-								>
-									{classroom.name}
-									{classroom.description}
-									{classroom.teacher}
-									{classroom.joincode}
-								</li>
-							)
-						)
-					)}
+								}}
+							>
+								<div className={styles.card_header}>
+									<div className={styles.card_title}>{c.name}</div>
+									{c.subject && (
+										<div className={styles.card_subject}>{c.subject}</div>
+									)}
+								</div>
+
+								<div className={styles.card_meta}>
+									<div className={styles.meta_row}>
+										<span className={styles.meta_label}>Teacher</span>
+										<span className={styles.meta_value}>{teacherLabel}</span>
+									</div>
+								</div>
+
+								<div className={styles.materials_row}>
+									<span className={styles.badge}>
+										Student material: {c.materials?.student ?? 0}
+									</span>
+									{showTeacherCount && (
+										<span className={`${styles.badge} ${styles.badge_alt}`}>
+											Teacher material: {c.materials.teacher}
+										</span>
+									)}
+								</div>
+
+								<div className={styles.card_cta}>View class</div>
+							</li>
+						);
+					})}
 				</ul>
 			</div>
 		);
 	}
 
-	// Otherwise render the slected classroom's outlet
 	return <Outlet context={{ classrooms }} />;
 };
 

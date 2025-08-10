@@ -1,0 +1,29 @@
+.wrap {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 10px;
+	background: #f8fafc; /* subtle, projector-friendly */
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.wrap:hover {
+	background-color: white;
+}
+
+.label {
+	color: #475569;
+	font-weight: 600;
+	margin-right: 2px;
+}
+
+/* Small screens */
+@media (max-width: 640px) {
+	.wrap {
+		gap: 6px;
+		padding: 6px 8px;
+	}
+}
