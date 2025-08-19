@@ -11,3 +11,12 @@
 	margin-top: 60px;
 }
 
+.class_members_wrapper {
+	margin: 0 auto;
+	width: 1080px;
+	height: calc(100vh - 120px);
+	padding: 20px;
+	background-color: #f9f9f9;
+	border: 1px solid #eee;
+	border-radius: 8px;
+}

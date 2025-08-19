@@ -3,6 +3,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { loginRequest, meRequest } from "@/api/auth/authAPI";
 import { setAuthHeaders } from "@/api/httpClient";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 const initialToken = localStorage.getItem("token");
 if (initialToken) setAuthHeaders(initialToken);
 
@@ -11,9 +13,10 @@ const initialState = {
 	token: initialToken || null,
 	status: "idle",
 	error: null,
+	userStatus: null, // For email-based auth method checking
 };
 
-// --- thunks (unchanged) ---
+// --- Existing thunks (unchanged) ---
 export const login = createAsyncThunk(
 	"auth/login",
 	async (credentials, thunkAPI) => {
@@ -40,11 +43,52 @@ export const fetchMe = createAsyncThunk("auth/me", async (_, thunkAPI) => {
 	}
 });
 
+// --- New OAuth-related thunks ---
+export const checkUserStatus = createAsyncThunk(
+	"auth/checkUserStatus",
+	async (email, { rejectWithValue }) => {
+		try {
+			const response = await fetch(`${API_BASE}/api/auth/status/${email}`);
+			const data = await response.json();
+
+			if (!response.ok) {
+				return rejectWithValue(data.message || "Failed to check user status");
+			}
+
+			return data;
+		} catch (error) {
+			return rejectWithValue(error.message);
+		}
+	}
+);
+
+// Handle OAuth callback (for when teachers return from Microsoft)
+export const handleOAuthCallback = createAsyncThunk(
+	"auth/oauthCallback",
+	async ({ token, user }, { rejectWithValue }) => {
+		try {
+			if (!token || !user) {
+				return rejectWithValue("Missing OAuth callback data");
+			}
+
+			const userData = typeof user === "string" ? JSON.parse(user) : user;
+
+			localStorage.setItem("token", token);
+			localStorage.setItem("user", JSON.stringify(userData));
+			setAuthHeaders(token);
+
+			return { token, user: userData };
+		} catch (error) {
+			return rejectWithValue("Failed to process OAuth callback");
+		}
+	}
+);
+
 const authSlice = createSlice({
 	name: "auth",
 	initialState,
 	reducers: {
-		// ✅ new: lets us set token+user directly (used after email verification)
+		// ✅ existing: lets us set token+user directly (used after email verification)
 		setCredentials: (state, action) => {
 			const { token, user } = action.payload || {};
 			state.token = token || null;
@@ -61,14 +105,31 @@ const authSlice = createSlice({
 		logout: (state) => {
 			state.user = null;
 			state.token = null;
+			state.userStatus = null;
 			localStorage.removeItem("token");
+			localStorage.removeItem("user");
 			setAuthHeaders(null);
+		},
+		clearError: (state) => {
+			state.error = null;
+		},
+		resetUserStatus: (state) => {
+			state.userStatus = null;
+		},
+		// For handling OAuth redirects
+		initiateOAuthLogin: (state, action) => {
+			const { provider } = action.payload;
+			state.status = "loading";
+			state.error = null;
+			// Redirect will happen in component
 		},
 	},
 	extraReducers: (builder) => {
 		builder
+			// Existing login cases
 			.addCase(login.pending, (state) => {
 				state.status = "loading";
+				state.error = null;
 			})
 			.addCase(login.fulfilled, (state, action) => {
 				state.status = "succeeded";
@@ -80,6 +141,7 @@ const authSlice = createSlice({
 				state.status = "failed";
 				state.error = action.payload;
 			})
+			// Existing fetchMe cases
 			.addCase(fetchMe.pending, (state) => {
 				state.status = "loading";
 			})
@@ -93,12 +155,47 @@ const authSlice = createSlice({
 				state.user = null;
 				state.token = null;
 				localStorage.removeItem("token");
+				localStorage.removeItem("user");
+				state.error = action.payload;
+			})
+			// New OAuth cases
+			.addCase(checkUserStatus.pending, (state) => {
+				state.status = "loading";
+				state.error = null;
+			})
+			.addCase(checkUserStatus.fulfilled, (state, action) => {
+				state.status = "idle";
+				state.userStatus = action.payload;
+				state.error = null;
+			})
+			.addCase(checkUserStatus.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.payload;
+			})
+			.addCase(handleOAuthCallback.pending, (state) => {
+				state.status = "loading";
+				state.error = null;
+			})
+			.addCase(handleOAuthCallback.fulfilled, (state, action) => {
+				state.status = "succeeded";
+				state.user = action.payload.user;
+				state.token = action.payload.token;
+				state.error = null;
+			})
+			.addCase(handleOAuthCallback.rejected, (state, action) => {
+				state.status = "failed";
 				state.error = action.payload;
 			});
 	},
 });
 
-export const { logout, setCredentials } = authSlice.actions;
+export const {
+	logout,
+	setCredentials,
+	clearError,
+	resetUserStatus,
+	initiateOAuthLogin,
+} = authSlice.actions;
 
 // selectors (unchanged)
 export const selectIsAuthenticated = (state) => !!state.auth.token;
@@ -110,5 +207,10 @@ export const selectHasRole = (roles) => (state) => {
 	const userRoles = selectUserRoles(state);
 	return roles.some((r) => userRoles.includes(r));
 };
+
+// New OAuth-related selectors
+export const selectUserStatus = (state) => state.auth.userStatus;
+export const selectAuthStatus = (state) => state.auth.status;
+export const selectAuthError = (state) => state.auth.error;
 
 export default authSlice.reducer;

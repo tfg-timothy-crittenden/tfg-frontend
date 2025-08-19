@@ -5,7 +5,7 @@ import styles from "./JoinCodeBar.module.css";
 const JoinCodeBar = ({ code, onOpenModal }) => {
 	return (
 		<div className={styles.wrap} role="group" aria-label="Class join code">
-			<span className={styles.label}>Invite Members</span>
+			<span className={styles.label}>Invite</span>
 
 			<UserRoundPlus />
 		</div>

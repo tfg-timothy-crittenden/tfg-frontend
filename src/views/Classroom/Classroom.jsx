@@ -64,7 +64,9 @@ const Classroom = () => {
 					</div>
 				</div>
 			) : (
-				<ViewClassMembers />
+				<div className={style.test_wrapper}>
+					<ViewClassMembers />
+				</div>
 			)}
 		</div>
 	);

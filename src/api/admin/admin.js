@@ -1,7 +1,10 @@
 import httpClient from "@/api/httpClient";
 
 export const inviteTeacher = ({ name, email }) => {
-	return httpClient.post("/admin/invite-teacher", { name, email });
+	return httpClient.post("/admin/teachers/invite", {
+		name,
+		email,
+	});
 };
 
 export const createClass = (classData) => {

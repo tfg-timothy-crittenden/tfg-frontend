@@ -1,57 +1,64 @@
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
-
+// App.jsx
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Suspense } from "react";
 import Header from "@/components/Header/Header";
-import Login from "@/views/Login/Login";
-import Unauthorised from "@/views/Unauthorised/Unauthorised";
-import AcceptInvite from "@/views/AcceptInvite/AcceptInvite";
-
-import UserClassrooms from "@/views/UserClassrooms/UserClassrooms";
-
-import AdminDashboard from "@/views/AdminDashboard/AdminDashboard";
-import AdminTeachers from "@/views/AdminDashboard/AdminTeachers";
-import AdminClasses from "@/views/AdminDashboard/AdminClasses";
-import AdminMaterial from "@/views/AdminDashboard/AdminMaterial";
-import StudentSignup from "@/views/StudentSignup/StudentSignup";
-import EmailVerification from "@/views/EmailVerification/EmailVerification";
-
 import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
 import RoleRoute from "@/components/RoleRoute/RoleRoute";
+import AuthCallback from "@/views/AuthCallback/AuthCallback";
 
-import Classroom from "@/views/Classroom/Classroom";
+import {
+	OAuthLogin,
+	Unauthorised,
+	UserClassrooms,
+	Classroom,
+	AdminDashboard,
+	AdminTeachers,
+	AdminClasses,
+	AdminMaterial,
+	StudentSignup,
+	EmailVerification,
+} from "@/routes/lazyRoutes";
+
+const Fallback = () => <div style={{ padding: 24 }}>Loading…</div>;
 
 function App() {
 	return (
 		<>
 			<Header />
+			<Suspense fallback={<Fallback />}>
+				<Routes>
+					{/* Public */}
+					<Route path="/login" element={<OAuthLogin />} />
+					<Route path="/auth/callback" element={<AuthCallback />} />
 
-			<Routes>
-				{/* Public Routes */}
-				<Route path="/" element={<Navigate to="/login" replace />} />
-				<Route path="/login" element={<Login />} />
-				<Route path="/unauthorised" element={<Unauthorised />} />
-				<Route path="/invite/accept" element={<AcceptInvite />} />
-				<Route path="/signup" element={<StudentSignup />} />{" "}
-				{/* classCode provided in the URL */}
-				<Route path="/signup/:classCode" element={<StudentSignup />} />
-				<Route path="/verify-email/:token" element={<EmailVerification />} />
-				{/* Private Routes */}
-				<Route element={<PrivateRoute />}>
-					<Route path="/my/classrooms" element={<UserClassrooms />}>
-						<Route
-							path=":id/test/:testId/part/:partNumber/*" /*Wildcard allows for the addition of "topic" at end of url when part 1 is selected*/
-							element={<Classroom />}
-						/>
+					{/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
+
+					<Route path="/unauthorised" element={<Unauthorised />} />
+					{/* <Route path="/invite/accept" element={<AcceptInvite />} /> */}
+					<Route path="/signup" element={<StudentSignup />} />
+					<Route path="/signup/:classCode" element={<StudentSignup />} />
+					<Route path="/verify-email/:token" element={<EmailVerification />} />
+					<Route path="/verify-email" element={<EmailVerification />} />
+					{/* Private */}
+					<Route element={<PrivateRoute />}>
+						<Route path="/my/classrooms" element={<UserClassrooms />}>
+							<Route
+								path=":id/test/:testId/part/:partNumber/*"
+								element={<Classroom />}
+							/>
+						</Route>
 					</Route>
-				</Route>
-				{/* Admin Routes */}
-				<Route element={<RoleRoute allowedRoles={["admin"]} />}>
-					<Route path="/admin_dashboard" element={<AdminDashboard />}>
-						<Route path="teachers" element={<AdminTeachers />} />
-						<Route path="classes" element={<AdminClasses />} />
-						<Route path="materials" element={<AdminMaterial />} />
+					{/* Admin-only */}
+					<Route element={<RoleRoute allowedRoles={["admin"]} />}>
+						<Route path="/admin_dashboard" element={<AdminDashboard />}>
+							<Route path="teachers" element={<AdminTeachers />} />
+							<Route path="classes" element={<AdminClasses />} />
+							<Route path="materials" element={<AdminMaterial />} />
+						</Route>
 					</Route>
-				</Route>
-			</Routes>
+					{/* 404 */}
+				</Routes>
+			</Suspense>
 		</>
 	);
 }
