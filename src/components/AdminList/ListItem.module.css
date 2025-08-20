@@ -1,0 +1,95 @@
+/* ListItem component styles */
+
+/* Main item row */
+.itemRow {
+	display: flex;
+	align-items: center;
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid #eee;
+	transition: background-color 0.2s ease;
+}
+
+.itemRow:last-child {
+	border-bottom: none;
+}
+
+.itemRow:nth-child(even) {
+	background-color: #fafafa;
+}
+
+.itemRow:hover {
+	background-color: #f0f0f0;
+}
+
+/* Checkbox container */
+.checkbox_container {
+	display: flex;
+	align-items: center;
+	margin-right: 1rem;
+	justify-content: center;
+}
+
+.checkbox_container input {
+	transform: scale(1.2);
+	cursor: pointer;
+}
+
+/* Content container */
+.content {
+	flex: 1;
+	margin: 0 20px;
+}
+
+/* Kebab menu styles */
+.kebabContainer {
+	margin-left: auto;
+	position: relative;
+}
+
+.kebab_button {
+	cursor: pointer;
+	padding: 0.25rem;
+	border-radius: 4px;
+	transition: background-color 0.2s ease;
+}
+
+.kebab_button:hover {
+	background-color: #f0f0f0;
+}
+
+.kebabDropdown {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	background: white;
+	border: 1px solid #ddd;
+	border-radius: 6px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	min-width: 140px;
+	z-index: 1000;
+}
+
+/* Dropdown items */
+.dropdownItem {
+	display: block;
+	width: 100%;
+	padding: 0.75rem 1rem;
+	border: none;
+	background: none;
+	text-align: left;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	font-size: 0.9rem;
+}
+
+.dropdownItem:hover {
+	background-color: #f5f5f5;
+}
+
+.dropdownItem:first-child {
+	border-radius: 6px 6px 0 0;
+}
+
+.dropdownItem:last-child {
+	border-radius: 0 0 6px 6px;
+}

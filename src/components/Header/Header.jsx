@@ -99,7 +99,11 @@ const Header = () => {
 						ref={dropdownRef}
 						onClick={() => setShowUserMenu((prev) => !prev)}
 					>
-						<CircleUser size={40} style={{ cursor: "pointer" }} />
+						<CircleUser
+							size={40}
+							style={{ cursor: "pointer" }}
+							strokeWidth={1}
+						/>
 						<div className={styles.userInfo}>
 							<span className={styles.username}>{username}</span>
 							<span className={styles.role}>{displayRole}</span>

@@ -7,6 +7,10 @@ export const inviteTeacher = ({ name, email }) => {
 	});
 };
 
+export const removeTeacherFromSchool = (teacherId) => {
+	return httpClient.delete(`/admin/teachers/${teacherId}`);
+};
+
 export const createClass = (classData) => {
 	return httpClient.post("/admin/classes", classData);
 };

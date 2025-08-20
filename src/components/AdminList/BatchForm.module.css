@@ -1,0 +1,167 @@
+/* BatchForm component styles */
+.batchForm {
+	margin-top: 2rem;
+	padding: 1.5rem;
+	background: #f8f9fa;
+	border-radius: 8px;
+	border: 1px solid #e9ecef;
+}
+
+.title {
+	margin: 0 0 1.5rem 0;
+	color: #333;
+	font-size: 1.1rem;
+}
+
+.addButtonContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 1rem;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.addButton {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background: white;
+	border: 1px solid #ddd;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease;
+}
+
+.addButton:hover:not(:disabled) {
+	border-color: #007bff;
+	box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1);
+}
+
+.addButton:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	background: #f5f5f5;
+}
+
+.limitMessage {
+	margin: 0;
+	font-size: 0.9rem;
+	color: #666;
+	text-align: center;
+}
+
+.formRow {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.75rem;
+	background: white;
+	border: 1px solid #e9ecef;
+	border-radius: 6px;
+	margin-bottom: 0.5rem;
+	transition: border-color 0.2s ease;
+}
+
+.formRow:hover {
+	border-color: #ced4da;
+}
+
+.errorRow {
+	border-color: #dc3545;
+	background-color: #fff5f5;
+}
+
+.fieldContainer {
+	flex: 1;
+}
+
+.input {
+	width: 100%;
+	padding: 0.5rem;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 0.9rem;
+	transition: border-color 0.2s ease;
+}
+
+.input:focus {
+	outline: none;
+	border-color: #007bff;
+	box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.removeButton {
+	width: 32px;
+	height: 32px;
+	border: none;
+	background: #f8f9fa;
+	border-radius: 4px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #6c757d;
+	transition: all 0.2s ease;
+	flex-shrink: 0;
+}
+
+.removeButton:hover {
+	background: #e9ecef;
+	color: #dc3545;
+}
+
+.submitButton {
+	width: 100%;
+	padding: 0.75rem 1.5rem;
+	background: #007bff;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	margin-top: 1rem;
+}
+
+.submitButton:hover:not(:disabled) {
+	background: #0056b3;
+}
+
+.submitButton:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.messages {
+	margin-top: 1rem;
+	max-height: 200px;
+	overflow-y: auto;
+}
+
+.message {
+	padding: 0.5rem 0.75rem;
+	margin-bottom: 0.5rem;
+	border-radius: 4px;
+	font-size: 0.9rem;
+}
+
+.message.success {
+	background: #d4edda;
+	color: #155724;
+	border: 1px solid #c3e6cb;
+}
+
+.message.error {
+	background: #f8d7da;
+	color: #721c24;
+	border: 1px solid #f5c6cb;
+}
+
+.message.info {
+	background: #d1ecf1;
+	color: #0c5460;
+	border: 1px solid #bee5eb;
+}

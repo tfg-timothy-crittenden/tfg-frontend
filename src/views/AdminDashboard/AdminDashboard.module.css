@@ -17,7 +17,7 @@
 	display: flex;
 	justify-content: start;
 	margin-bottom: 60px;
-	border-bottom: solid 2px lightgrey;
+	border-bottom: solid 1px lightgrey;
 }
 
 .navList li {
@@ -28,9 +28,14 @@
 	text-decoration: none;
 	color: #333;
 	padding-bottom: 10px;
+	border-bottom: solid 2px transparent; /* Prevents undesired animation effect on hover */
+	transition: border-color 0.3s ease, border-width 0.1s ease;
+}
+
+.navList a:hover:not(.activeLink) {
+	border-bottom: solid 2px lightblue;
 }
 
 .navList .activeLink {
-	color: darkblue;
 	border-bottom: solid 2px darkblue;
 }

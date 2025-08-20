@@ -1,0 +1,63 @@
+/* TeacherItem component styles */
+
+/* Main teacher container */
+.teacherContainer {
+	display: flex;
+	align-items: center;
+	flex: 1;
+}
+
+/* Teacher icon */
+.teacherIcon {
+	margin-right: 1rem;
+	flex-shrink: 0;
+	color: #007bff;
+}
+
+/* Teacher information section */
+.teacherInfo {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+	flex: 1;
+}
+
+.teacherName {
+	font-weight: 500;
+	color: #333;
+}
+
+.teacherEmail {
+	font-size: 0.85rem;
+	color: #666;
+	font-weight: normal;
+}
+
+/* Invited teacher status styles */
+.invited {
+	opacity: 0.6;
+}
+
+.invitedIcon {
+	color: #999 !important;
+	opacity: 0.7;
+}
+
+.invitedName {
+	color: #999;
+}
+
+.invitedEmail {
+	color: #bbb;
+}
+
+.invitedStatus {
+	margin-left: 0.5rem;
+	font-size: 0.8rem;
+	color: #666;
+	font-style: italic;
+	background-color: #f0f0f0;
+	padding: 0.2rem 0.5rem;
+	border-radius: 12px;
+	text-transform: lowercase;
+}

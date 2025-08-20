@@ -65,3 +65,10 @@
 	fill: red;
 	stroke: red;
 }
+
+.addPersonButtonContainer {
+	display: flex;
+	align-items: center;
+	margin-top: 35px;
+	justify-content: center;
+}

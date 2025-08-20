@@ -71,7 +71,7 @@ const UserClassrooms = () => {
 	if (atRoot) {
 		return (
 			<div className={styles.classrooms_container}>
-				<h2>Your Classrooms</h2>
+				<h2 className={styles.classrooms_title}>Your Classrooms</h2>
 
 				{classrooms.length === 0 && (
 					<div className={styles.emptyWrap}>
@@ -136,7 +136,7 @@ const UserClassrooms = () => {
 					{/* Join-a-class card */}
 					<li
 						key="join-card"
-						className={styles.classroom_card}
+						className={styles.join_class_card}
 						role="button"
 						tabIndex={0}
 						onClick={() => setJoinOpen((v) => !v)}
@@ -149,21 +149,15 @@ const UserClassrooms = () => {
 								className={styles.card_title}
 								style={{ display: "flex", alignItems: "center", gap: 8 }}
 							>
-								<Plus size={18} />
-								Join a class
+								<Plus size={34} />
 							</div>
 						</div>
 
 						{!joinOpen ? (
 							<>
 								<div className={styles.card_meta}>
-									<div className={styles.meta_row}>
-										<span className={styles.meta_value}>
-											Click to enter a code and join a class.
-										</span>
-									</div>
+									<div className={styles.meta_row}></div>
 								</div>
-								<div className={styles.card_cta}>Enter code</div>
 							</>
 						) : (
 							<>
