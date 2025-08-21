@@ -42,8 +42,15 @@ function App() {
 					{/* Private */}
 					<Route element={<PrivateRoute />}>
 						<Route path="/my/classrooms" element={<UserClassrooms />}>
+							{/* Welcome route - no test selected */}
+							<Route path=":id" element={<Classroom />} />
+							{/* Test routes */}
 							<Route
 								path=":id/test/:testId/part/:partNumber/*"
+								element={<Classroom />}
+							/>
+							<Route
+								path=":id/test/:testId/instructions"
 								element={<Classroom />}
 							/>
 						</Route>

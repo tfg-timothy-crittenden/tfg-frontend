@@ -28,12 +28,12 @@
 }
 
 .activeLink {
-	border-bottom: solid 2px #5d92c0;
-	color: #5d92c0;
+	border-bottom: solid 2px var(--color-primary);
+	color: var(--color-primary);
 }
 
 .inactiveLink {
-	background-color: white;
-	color: grey;
-	border-bottom: 2px solid rgb(237, 237, 237);
+	background-color: var(--color-background);
+	color: var(--color-text-muted);
+	border-bottom: 2px solid var(--color-border);
 }

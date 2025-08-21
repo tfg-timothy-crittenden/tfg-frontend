@@ -4,9 +4,9 @@
 	align-items: center;
 	height: 80px;
 	position: relative;
-	border-bottom: 1px solid #e7e7e7;
-	background-color: #f8fafd;
-	color: #454336;
+	border-bottom: 1px solid var(--color-border);
+	background-color: var(--color-background-alt);
+	color: var(--color-text);
 }
 
 .title {
@@ -15,6 +15,7 @@
 	transform: translateX(-50%);
 	font-size: 2rem;
 	font-weight: bold;
+	color: var(--color-secondary);
 }
 
 .buttonGroup {
@@ -47,11 +48,12 @@
 	font-weight: 600;
 	font-size: 14px;
 	margin-bottom: 5px;
+	color: var(--color-text);
 }
 
 .role {
 	font-size: 12px;
-	color: #626262;
+	color: var(--color-text-secondary);
 }
 
 .role::before {
@@ -67,11 +69,11 @@
 	position: absolute;
 	top: 100%;
 	right: 0;
-	background-color: white;
-	color: black;
-	border: 1px solid #ccc;
+	background-color: var(--color-background);
+	color: var(--color-text);
+	border: 1px solid var(--color-border);
 	border-radius: 4px;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	box-shadow: var(--shadow-md);
 	min-width: 160px;
 	z-index: 1000;
 	padding: 5px 0;
@@ -81,29 +83,31 @@
 	padding: 10px 14px;
 	cursor: pointer;
 	white-space: nowrap;
+	color: var(--color-text);
 }
 
 .dropdown div:hover {
-	background-color: #f0f0f0;
+	background-color: var(--color-background-alt);
 }
 
 .dropdownHeader {
 	padding: 10px 14px;
 	font-weight: bold;
-	background-color: #f5f5f5;
-	border-bottom: 1px solid #ddd;
+	background-color: var(--color-background-alt);
+	border-bottom: 1px solid var(--color-border);
 	cursor: default;
 	pointer-events: none;
-	color: #333;
+	color: var(--color-text);
 }
 
 .nav_item_border {
-	border-right: 1px solid #ccc;
+	border-right: 1px solid var(--color-border);
 }
 
 .nav_item_container:hover {
-	background-color: rgb(224 225 225 / 44%);
+	background-color: var(--color-hover);
 }
+
 .activeLink {
-	background-color: rgb(241 127 157 / 38%);
+	background-color: var(--color-primary-light);
 }

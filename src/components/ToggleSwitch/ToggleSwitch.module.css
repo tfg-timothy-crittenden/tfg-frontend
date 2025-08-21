@@ -1,11 +1,19 @@
+.toggle_container {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	max-width: max-content;
+	margin: 10px auto;
+}
+
 .toggle_group {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	background-color: var(--color-background);
+	overflow: hidden;
 	max-width: max-content;
 	margin: 10px auto;
-	background-color: white;
-	overflow: hidden;
 }
 
 /* Hide the default radio button */
@@ -26,18 +34,47 @@
 .toggle_group input[type="radio"] + label {
 	cursor: pointer;
 	padding: 10px 20px;
-	border-bottom: 2px solid #5d92c0;
-	color: #5d92c0;
+	border-bottom: 2px solid var(--color-primary);
+	color: var(--color-primary);
 	transition: all 0.3s ease;
 }
 
-/* Change the color of the label when the icon is selected */
+/* Change the color of the label when the icon is not selected */
 .toggle_group input[type="radio"]:not(:is(:checked)) + label {
-	border-bottom: rgb(237, 237, 237) 2px solid;
-	color: gray;
+	border-bottom: var(--color-border) 2px solid;
+	color: var(--color-text-muted);
 }
 
-.toggle_icon {
-	width: 24px;
-	height: 24px;
+.next_button,
+.prev_button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	background-color: var(--color-background-alt);
+	color: var(--color-text);
+	border: 1px solid var(--color-border);
+	border-radius: 50%;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.next_button:hover,
+.prev_button:hover {
+	background-color: var(--color-background-disabled);
+	border-color: var(--color-text-secondary);
+}
+
+.next_button:hover {
+	transform: translateX(2px);
+}
+
+.prev_button:hover {
+	transform: translateX(-2px);
+}
+
+.next_button:active,
+.prev_button:active {
+	transform: scale(0.95);
 }

@@ -9,7 +9,7 @@
 	padding: 0.2rem 0.2rem 0rem 0.2rem;
 
 	margin: 2px;
-	color: #555555;
+	color: var(--color-text-secondary);
 	cursor: pointer;
 	border: none;
 	background-color: transparent;
@@ -17,7 +17,7 @@
 }
 
 .btn:hover {
-	color: grey;
+	color: var(--color-text-muted);
 	border-color: grey;
 }
 
@@ -38,13 +38,13 @@
 }
 
 .stop:disabled {
-	color: #dbdbdb;
+	color: var(--color-text-disabled);
 	cursor: default;
 }
 
 .stop:disabled:hover {
-	color: #dbdbdb;
-	border-color: #dbdbdb;
+	color: var(--color-text-disabled);
+	border-color: var(--color-text-disabled);
 	cursor: default;
 }
 
@@ -53,7 +53,7 @@
 }
 
 .reset:hover {
-	color: #c82333;
+	color: var(--color-error-hover);
 }
 
 .reset:focus {

@@ -2,14 +2,14 @@
 .batchForm {
 	margin-top: 2rem;
 	padding: 1.5rem;
-	background: #f8f9fa;
+	background: var(--color-background-alt);
 	border-radius: 8px;
-	border: 1px solid #e9ecef;
+	border: 1px solid var(--color-border);
 }
 
 .title {
 	margin: 0 0 1.5rem 0;
-	color: #333;
+	color: var(--color-text);
 	font-size: 1.1rem;
 }
 
@@ -26,8 +26,8 @@
 	width: 48px;
 	height: 48px;
 	border-radius: 50%;
-	background: white;
-	border: 1px solid #ddd;
+	background: var(--color-background);
+	border: 1px solid var(--color-border);
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -36,20 +36,20 @@
 }
 
 .addButton:hover:not(:disabled) {
-	border-color: #007bff;
-	box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1);
+	border-color: var(--color-primary);
+	box-shadow: 0 2px 4px rgba(93, 146, 192, 0.1);
 }
 
 .addButton:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
-	background: #f5f5f5;
+	background: var(--color-background-alt);
 }
 
 .limitMessage {
 	margin: 0;
 	font-size: 0.9rem;
-	color: #666;
+	color: var(--color-text-secondary);
 	text-align: center;
 }
 
@@ -58,20 +58,20 @@
 	align-items: center;
 	gap: 0.5rem;
 	padding: 0.75rem;
-	background: white;
-	border: 1px solid #e9ecef;
+	background: var(--color-background);
+	border: 1px solid var(--color-border);
 	border-radius: 6px;
 	margin-bottom: 0.5rem;
 	transition: border-color 0.2s ease;
 }
 
 .formRow:hover {
-	border-color: #ced4da;
+	border-color: var(--color-border);
 }
 
 .errorRow {
-	border-color: #dc3545;
-	background-color: #fff5f5;
+	border-color: var(--color-error);
+	background-color: var(--color-error-light);
 }
 
 .fieldContainer {
@@ -81,7 +81,7 @@
 .input {
 	width: 100%;
 	padding: 0.5rem;
-	border: 1px solid #ddd;
+	border: 1px solid var(--color-border);
 	border-radius: 4px;
 	font-size: 0.9rem;
 	transition: border-color 0.2s ease;
@@ -89,34 +89,34 @@
 
 .input:focus {
 	outline: none;
-	border-color: #007bff;
-	box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 2px rgba(93, 146, 192, 0.1);
 }
 
 .removeButton {
 	width: 32px;
 	height: 32px;
 	border: none;
-	background: #f8f9fa;
+	background: var(--color-background-alt);
 	border-radius: 4px;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: #6c757d;
+	color: var(--color-text-secondary);
 	transition: all 0.2s ease;
 	flex-shrink: 0;
 }
 
 .removeButton:hover {
-	background: #e9ecef;
-	color: #dc3545;
+	background: var(--color-border);
+	color: var(--color-error);
 }
 
 .submitButton {
 	width: 100%;
 	padding: 0.75rem 1.5rem;
-	background: #007bff;
+	background: var(--color-primary);
 	color: white;
 	border: none;
 	border-radius: 6px;
@@ -127,7 +127,7 @@
 }
 
 .submitButton:hover:not(:disabled) {
-	background: #0056b3;
+	background: var(--color-primary-hover);
 }
 
 .submitButton:disabled {
@@ -149,19 +149,19 @@
 }
 
 .message.success {
-	background: #d4edda;
-	color: #155724;
-	border: 1px solid #c3e6cb;
+	background: var(--color-success-light);
+	color: var(--color-success);
+	border: 1px solid var(--color-success);
 }
 
 .message.error {
-	background: #f8d7da;
-	color: #721c24;
-	border: 1px solid #f5c6cb;
+	background: var(--color-error-light);
+	color: var(--color-error-dark);
+	border: 1px solid var(--color-error);
 }
 
 .message.info {
-	background: #d1ecf1;
-	color: #0c5460;
-	border: 1px solid #bee5eb;
+	background: var(--color-info-light);
+	color: var(--color-info);
+	border: 1px solid var(--color-info);
 }

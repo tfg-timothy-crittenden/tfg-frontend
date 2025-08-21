@@ -19,7 +19,7 @@
 }
 
 .material_list_container {
-	border: solid 1px #ccc;
+	border: solid 1px var(--color-border);
 }
 
 .transfer_buttons {
@@ -33,7 +33,7 @@
 .list {
 	min-width: 200px;
 	padding: 10px;
-	background-color: white;
-	border: 1px solid #ccc;
+	background-color: var(--color-background);
+	border: 1px solid var(--color-border);
 	border-radius: 5px;
 }

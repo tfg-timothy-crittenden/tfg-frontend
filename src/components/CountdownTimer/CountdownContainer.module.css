@@ -6,13 +6,13 @@
 }
 
 .container {
-	color: #474747;
+	color: var(--color-text-secondary);
 	text-align: center;
 
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background-color: rgb(240, 243, 244);
+	background-color: var(--color-background-alt);
 	padding: 10px 20px;
 	border-radius: 30px;
 	max-width: 600px;

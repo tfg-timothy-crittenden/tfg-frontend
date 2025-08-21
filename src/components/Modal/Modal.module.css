@@ -13,9 +13,9 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background: white;
+	background: var(--color-background);
 	padding: 10px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	box-shadow: var(--shadow-lg);
 	z-index: 1000;
 	border-radius: 5px;
 }
@@ -40,8 +40,8 @@
 }
 
 .modal_close_button:hover {
-	color: #ff0000;
-	background-color: rgb(255, 216, 144);
+	color: var(--color-error);
+	background-color: var(--color-warning-light);
 }
 
 .modal_body {

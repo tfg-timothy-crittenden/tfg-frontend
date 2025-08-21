@@ -7,10 +7,10 @@
 	top: 0px;
 	left: 0;
 	height: 100%;
-	background-color: white;
+	background-color: var(--color-background);
 	transform: translateX(-320px);
 	transition: transform 0.3s ease;
-	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+	box-shadow: var(--shadow-md);
 	overflow: hidden;
 }
 
@@ -29,11 +29,11 @@
 
 .test_menu_section {
 	margin-bottom: 20px;
-	background: #fff;
+	background: var(--color-background);
 	border-radius: 8px;
 
 	overflow: hidden;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+	box-shadow: var(--shadow-sm);
 }
 
 .accordion_wrapper {
@@ -55,9 +55,9 @@
 	padding: 12px 16px;
 	font-weight: 600;
 	font-size: 15px;
-	background-color: #f9fafb;
+	background-color: var(--color-background-alt);
 	cursor: pointer;
-	border-bottom: 1px solid #e5e7eb;
+	border-bottom: 1px solid var(--color-border);
 	user-select: none;
 }
 
@@ -83,8 +83,8 @@
 
 .list_item {
 	padding: 12px 16px;
-	border-bottom: 1px solid #f3f4f6;
-	background: white;
+	border-bottom: 1px solid var(--color-border);
+	background: var(--color-background);
 	cursor: pointer;
 	transition: background-color 0.2s ease;
 	border-left: 4px solid transparent;
@@ -93,23 +93,23 @@
 }
 
 .list_item:hover {
-	background-color: #f9fafb;
+	background-color: var(--color-background-alt);
 }
 
 .active {
-	background-color: #e0f2fe;
-	border-left-color: #3b82f6;
+	background-color: var(--color-primary-light);
+	border-left-color: var(--color-primary);
 }
 
 .test_title {
 	font-weight: 600;
 	font-size: 15px;
-	color: #111827;
+	color: var(--color-text);
 }
 
 .reading_title {
 	font-size: 13px;
-	color: #6b7280;
+	color: var(--color-text-secondary);
 	margin-top: 4px;
 }
 .sidebar_toggle {
@@ -130,12 +130,12 @@
 }
 
 .sidebar_toggle:hover {
-	background-color: #f3f4f6;
+	background-color: var(--color-background-alt);
 }
 
 /* Select all children of .sidebar_bar when hovered - in this case, the open sidebar button */
 .sidebar_bar:hover > * {
-	background-color: white;
+	background-color: var(--color-background);
 }
 
 .margin_right {
@@ -149,8 +149,8 @@
 	left: 0;
 	width: 50px;
 	height: 100vh;
-	background-color: white;
-	border-right: 1px solid #e5e7eb;
+	background-color: var(--color-background);
+	border-right: 1px solid var(--color-border);
 	display: flex;
 	justify-content: center;
 	cursor: pointer;
@@ -160,7 +160,7 @@
 }
 
 .sidebar_bar:hover {
-	background-color: #e5e7eb;
+	background-color: var(--color-border);
 }
 
 /* Already defined sidebar toggle button, just aligning it when sidebar is open */

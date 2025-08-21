@@ -7,6 +7,7 @@ const SpeakingPart2Container = () => {
 	const { testId } = useParams();
 
 	const modeEnum = Object.freeze({
+		INSTRUCTIONS: "INSTRUCTIONS",
 		READ: "READ",
 		LISTEN: "LISTEN",
 		PREPARE: "PREPARE",
@@ -18,7 +19,7 @@ const SpeakingPart2Container = () => {
 		[modeEnum.SPEAK]: 60,
 	};
 
-	const [mode, setMode] = useState(modeEnum.READ);
+	const [mode, setMode] = useState(modeEnum.INSTRUCTIONS);
 	const [time, setTime] = useState(0);
 	const [testData, setTestData] = useState(null);
 
@@ -34,10 +35,10 @@ const SpeakingPart2Container = () => {
 			mode={mode}
 			setMode={setMode}
 			modeEnum={modeEnum}
-			currentTest={testData}
+			modeTimeEnum={modeTimes}
 			time={time}
 			setTime={setTime}
-			modeTimes={modeTimes}
+			testData={testData}
 		/>
 	);
 };

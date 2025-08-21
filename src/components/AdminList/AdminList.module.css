@@ -1,13 +1,13 @@
 /* AdminList component styles */
 .adminList {
-	background-color: #fff;
+	background-color: var(--color-background);
 	border-radius: 8px;
 	overflow: visible;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+	box-shadow: var(--shadow-sm);
 }
 
 .header {
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid var(--color-border);
 }
 
 .selectAllContainer {
@@ -29,7 +29,7 @@
 
 .selectAllText {
 	font-weight: 500;
-	color: #333;
+	color: var(--color-text);
 }
 
 .bulkActionsContainer {
@@ -42,9 +42,9 @@
 	align-items: center;
 	gap: 0.5rem;
 	padding: 0.5rem 1rem;
-	background-color: #f5f5f5;
-	color: #333;
-	border: 1px solid #ddd;
+	background-color: var(--color-background-alt);
+	color: var(--color-text);
+	border: 1px solid var(--color-border);
 	border-radius: 50px; /* Fully rounded corners like teacher list */
 	cursor: pointer;
 	font-size: 0.9rem;
@@ -52,14 +52,14 @@
 }
 
 .actionsButton:hover {
-	background-color: #e9ecef;
-	border-color: #bbb;
+	background-color: var(--color-background-disabled);
+	border-color: var(--color-text-secondary);
 }
 
 .actionsButtonDisabled {
-	background-color: #f8f9fa !important;
-	color: #6c757d !important;
-	border-color: #e9ecef !important;
+	background-color: var(--color-background-alt) !important;
+	color: var(--color-text-secondary) !important;
+	border-color: var(--color-border) !important;
 	cursor: not-allowed !important;
 }
 
@@ -68,9 +68,9 @@
 	top: 100%;
 	right: 0;
 	background: white;
-	border: 1px solid #ddd;
+	border: 1px solid var(--color-border);
 	border-radius: 6px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	box-shadow: var(--shadow-md);
 	min-width: 140px;
 	z-index: 10; /* Match teacher list z-index */
 }
@@ -88,7 +88,7 @@
 }
 
 .dropdownItem:hover {
-	background-color: #f5f5f5; /* Match teacher list hover */
+	background-color: var(--color-background-alt); /* Match teacher list hover */
 }
 
 .dropdownItem:first-child {
@@ -109,7 +109,7 @@
 .empty {
 	padding: 2rem;
 	text-align: center;
-	color: #666;
+	color: var(--color-text-secondary);
 	font-style: italic;
 }
 
@@ -118,7 +118,7 @@
 	display: flex;
 	align-items: center;
 	padding: 0.75rem 1rem;
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid var(--color-border);
 	transition: background-color 0.2s ease;
 }
 
@@ -127,11 +127,11 @@
 }
 
 .itemRow:nth-child(even) {
-	background-color: #fafafa;
+	background-color: var(--color-background-alt);
 }
 
 .itemRow:hover {
-	background-color: #f0f0f0;
+	background-color: var(--color-background-disabled);
 }
 
 .itemRow .checkbox_container {
@@ -151,7 +151,7 @@
 	margin-left: 1rem;
 	margin-right: 1rem;
 	flex-shrink: 0;
-	color: #007bff;
+	color: var(--color-primary);
 }
 
 .userInfo {
@@ -163,12 +163,12 @@
 
 .userName {
 	font-weight: 500;
-	color: #333;
+	color: var(--color-text);
 }
 
 .userEmail {
 	font-size: 0.85rem;
-	color: #666;
+	color: var(--color-text-secondary);
 	font-weight: normal;
 }
 
@@ -178,24 +178,24 @@
 }
 
 .invitedIcon {
-	color: #999 !important;
+	color: var(--color-text-muted) !important;
 	opacity: 0.7;
 }
 
 .invitedName {
-	color: #999;
+	color: var(--color-text-muted);
 }
 
 .invitedEmail {
-	color: #bbb;
+	color: var(--color-text-disabled);
 }
 
 .invitedStatus {
 	margin-left: 0.5rem;
 	font-size: 0.8rem;
-	color: #666;
+	color: var(--color-text-secondary);
 	font-style: italic;
-	background-color: #f0f0f0;
+	background-color: var(--color-background-disabled);
 	padding: 0.2rem 0.5rem;
 	border-radius: 12px;
 	text-transform: lowercase;
@@ -214,17 +214,17 @@
 }
 
 .kebab_button:hover {
-	background-color: #f0f0f0;
+	background-color: var(--color-background-disabled);
 }
 
 .kebabDropdown {
 	position: absolute;
 	top: 100%;
 	right: 0;
-	background: white;
-	border: 1px solid #ddd;
+	background: var(--color-background);
+	border: 1px solid var(--color-border);
 	border-radius: 6px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	box-shadow: var(--shadow-md);
 	min-width: 140px;
 	z-index: 1000;
 }
@@ -248,27 +248,27 @@
 	justify-content: center;
 	width: 36px;
 	height: 36px;
-	background-color: #f8f9fa;
-	color: #333;
-	border: 1px solid #e9ecef;
+	background-color: var(--color-background-alt);
+	color: var(--color-text);
+	border: 1px solid var(--color-border);
 	border-radius: 50%;
 	cursor: pointer;
 	transition: all 0.2s ease;
 }
 
 .sortButton:hover {
-	background-color: #e9ecef;
-	border-color: #bbb;
+	background-color: var(--color-background-disabled);
+	border-color: var(--color-text-secondary);
 }
 
 .sortDropdown {
 	position: absolute;
 	top: 100%;
 	right: 0;
-	background: white;
-	border: 1px solid #ddd;
+	background: var(--color-background);
+	border: 1px solid var(--color-border);
 	border-radius: 6px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	box-shadow: var(--shadow-md);
 	min-width: 160px;
 	z-index: 1000;
 }
@@ -286,7 +286,7 @@
 }
 
 .sortDropdownItem:hover {
-	background-color: #f5f5f5;
+	background-color: var(--color-background-alt);
 }
 
 .sortDropdownItem:first-child {
@@ -298,7 +298,7 @@
 }
 
 .activeSortItem {
-	background-color: #e3f2fd;
-	color: #1976d2;
+	background-color: var(--color-primary-light);
+	color: var(--color-primary);
 	font-weight: 500;
 }

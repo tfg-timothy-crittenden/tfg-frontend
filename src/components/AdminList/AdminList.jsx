@@ -18,7 +18,6 @@ const AdminList = ({
 	className = "",
 	emptyMessage = "No items found.",
 	loadingMessage = "Loading...",
-	// New sorting props
 	sortOptions = [],
 	currentSort,
 	onSortChange,
@@ -95,10 +94,6 @@ const AdminList = ({
 							onChange={handleSelectAll}
 						/>
 					</div>
-
-					<span className={styles.selectAllText}>
-						{selectedItems.size > 0 ? `${selectedItems.size} selected` : ""}
-					</span>
 
 					{/* Always show actions button, but disable when nothing selected */}
 					{bulkActions.length > 0 && (

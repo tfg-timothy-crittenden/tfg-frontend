@@ -4,6 +4,8 @@ import SpeakingPart1Container from "@/views/SpeakingPart1/SpeakingPart1Container
 import SpeakingPart2Container from "@/views/SpeakingPart2/SpeakingPart2Container";
 import SpeakingPart3Container from "@/views/SpeakingPart3/SpeakingPart3Container";
 import SpeakingPart4Container from "@/views/SpeakingPart4/SpeakingPart4Container";
+import TestInstructions from "@/components/TestInstructions/TestInstructions";
+import TestSelectionWelcome from "@/components/TestSelectionWelcome/TestSelectionWelcome";
 
 import QuestionToggleSwitch from "../../components/QuestionToggleSwitch/QuestionToggleSwitch";
 import ClassroomHeader from "../../components/ClassroomHeader/ClassroomHeader";
@@ -16,11 +18,26 @@ const Classroom = () => {
 	const [showMaterial, setShowMaterial] = useState(true);
 
 	const { partNumber, testId } = useParams();
-
-	const { classrooms, partOneTopic } = useOutletContext();
+	const { classrooms } = useOutletContext();
 	const navigate = useNavigate();
 
+	// Find current classroom for welcome message
+	const { id: classroomId } = useParams();
+	const currentClassroom = classrooms?.find(
+		(c) => String(c.id) === String(classroomId)
+	);
+
 	const renderPart = () => {
+		// Show welcome message when no test is selected
+		if (!testId) {
+			return <TestSelectionWelcome classroomName={currentClassroom?.name} />;
+		}
+
+		// Check if we're on the instructions route
+		if (window.location.pathname.includes("/instructions")) {
+			return <TestInstructions />;
+		}
+
 		switch (partNumber) {
 			case "1":
 				return <SpeakingPart1Container />;
@@ -31,14 +48,13 @@ const Classroom = () => {
 			case "4":
 				return <SpeakingPart4Container />;
 			default:
-				return <p>Invalid part</p>;
+				return <TestSelectionWelcome classroomName={currentClassroom?.name} />;
 		}
 	};
 
 	const handleClassroomChange = (newClassroomId) => {
-		navigate(
-			`/my/classrooms/${newClassroomId}/test/${testId}/part/${partNumber}`
-		);
+		// Navigate to welcome state when changing classrooms
+		navigate(`/my/classrooms/${newClassroomId}`);
 	};
 
 	return (
@@ -59,7 +75,8 @@ const Classroom = () => {
 				<div style={{ display: "flex", flex: 1, position: "relative" }}>
 					<SideNavBar />
 					<div className={style.test_wrapper}>
-						<QuestionToggleSwitch />
+						{/* Only show QuestionToggleSwitch when a test is selected */}
+						{testId && <QuestionToggleSwitch />}
 						<div className={style.part_wrapper}>{renderPart()}</div>
 					</div>
 				</div>

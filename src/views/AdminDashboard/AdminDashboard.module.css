@@ -1,12 +1,12 @@
 .container {
 	max-width: 1080px;
 	margin: 0 auto;
-	background-color: white;
+	background-color: var(--color-background);
 	padding: 20px;
 }
 
 .admin_dashboard_heading {
-	color: #333;
+	color: var(--color-text);
 	text-align: left;
 	margin-bottom: 60px;
 }
@@ -17,7 +17,7 @@
 	display: flex;
 	justify-content: start;
 	margin-bottom: 60px;
-	border-bottom: solid 1px lightgrey;
+	border-bottom: solid 1px var(--color-border);
 }
 
 .navList li {
@@ -26,16 +26,16 @@
 
 .navList a {
 	text-decoration: none;
-	color: #333;
+	color: var(--color-text);
 	padding-bottom: 10px;
 	border-bottom: solid 2px transparent; /* Prevents undesired animation effect on hover */
 	transition: border-color 0.3s ease, border-width 0.1s ease;
 }
 
 .navList a:hover:not(.activeLink) {
-	border-bottom: solid 2px lightblue;
+	border-bottom: solid 2px var(--color-primary-light);
 }
 
 .navList .activeLink {
-	border-bottom: solid 2px darkblue;
+	border-bottom: solid 2px var(--color-primary);
 }

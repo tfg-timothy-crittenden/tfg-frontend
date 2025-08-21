@@ -1,84 +1,76 @@
-import SideNavBar from "@/components/SideNavBar/SideNavBar";
-import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
+import ModeNavigationWrapper from "@/components/ModeNavigationWrapper/ModeNavigationWrapper";
 import Read from "@/components/Read/Read";
 import Listen from "@/components/Listen/ListenPresentation";
 import PrepareSpeak from "@/components/PrepareSpeak/PrepareSpeak";
+import Instructions from "@/components/Instructions/Instructions";
 import image from "@/assets/question_two_1.png";
 
 import styles from "./SpeakingPart2.module.css";
 
 const SpeakingPart2Presentation = ({
-	tests,
-	loadTest,
-	currentTest,
+	testData,
 	mode,
 	setTime,
 	setMode,
 	modeEnum,
 	time,
-	modeTimes,
+	modeTimeEnum,
 }) => {
 	const renderContent = () => {
-		if (!currentTest)
-			return <h2 className={styles.no_test}>Select a question</h2>;
+		if (!testData) return <h2 className={styles.no_test}>Loading test...</h2>;
 
 		switch (mode) {
+			case modeEnum.INSTRUCTIONS:
+				return (
+					<Instructions partNumber="2">
+						<p>
+							In this integrated speaking task, you will read a short passage
+							and listen to a conversation.
+						</p>
+						<p>
+							You will then be asked to speak about the topic, combining
+							information from both sources.
+						</p>
+						<p>
+							You will have <strong>30 seconds</strong> to prepare your response
+							and <strong>60 seconds</strong> to speak.
+						</p>
+						<p>
+							Take notes while reading and listening as they will help you
+							organize your response.
+						</p>
+					</Instructions>
+				);
+
 			case modeEnum.READ:
 				return (
-					<>
-						<ToggleSwitch
-							mode={mode}
-							setMode={setMode}
-							modeEnum={modeEnum}
-							setTime={setTime}
-							modeTimeEnum={modeTimes}
-						/>
-						<Read
-							title={currentTest.readingTitle}
-							body={currentTest.readingBody}
-							author={currentTest.author}
-						/>
-					</>
+					<Read
+						title={testData.readingTitle}
+						body={testData.readingBody}
+						author={testData.author}
+					/>
 				);
 
 			case modeEnum.LISTEN:
 				return (
-					<>
-						<ToggleSwitch
-							mode={mode}
-							setMode={setMode}
-							modeEnum={modeEnum}
-							setTime={setTime}
-							modeTimeEnum={modeTimes}
-						/>
-						<Listen
-							key={currentTest.listeningAudio}
-							audio={currentTest.listeningAudio}
-							image={image}
-						/>
-					</>
+					<Listen
+						key={testData.listeningAudio}
+						audio={testData.listeningAudio}
+						image={image}
+					/>
 				);
 
 			case modeEnum.PREPARE:
 			case modeEnum.SPEAK:
 				return (
-					<>
-						<ToggleSwitch
-							mode={mode}
-							setMode={setMode}
-							modeEnum={modeEnum}
-							setTime={setTime}
-							modeTimeEnum={modeTimes}
-						/>
-						<PrepareSpeak
-							question_audio={currentTest.questionAudio}
-							question={currentTest.questionText}
-							mode={mode}
-							time={time}
-							modeEnum={modeEnum}
-							modeTimes={modeTimes}
-						/>
-					</>
+					<PrepareSpeak
+						question_audio={testData.questionAudio}
+						question={testData.questionText}
+						mode={mode}
+						time={time}
+						modeEnum={modeEnum}
+						modeTimes={modeTimeEnum}
+					/>
 				);
 
 			default:
@@ -87,16 +79,17 @@ const SpeakingPart2Presentation = ({
 	};
 
 	return (
-		<article className={styles.container}>
-			{/* <SideNavBar
-				navTitle={"Question 2"}
-				tests={tests}
-				loadTest={loadTest}
-				currentTest={currentTest}
-			/> */}
-
-			<div>{renderContent()}</div>
-		</article>
+		<ModeNavigationWrapper
+			mode={mode}
+			setMode={setMode}
+			modeEnum={modeEnum}
+			setTime={setTime}
+			modeTimeEnum={modeTimeEnum}
+		>
+			<article className={styles.container}>
+				<div>{renderContent()}</div>
+			</article>
+		</ModeNavigationWrapper>
 	);
 };
 

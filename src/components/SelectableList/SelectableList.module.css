@@ -7,8 +7,8 @@
 .list {
 	min-width: 200px;
 	padding: 10px;
-	background-color: white;
-	border: 1px solid #ccc;
+	background-color: var(--color-background);
+	border: 1px solid var(--color-border);
 	border-radius: 5px;
 	list-style: none;
 }

@@ -1,0 +1,45 @@
+/* src/components/NavigationArrows/NavigationArrows.module.css */
+.nav_arrow {
+	position: fixed;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 100;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	background: var(--color-primary);
+	color: white;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	box-shadow: var(--shadow-md);
+}
+
+.nav_arrow:hover {
+	background: var(--color-primary-dark);
+	transform: translateY(-50%) scale(1.1);
+	box-shadow: var(--shadow-lg);
+}
+
+.nav_arrow:active {
+	transform: translateY(-50%) scale(0.95);
+}
+
+.left_arrow {
+	left: 20px;
+}
+
+.right_arrow {
+	right: 20px;
+}
+
+/* Hide arrows on smaller screens to avoid overlap */
+@media (max-width: 1200px) {
+	.nav_arrow {
+		display: none;
+	}
+}

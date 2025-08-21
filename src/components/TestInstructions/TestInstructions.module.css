@@ -1,0 +1,108 @@
+.instructions_container {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 2rem;
+}
+
+.title {
+	color: var(--color-primary);
+	text-align: center;
+	margin-bottom: 2rem;
+	font-size: 2rem;
+	font-weight: bold;
+}
+
+.content {
+	line-height: 1.6;
+	color: var(--color-text);
+}
+
+.section {
+	margin-bottom: 2rem;
+	padding-bottom: 1.5rem;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.section:last-child {
+	border-bottom: none;
+}
+
+.section h2 {
+	color: var(--color-primary);
+	font-size: 1.4rem;
+	margin-bottom: 1rem;
+	font-weight: 600;
+}
+
+.section p {
+	margin-bottom: 0.8rem;
+	font-size: 1.1rem;
+}
+
+.task_list {
+	display: grid;
+	gap: 1.5rem;
+	margin-top: 1rem;
+}
+
+.task {
+	background-color: var(--color-background-secondary, #f8f9fa);
+	padding: 1.5rem;
+	border-radius: 8px;
+	border-left: 4px solid var(--color-primary);
+}
+
+.task h3 {
+	color: var(--color-primary);
+	font-size: 1.2rem;
+	margin-bottom: 0.5rem;
+	font-weight: 600;
+}
+
+.task p {
+	margin-bottom: 0.5rem;
+	font-size: 1rem;
+}
+
+.task p:last-child {
+	margin-bottom: 0;
+	font-weight: 500;
+	color: var(--color-accent, #666);
+}
+
+.tips {
+	list-style-type: none;
+	padding: 0;
+	margin: 1rem 0;
+}
+
+.tips li {
+	background-color: var(--color-background-secondary, #f8f9fa);
+	padding: 0.8rem 1rem;
+	margin-bottom: 0.5rem;
+	border-radius: 6px;
+	border-left: 3px solid var(--color-accent, #28a745);
+	font-size: 1rem;
+	position: relative;
+}
+
+.tips li::before {
+	content: "✓";
+	color: var(--color-accent, #28a745);
+	font-weight: bold;
+	margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+	.instructions_container {
+		padding: 1rem;
+	}
+
+	.title {
+		font-size: 1.6rem;
+	}
+
+	.task {
+		padding: 1rem;
+	}
+}

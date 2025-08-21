@@ -10,6 +10,14 @@ const QuestionToggleSwitch = () => {
 	return (
 		<nav className={styles.container}>
 			<div className={styles.toggle_group}>
+				<NavLink
+					to={`/my/classrooms/${id}/test/${testId}/instructions`}
+					className={({ isActive }) =>
+						isActive ? styles.activeLink : styles.inactiveLink
+					}
+				>
+					Instructions
+				</NavLink>
 				{TASK_PARTS.map((part) => (
 					<NavLink
 						key={part}

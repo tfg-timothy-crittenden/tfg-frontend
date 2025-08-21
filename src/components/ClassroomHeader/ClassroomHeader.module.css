@@ -1,14 +1,14 @@
 .classroomHeader_container {
 	height: 90px;
 	width: 100%;
-	background-color: #ffffffa1;
+	background-color: rgba(255, 255, 255, 0.63);
 	display: flex;
 	align-items: center;
 	justify-content: left;
 	padding: 20px;
 	font-size: 1.8rem;
 	z-index: 2;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	box-shadow: var(--shadow-sm);
 }
 
 .classroom_selector {
@@ -17,14 +17,14 @@
 	margin-top: 0.2rem;
 	cursor: pointer;
 	padding: 5px 15px 5px 5px;
-	border: solid 1px #eaeaea;
+	border: solid 1px var(--color-border);
 	border-radius: 5px;
-	background: #f9fafb;
-	color: #525252;
+	background: var(--color-background-light);
+	color: var(--color-text-secondary);
 }
 
 .classroomHeader_title {
-	color: #6080ac;
+	color: var(--color-secondary);
 }
 
 .classroom_nav_group_right {
@@ -33,7 +33,7 @@
 	gap: 20px;
 	align-items: center;
 	margin-left: auto;
-	color: #4d4d4d;
+	color: var(--color-text);
 }
 
 .classroom_nav_group_right > div {
@@ -44,7 +44,7 @@
 }
 
 .classroom_join_code_container {
-	color: #6080ac;
+	color: var(--color-secondary);
 	font-size: 1.2rem;
 	margin-left: 30px;
 	display: flex;
@@ -52,13 +52,13 @@
 }
 
 .classroom_join_code {
-	color: #6080ac;
+	color: var(--color-secondary);
 	font-weight: 550;
 	cursor: pointer;
 }
 
 .classroom_join_code_card {
-	border: solid 1px #eaeaea;
+	border: solid 1px var(--color-border);
 	border-radius: 5px;
 	padding: 5px 10px;
 	display: flex;
@@ -67,11 +67,11 @@
 }
 
 .classroom_join_code_card:hover {
-	background-color: #f9fafb;
+	background-color: var(--color-background-light);
 }
 
 .classroom_join_code_card:hover .maximize {
-	color: green;
+	color: var(--color-success);
 	transform: scale(1.1);
 }
 
@@ -87,4 +87,5 @@
 .classroom_join_code_big {
 	font-size: 5rem;
 	font-weight: 550;
+	color: var(--color-text);
 }

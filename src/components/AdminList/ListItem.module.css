@@ -5,7 +5,7 @@
 	display: flex;
 	align-items: center;
 	padding: 0.75rem 1rem;
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid var(--color-border);
 	transition: background-color 0.2s ease;
 }
 
@@ -14,11 +14,11 @@
 }
 
 .itemRow:nth-child(even) {
-	background-color: #fafafa;
+	background-color: var(--color-background-alt);
 }
 
 .itemRow:hover {
-	background-color: #f0f0f0;
+	background-color: var(--color-background-disabled);
 }
 
 /* Checkbox container */
@@ -54,7 +54,7 @@
 }
 
 .kebab_button:hover {
-	background-color: #f0f0f0;
+	background-color: var(--color-background-disabled);
 }
 
 .kebabDropdown {
@@ -62,7 +62,7 @@
 	top: 100%;
 	right: 0;
 	background: white;
-	border: 1px solid #ddd;
+	border: 1px solid var(--color-border);
 	border-radius: 6px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 	min-width: 140px;

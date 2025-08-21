@@ -94,12 +94,12 @@ const UserClassrooms = () => {
 							<li
 								key={c.id}
 								className={styles.classroom_card}
-								onClick={() => navigate(`/my/classrooms/${c.id}/test/1/part/1`)}
+								onClick={() => navigate(`/my/classrooms/${c.id}`)}
 								role="button"
 								tabIndex={0}
 								onKeyDown={(e) => {
 									if (e.key === "Enter" || e.key === " ") {
-										navigate(`/my/classrooms/${c.id}/test/1/part/1`);
+										navigate(`/my/classrooms/${c.id}`);
 									}
 								}}
 							>

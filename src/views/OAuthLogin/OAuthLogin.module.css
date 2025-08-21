@@ -6,17 +6,17 @@
 	margin: 50px auto;
 	width: 100%;
 	max-width: 400px;
-	background: white;
+	background: var(--color-background);
 	padding: 30px;
 	border-radius: 10px;
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	box-shadow: var(--shadow-lg);
 	font-family: "Roboto", sans-serif;
 }
 
 .login_container h2 {
 	text-align: center;
 	margin-bottom: 30px;
-	color: #333;
+	color: var(--color-text);
 	font-size: 1.8rem;
 }
 
@@ -29,14 +29,19 @@
 .login_form input {
 	margin-bottom: 10px;
 	padding: 10px;
-	border: 1px solid #ccc;
+	border: 1px solid var(--color-border);
 	border-radius: 5px;
 	font-size: 1rem;
 }
 
+.login_form input:focus {
+	outline: none;
+	border-color: var(--color-border-focus);
+}
+
 .login_form button {
 	padding: 10px;
-	background-color: #6080ac;
+	background-color: var(--color-secondary);
 	color: white;
 	border: none;
 	border-radius: 5px;
@@ -46,12 +51,12 @@
 }
 
 .login_form button:hover {
-	background-color: #4a5f8c;
+	background-color: var(--color-secondary-hover);
 }
 
 .forgot_password {
 	margin-top: 10px;
-	color: #0054f1;
+	color: var(--color-primary);
 	cursor: pointer;
 	font-size: 0.8rem;
 	text-decoration: underline;
@@ -65,26 +70,26 @@
 	margin-bottom: 20px;
 	border-radius: 8px;
 	overflow: hidden;
-	border: 1px solid #ddd;
+	border: 1px solid var(--color-border);
 }
 
 .type_button {
 	flex: 1;
 	padding: 12px;
 	border: none;
-	background-color: #f8f9fa;
-	color: #6c757d;
+	background-color: var(--color-background-alt);
+	color: var(--color-text-secondary);
 	cursor: pointer;
 	transition: all 0.3s ease;
 	font-size: 0.9rem;
 }
 
 .type_button:hover {
-	background-color: #e9ecef;
+	background-color: var(--color-background-disabled);
 }
 
 .type_button.active {
-	background-color: #5d92c0;
+	background-color: var(--color-primary);
 	color: white;
 }
 
@@ -95,7 +100,7 @@
 
 .teacher_login p {
 	text-align: center;
-	color: #666;
+	color: var(--color-text-secondary);
 	margin-bottom: 15px;
 	font-size: 0.9rem;
 }
@@ -103,7 +108,7 @@
 .microsoft_button {
 	width: 100%;
 	padding: 12px;
-	background-color: #0078d4;
+	background-color: var(--color-microsoft);
 	color: white;
 	border: none;
 	border-radius: 6px;
@@ -113,7 +118,7 @@
 }
 
 .microsoft_button:hover {
-	background-color: #106ebe;
+	background-color: var(--color-microsoft-hover);
 }
 
 /* Divider */
@@ -130,13 +135,13 @@
 	left: 0;
 	right: 0;
 	height: 1px;
-	background-color: #ddd;
+	background-color: var(--color-border);
 }
 
 .divider span {
-	background-color: white;
+	background-color: var(--color-background);
 	padding: 0 15px;
-	color: #666;
+	color: var(--color-text-secondary);
 	font-size: 0.9rem;
 }
 
@@ -155,13 +160,13 @@
 
 .form_group label {
 	font-weight: 500;
-	color: #333;
+	color: var(--color-text);
 	font-size: 0.9rem;
 }
 
 .form_group input {
 	padding: 12px;
-	border: 1px solid #ddd;
+	border: 1px solid var(--color-border);
 	border-radius: 6px;
 	font-size: 1rem;
 	transition: border-color 0.3s ease;
@@ -169,13 +174,13 @@
 
 .form_group input:focus {
 	outline: none;
-	border-color: #5d92c0;
-	box-shadow: 0 0 0 2px rgba(93, 146, 192, 0.2);
+	border-color: var(--color-primary);
+	box-shadow: var(--shadow-focus);
 }
 
 .login_button {
 	padding: 12px;
-	background-color: #5d92c0;
+	background-color: var(--color-primary);
 	color: white;
 	border: none;
 	border-radius: 6px;
@@ -187,22 +192,22 @@
 }
 
 .login_button:hover:not(:disabled) {
-	background-color: #4a7ba0;
+	background-color: var(--color-primary-hover);
 }
 
 .login_button:disabled {
-	background-color: #ccc;
+	background-color: var(--color-border);
 	cursor: not-allowed;
 }
 
 /* Error Message */
 .error_message {
-	color: #dc3545;
+	color: var(--color-error);
 	font-size: 0.9rem;
 	text-align: center;
 	padding: 10px;
-	background-color: #f8d7da;
-	border: 1px solid #f5c6cb;
+	background-color: var(--color-error-light);
+	border: 1px solid var(--color-error-light);
 	border-radius: 4px;
 }
 
@@ -213,7 +218,7 @@
 }
 
 .student_info p {
-	color: #666;
+	color: var(--color-text-secondary);
 	font-size: 0.9rem;
 	font-style: italic;
 }

@@ -9,9 +9,9 @@
 	font-size: 1rem;
 	margin: 1em 0;
 
-	color: black;
+	color: var(--color-text);
 	margin: 0;
 	width: 320px;
-	border: 1px solid darkgrey;
+	border: 1px solid var(--color-border);
 	padding: 3px 45px;
 }

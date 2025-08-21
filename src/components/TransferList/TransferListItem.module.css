@@ -2,13 +2,13 @@
 	margin: 10px;
 	cursor: pointer;
 	padding: 10px;
-	border: 1px solid grey;
+	border: 1px solid var(--color-border);
 	border-radius: 5px;
 	transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .container:hover {
-	background-color: #efffea;
+	background-color: var(--color-success-light);
 	transform: translate(1px, 1px);
 }
 
@@ -26,7 +26,7 @@
 }
 
 .selected:hover {
-	background-color: #fff8f8;
+	background-color: var(--color-error-light);
 	transform: translate(1px, 1px);
 }
 
@@ -63,6 +63,6 @@
 
 .removeIcon::after {
 	content: "×";
-	color: #c00;
+	color: var(--color-error);
 	font-weight: bold;
 }

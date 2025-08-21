@@ -7,9 +7,9 @@
 }
 
 .timer_bar_outer {
-	background-color: #5d92c0;
+	background-color: var(--color-primary);
 	/* border-radius: 5px; */
-	border: 1px solid rgb(181, 181, 181);
+	border: 1px solid var(--color-border);
 	border-radius: 5px;
 	max-width: 600px;
 	display: flex;
