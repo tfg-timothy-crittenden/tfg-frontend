@@ -8,7 +8,7 @@ import {
 	selectUsername,
 } from "@/store/auth/authSlice";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CircleUser } from "lucide-react";
+import { CircleUser, Home, Settings } from "lucide-react";
 
 const Header = () => {
 	const dispatch = useDispatch();
@@ -67,49 +67,60 @@ const Header = () => {
 	const isClassroomsActive = location.pathname.startsWith("/my/classrooms");
 	const isAdminActive = location.pathname.startsWith("/admin_dashboard");
 
+	// Get display name for mobile (first name or username)
+	const mobileDisplayName = username?.split(" ")[0] || username || "User";
+
 	return (
 		<header className={styles.header}>
-			<p className={styles.title}>TOEFL Speaking</p>
+			<h1 className={styles.title}>TOEFL Speaking</h1>
 
 			{isAuthenticated && (
 				<div className={styles.buttonGroup}>
+					{/* Classrooms Navigation */}
 					<div
-						className={
-							`${styles.nav_item_container} ${styles.nav_item_border}` +
-							(isClassroomsActive ? ` ${styles.activeLink}` : "")
-						}
+						className={`${styles.nav_item_container} ${styles.nav_item_border}${
+							isClassroomsActive ? ` ${styles.activeLink}` : ""
+						}`}
 						onClick={() => handleNavigateTo("/my/classrooms")}
 					>
-						Classrooms
+						<Home size={20} />
+						<span>Classrooms</span>
 					</div>
+
+					{/* Admin Dashboard - Only show for admins */}
 					{isAdmin && (
 						<div
-							className={
-								`${styles.nav_item_container} ${styles.nav_item_border}` +
-								(isAdminActive ? ` ${styles.activeLink}` : "")
-							}
+							className={`${styles.nav_item_container} ${
+								styles.nav_item_border
+							}${isAdminActive ? ` ${styles.activeLink}` : ""}`}
 							onClick={() => handleNavigateTo("/admin_dashboard/teachers")}
 						>
-							Admin Dashboard
+							<Settings size={20} />
+							<span>Admin</span>
 						</div>
 					)}
 
+					{/* User Menu */}
 					<div
 						className={styles.nav_item_container}
 						ref={dropdownRef}
 						onClick={() => setShowUserMenu((prev) => !prev)}
 					>
 						<CircleUser
-							size={40}
+							size={24}
 							style={{ cursor: "pointer" }}
-							strokeWidth={1}
+							strokeWidth={1.5}
 						/>
 						<div className={styles.userInfo}>
-							<span className={styles.username}>{username}</span>
+							<span className={styles.username}>{mobileDisplayName}</span>
 							<span className={styles.role}>{displayRole}</span>
 						</div>
+
 						{showUserMenu && (
 							<div className={styles.dropdown}>
+								<div className={styles.dropdownHeader}>
+									{username} {displayRole && `(${displayRole})`}
+								</div>
 								<div onClick={handleProfile}>Profile</div>
 								<div onClick={handleLogout}>Logout</div>
 							</div>

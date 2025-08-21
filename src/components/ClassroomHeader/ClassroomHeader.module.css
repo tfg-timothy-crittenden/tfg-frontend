@@ -4,51 +4,41 @@
 	background-color: rgba(255, 255, 255, 0.63);
 	display: flex;
 	align-items: center;
-	justify-content: left;
+	justify-content: flex-start;
 	padding: 20px;
 	font-size: 1.8rem;
 	z-index: 2;
 	box-shadow: var(--shadow-sm);
+	gap: 15px;
+	overflow: hidden;
+}
+
+.classroomHeader_title {
+	color: var(--color-secondary);
+	white-space: nowrap;
+	flex-shrink: 0;
 }
 
 .classroom_selector {
 	font-size: 1.3rem;
-	margin-left: 15px;
-	margin-top: 0.2rem;
 	cursor: pointer;
 	padding: 5px 15px 5px 5px;
 	border: solid 1px var(--color-border);
 	border-radius: 5px;
 	background: var(--color-background-light);
 	color: var(--color-text-secondary);
-}
-
-.classroomHeader_title {
-	color: var(--color-secondary);
-}
-
-.classroom_nav_group_right {
-	align-self: center;
-	display: flex;
-	gap: 20px;
-	align-items: center;
-	margin-left: auto;
-	color: var(--color-text);
-}
-
-.classroom_nav_group_right > div {
-	display: flex;
-	align-items: center;
-	gap: 5px;
-	cursor: pointer;
+	min-width: 120px;
+	max-width: 200px;
+	flex-shrink: 1;
 }
 
 .classroom_join_code_container {
 	color: var(--color-secondary);
 	font-size: 1.2rem;
-	margin-left: 30px;
 	display: flex;
 	align-items: center;
+	flex-shrink: 1;
+	min-width: 0; /* Allow shrinking */
 }
 
 .classroom_join_code {
@@ -64,6 +54,7 @@
 	display: flex;
 	align-items: center;
 	margin-left: 10px;
+	transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .classroom_join_code_card:hover {
@@ -83,9 +74,234 @@
 	margin-left: 10px;
 }
 
+.classroom_nav_group_right {
+	align-self: center;
+	display: flex;
+	gap: 20px;
+	align-items: center;
+	margin-left: auto;
+	color: var(--color-text);
+	flex-shrink: 0;
+}
+
+.classroom_nav_group_right > div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	cursor: pointer;
+	padding: 8px 12px;
+	border-radius: 8px;
+	transition: background-color 0.2s ease;
+	min-width: 60px;
+}
+
+.classroom_nav_group_right > div:hover {
+	background-color: var(--color-background-alt);
+}
+
+.classroomHeader_iconText {
+	font-size: 0.8rem;
+	font-weight: 550;
+	color: var(--color-text);
+	text-transform: capitalize;
+}
+
 /* Class code modal */
 .classroom_join_code_big {
 	font-size: 5rem;
-	font-weight: 550;
+	font-weight: 800;
 	color: var(--color-text);
+}
+
+/* Tablet responsive */
+@media (max-width: 1024px) {
+	.classroomHeader_container {
+		height: 80px;
+		padding: 15px;
+		font-size: 1.6rem;
+		gap: 12px;
+	}
+
+	.classroom_selector {
+		font-size: 1.1rem;
+		max-width: 180px;
+	}
+
+	.classroom_join_code_container {
+		font-size: 1.1rem;
+	}
+
+	.classroom_nav_group_right {
+		gap: 15px;
+	}
+
+	.classroom_nav_group_right > div {
+		min-width: 55px;
+		padding: 6px 10px;
+	}
+
+	.classroomHeader_iconText {
+		font-size: 0.75rem;
+	}
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+	.classroomHeader_container {
+		height: 70px;
+		padding: 10px;
+		font-size: 1.4rem;
+		gap: 8px;
+	}
+
+	.classroomHeader_title {
+		font-size: 1.2rem;
+	}
+
+	.classroom_selector {
+		font-size: 1rem;
+		padding: 4px 12px 4px 4px;
+		max-width: 150px;
+	}
+
+	.classroom_join_code_container {
+		font-size: 1rem;
+	}
+
+	.classroom_join_code_card {
+		padding: 4px 8px;
+		margin-left: 6px;
+	}
+
+	.classroom_nav_group_right {
+		gap: 12px;
+	}
+
+	.classroom_nav_group_right > div {
+		min-width: 50px;
+		padding: 4px 8px;
+	}
+
+	.classroomHeader_iconText {
+		font-size: 0.7rem;
+	}
+
+	.maximize {
+		margin-left: 6px;
+	}
+}
+
+/* Small mobile responsive */
+@media (max-width: 640px) {
+	.classroomHeader_container {
+		height: 60px;
+		padding: 8px;
+		font-size: 1.2rem;
+		gap: 6px;
+	}
+
+	.classroomHeader_title {
+		font-size: 1rem;
+	}
+
+	.classroom_selector {
+		font-size: 0.9rem;
+		max-width: 120px;
+		padding: 3px 10px 3px 3px;
+	}
+
+	.classroom_join_code_container {
+		font-size: 0.9rem;
+		/* Hide join code on very small screens to save space */
+		display: none;
+	}
+
+	.classroom_nav_group_right {
+		gap: 8px;
+	}
+
+	.classroom_nav_group_right > div {
+		min-width: 44px;
+		padding: 4px 6px;
+	}
+
+	/* Hide text labels on small screens, show only icons */
+	.classroomHeader_iconText {
+		display: none;
+	}
+}
+
+/* Very small mobile responsive */
+@media (max-width: 480px) {
+	.classroomHeader_container {
+		height: 56px;
+		padding: 6px;
+		gap: 4px;
+	}
+
+	.classroomHeader_title {
+		font-size: 0.9rem;
+	}
+
+	.classroom_selector {
+		font-size: 0.8rem;
+		max-width: 100px;
+		padding: 2px 8px 2px 2px;
+	}
+
+	.classroom_nav_group_right {
+		gap: 6px;
+	}
+
+	.classroom_nav_group_right > div {
+		min-width: 40px;
+		padding: 3px 4px;
+	}
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+	.classroomHeader_container {
+		padding: 25px;
+		gap: 20px;
+	}
+
+	.classroom_selector {
+		font-size: 1.4rem;
+		max-width: 250px;
+	}
+
+	.classroom_join_code_container {
+		font-size: 1.3rem;
+	}
+
+	.classroom_nav_group_right {
+		gap: 25px;
+	}
+
+	.classroom_nav_group_right > div {
+		min-width: 70px;
+		padding: 10px 15px;
+	}
+
+	.classroomHeader_iconText {
+		font-size: 0.85rem;
+	}
+}
+
+/* Accessibility - Ensure touch targets are adequate */
+@media (hover: none) and (pointer: coarse) {
+	.classroom_nav_group_right > div {
+		min-height: 44px;
+		min-width: 44px;
+	}
+
+	.classroom_selector {
+		min-height: 44px;
+	}
+
+	.classroom_join_code_card {
+		min-height: 44px;
+	}
 }
