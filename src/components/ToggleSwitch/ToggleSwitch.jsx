@@ -1,17 +1,14 @@
 import React from "react";
-import { BookOpen, Headphones, Mic, Info } from "lucide-react";
-import { Brain } from "lucide-react";
+import { BookOpen, Headphones, Mic, Info, Brain } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { buildRoute, MODE_SEGMENTS } from "@/routes/routeConfig";
 
 import styles from "./ToggleSwitch.module.css";
 
-const ToggleSwitch = ({
-	mode,
-	modeEnum,
-	setMode,
-	setTime,
-	modeTimeEnum,
-	onModeChange,
-}) => {
+const ToggleSwitch = ({ mode, modeEnum }) => {
+	const navigate = useNavigate();
+	const { id: classroomId, testId, partNumber } = useParams();
+
 	const modeIcons = {
 		INSTRUCTIONS: <Info size={24} />,
 		READ: <BookOpen size={24} />,
@@ -20,31 +17,49 @@ const ToggleSwitch = ({
 		SPEAK: <Mic size={24} />,
 	};
 
-	// Get ordered list of modes to determine direction
-	const modeKeys = Object.keys(modeEnum);
-	const currentModeIndex = modeKeys.findIndex((key) => modeEnum[key] === mode);
+	const handleModeChange = (targetMode) => {
+		if (!testId || !partNumber || !classroomId) return;
+
+		let routePath;
+
+		if (targetMode === "INSTRUCTIONS") {
+			routePath = buildRoute.partMode(
+				classroomId,
+				testId,
+				partNumber,
+				MODE_SEGMENTS.INSTRUCTIONS
+			);
+		} else {
+			// Map the mode enum to route segments
+			const modeMap = {
+				PREPARE: MODE_SEGMENTS.PREPARE,
+				SPEAK: MODE_SEGMENTS.SPEAK,
+				READ: MODE_SEGMENTS.READ,
+				LISTEN: MODE_SEGMENTS.LISTEN,
+			};
+
+			const routeMode = modeMap[targetMode];
+			if (routeMode) {
+				routePath = buildRoute.partMode(
+					classroomId,
+					testId,
+					partNumber,
+					routeMode
+				);
+			} else {
+				// Default to the part route without mode
+				routePath = buildRoute.testPart(classroomId, testId, partNumber);
+			}
+		}
+
+		navigate(routePath);
+	};
 
 	return (
 		<div className={styles.toggle_group}>
-			{Object.entries(modeEnum).map(([key, value], index) => {
+			{Object.entries(modeEnum).map(([key, value]) => {
 				const id = key.toLowerCase();
-
-				const handleChange = () => {
-					// Set time conditionally for specific modes
-					if (value === modeEnum.PREPARE) {
-						setTime(modeTimeEnum.PREPARE * 1000);
-					} else if (value === modeEnum.SPEAK) {
-						setTime(modeTimeEnum.SPEAK * 1000);
-					}
-
-					// Determine animation direction if callback provided
-					if (onModeChange) {
-						const direction = index > currentModeIndex ? "right" : "left";
-						onModeChange(direction);
-					}
-
-					setMode(value);
-				};
+				const isActive = mode === value;
 
 				return (
 					<React.Fragment key={key}>
@@ -53,8 +68,8 @@ const ToggleSwitch = ({
 							id={id}
 							name="mode"
 							value={value}
-							checked={mode === value}
-							onChange={handleChange}
+							checked={isActive}
+							onChange={() => handleModeChange(value)}
 							hidden
 						/>
 						<label htmlFor={id} className={styles.toggle_label}>

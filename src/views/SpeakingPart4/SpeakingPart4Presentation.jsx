@@ -1,4 +1,3 @@
-import ModeNavigationWrapper from "@/components/ModeNavigationWrapper/ModeNavigationWrapper";
 import ListenLectureContainer from "@/components/Listen/ListenLectureContainer";
 import PrepareSpeak from "@/components/PrepareSpeak/PrepareSpeak";
 import Instructions from "@/components/Instructions/Instructions";
@@ -6,20 +5,12 @@ import Instructions from "@/components/Instructions/Instructions";
 const SpeakingPart4Presentation = ({
 	testData,
 	mode,
-	setTime,
-	setMode,
 	modeEnum,
 	time,
 	modeTimeEnum,
 }) => {
 	return (
-		<ModeNavigationWrapper
-			mode={mode}
-			setMode={setMode}
-			modeEnum={modeEnum}
-			setTime={setTime}
-			modeTimeEnum={modeTimeEnum}
-		>
+		<>
 			{mode === modeEnum.INSTRUCTIONS && (
 				<Instructions partNumber="4">
 					<p>
@@ -62,7 +53,7 @@ const SpeakingPart4Presentation = ({
 					modeTimes={modeTimeEnum}
 				/>
 			)}
-		</ModeNavigationWrapper>
+		</>
 	);
 };
 

@@ -72,56 +72,68 @@ const Header = () => {
 
 	return (
 		<header className={styles.header}>
-			<h1 className={styles.title}>TOEFL Speaking</h1>
+			{/* Responsive Logo */}
+			<h1 className={styles.title}>
+				<span className={styles.logo_full}>TOEFL Speaking</span>
+				<span className={styles.logo_short}>TS</span>
+			</h1>
 
 			{isAuthenticated && (
 				<div className={styles.buttonGroup}>
-					{/* Classrooms Navigation */}
-					<div
-						className={`${styles.nav_item_container} ${styles.nav_item_border}${
-							isClassroomsActive ? ` ${styles.activeLink}` : ""
+					{/* My Classrooms Link */}
+					<a
+						href="/my/classrooms"
+						className={`${styles.nav_item_container} ${
+							isClassroomsActive ? styles.activeNavItem : ""
 						}`}
-						onClick={() => handleNavigateTo("/my/classrooms")}
 					>
 						<Home size={20} />
-						<span>Classrooms</span>
-					</div>
+						<span className={styles.nav_label}>My Classrooms</span>
+					</a>
 
-					{/* Admin Dashboard - Only show for admins */}
+					{/* Admin Dashboard Link (only for admins) */}
 					{isAdmin && (
-						<div
+						<a
+							href="/admin_dashboard"
 							className={`${styles.nav_item_container} ${
-								styles.nav_item_border
-							}${isAdminActive ? ` ${styles.activeLink}` : ""}`}
-							onClick={() => handleNavigateTo("/admin_dashboard/teachers")}
+								isAdminActive ? styles.activeNavItem : ""
+							}`}
 						>
 							<Settings size={20} />
-							<span>Admin</span>
-						</div>
+							<span className={styles.nav_label}>Admin</span>
+						</a>
 					)}
 
 					{/* User Menu */}
-					<div
-						className={styles.nav_item_container}
-						ref={dropdownRef}
-						onClick={() => setShowUserMenu((prev) => !prev)}
-					>
-						<CircleUser
-							size={24}
-							style={{ cursor: "pointer" }}
-							strokeWidth={1.5}
-						/>
-						<div className={styles.userInfo}>
-							<span className={styles.username}>{mobileDisplayName}</span>
-							<span className={styles.role}>{displayRole}</span>
-						</div>
+					<div className={styles.nav_item_container} ref={dropdownRef}>
+						<button
+							onClick={() => setShowUserMenu(!showUserMenu)}
+							className={styles.user_button}
+						>
+							<CircleUser size={20} />
+
+							<div className={styles.userInfo}>
+								<span>{username}</span>
+								{displayRole && (
+									<span className={styles.role}>{displayRole}</span>
+								)}
+							</div>
+						</button>
 
 						{showUserMenu && (
 							<div className={styles.dropdown}>
 								<div className={styles.dropdownHeader}>
-									{username} {displayRole && `(${displayRole})`}
+									{username} ({displayRole})
 								</div>
 								<div onClick={handleProfile}>Profile</div>
+								<div onClick={() => handleNavigateTo("/my/classrooms")}>
+									My Classrooms
+								</div>
+								{isAdmin && (
+									<div onClick={() => handleNavigateTo("/admin_dashboard")}>
+										Admin Dashboard
+									</div>
+								)}
 								<div onClick={handleLogout}>Logout</div>
 							</div>
 						)}

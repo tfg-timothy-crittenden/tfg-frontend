@@ -1,17 +1,16 @@
-import ModeNavigationWrapper from "@/components/ModeNavigationWrapper/ModeNavigationWrapper";
 import Read from "@/components/Read/Read";
 import Listen from "@/components/Listen/ListenPresentation";
 import PrepareSpeak from "@/components/PrepareSpeak/PrepareSpeak";
 import Instructions from "@/components/Instructions/Instructions";
 import image from "@/assets/question_two_1.png";
 
+import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
+
 import styles from "./SpeakingPart2.module.css";
 
 const SpeakingPart2Presentation = ({
 	testData,
 	mode,
-	setTime,
-	setMode,
 	modeEnum,
 	time,
 	modeTimeEnum,
@@ -79,17 +78,10 @@ const SpeakingPart2Presentation = ({
 	};
 
 	return (
-		<ModeNavigationWrapper
-			mode={mode}
-			setMode={setMode}
-			modeEnum={modeEnum}
-			setTime={setTime}
-			modeTimeEnum={modeTimeEnum}
-		>
-			<article className={styles.container}>
-				<div>{renderContent()}</div>
-			</article>
-		</ModeNavigationWrapper>
+		<article className={styles.container}>
+			<ToggleSwitch modeEnum={modeEnum} mode={mode} />
+			<div>{renderContent()}</div>
+		</article>
 	);
 };
 

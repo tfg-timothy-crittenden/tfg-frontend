@@ -1,7 +1,13 @@
 import { X } from "lucide-react";
 import styles from "./Modal.module.css";
 
-const Modal = ({ modalRef, closeModal, children, modalTitle }) => {
+const Modal = ({
+	modalRef,
+	closeModal,
+	children,
+	modalTitle,
+	FooterContent,
+}) => {
 	return (
 		<div
 			className={styles.modal_overlay}
@@ -19,6 +25,7 @@ const Modal = ({ modalRef, closeModal, children, modalTitle }) => {
 					{modalTitle && <h4 className={styles.modal_title}>{modalTitle}</h4>}
 				</div>
 				<div className={styles.modal_body}>{children}</div>
+				{FooterContent && <FooterContent />}
 			</div>
 		</div>
 	);

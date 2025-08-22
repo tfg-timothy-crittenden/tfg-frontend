@@ -1,56 +1,64 @@
-import ModeNavigationWrapper from "@/components/ModeNavigationWrapper/ModeNavigationWrapper";
 import TestWrapper from "@/components/TestWrapper/TestWrapper";
 import TimeInformation from "@/components/TimeInformation/TimeInformation";
 import SpeakingPart1QuestionSelector from "@/components/SpeakingPart1QuestionSelector/SpeakingPart1QuestionSelector";
 import Instructions from "@/components/Instructions/Instructions";
-
-import styles from "./SpeakingPart1.module.css";
+import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
 import TimerWrapper from "@/components/TimerWrapper/TimerWrapper";
 import CountdownContainer from "@/components/CountdownTimer/CountdownContainer";
+import styles from "./SpeakingPart1.module.css";
 
 const SpeakingPart1Presentation = ({
 	question,
 	mode,
-	setMode,
+
 	modeEnum,
 	modeTimeEnum,
 	time,
-	setTime,
+
 	currentTopic,
 	topics,
 	handleTopicChange,
 }) => {
-	return (
-		<ModeNavigationWrapper
-			mode={mode}
-			setMode={setMode}
-			modeEnum={modeEnum}
-			setTime={setTime}
-			modeTimeEnum={modeTimeEnum}
-		>
-			{mode === modeEnum.INSTRUCTIONS && (
-				<Instructions partNumber="1">
-					<p>
-						In this task, you will be asked to speak about a familiar topic.
-					</p>
-					<p>
-						You will have <strong>15 seconds</strong> to prepare your response
-						and <strong>45 seconds</strong> to speak.
-					</p>
-					<p>
-						You may take notes during the preparation time and use them while
-						speaking.
-					</p>
-					<p>
-						Choose from the topics below to practice different question types.
-					</p>
-				</Instructions>
-			)}
+	const renderContent = () => {
+		switch (mode) {
+			case modeEnum.INSTRUCTIONS:
+				return (
+					<Instructions partNumber="1">
+						<p>
+							In this independent speaking task, you will express your opinion
+							on a familiar topic.
+						</p>
+						<p>
+							You will have <strong>15 seconds</strong> to prepare your response
+							and
+							<strong>45 seconds</strong> to speak.
+						</p>
+						<p>
+							Choose a topic from the selector below to get a random question,
+							then speak about your personal experiences and opinions.
+						</p>
+						<p>
+							<em>
+								Be sure to explain your reasons clearly and provide specific
+								examples to support your answer.
+							</em>
+						</p>
+					</Instructions>
+				);
 
-			{(mode === modeEnum.PREPARE || mode === modeEnum.SPEAK) && (
-				<>
-					<TestWrapper>
-						{question && (
+			case modeEnum.PREPARE:
+			case modeEnum.SPEAK:
+				if (!question) {
+					return (
+						<TestWrapper>
+							<p>Loading question...</p>
+						</TestWrapper>
+					);
+				}
+
+				return (
+					<>
+						<TestWrapper>
 							<div>
 								<p>{question.question}</p>
 								{question.choices && (
@@ -63,19 +71,29 @@ const SpeakingPart1Presentation = ({
 									</ul>
 								)}
 							</div>
-						)}
+							<TimeInformation modeTimes={modeTimeEnum} />
+						</TestWrapper>
 
-						<TimeInformation modeTimes={modeTimeEnum} />
-					</TestWrapper>
+						<hr />
 
-					<hr />
-					<TimerWrapper>
-						<CountdownContainer initialTime={time} />
-					</TimerWrapper>
-				</>
-			)}
+						<TimerWrapper>
+							<CountdownContainer initialTime={time} />
+						</TimerWrapper>
+					</>
+				);
 
-			{/* Topic selector below the test content */}
+			default:
+				return <p>Invalid mode</p>;
+		}
+	};
+
+	return (
+		<article className={styles.container}>
+			<ToggleSwitch modeEnum={modeEnum} mode={mode} />
+
+			<div>{renderContent()}</div>
+
+			{/* Topic selector - only show for prepare/speak modes when topics are loaded */}
 			{(mode === modeEnum.PREPARE || mode === modeEnum.SPEAK) &&
 				topics.length > 0 && (
 					<SpeakingPart1QuestionSelector
@@ -84,7 +102,7 @@ const SpeakingPart1Presentation = ({
 						handleTopicChange={handleTopicChange}
 					/>
 				)}
-		</ModeNavigationWrapper>
+		</article>
 	);
 };
 

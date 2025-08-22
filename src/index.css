@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+@import url("./styles/media.css"); /* Import PostCSS custom media FIRST */
 @import url("./styles/globals.css");
 
 body {
@@ -22,6 +23,7 @@ body {
 	margin: 10px auto;
 	max-width: 1080px;
 }
+
 h1 {
 	font-size: 3em;
 	text-align: center;
@@ -29,13 +31,15 @@ h1 {
 }
 
 h2 {
-	font-size: 2em;
+	font-size: 1.5em;
 	text-align: center;
 	margin: 20px 0;
 }
+
 p {
 	margin: 10px 0;
 }
+
 audio {
 	display: block;
 	margin: 20px auto;
@@ -71,7 +75,6 @@ hr {
 	border-radius: 10px;
 }
 
-/* Scrollbar styling */
 .scrollable_inner::-webkit-scrollbar {
 	width: 8px;
 }
@@ -99,14 +102,14 @@ hr {
 }
 
 .action_button:hover {
-	background-color: #2a7bbf;
-}
-.action_button.save_button {
-	background-color: #4caf50;
-	color: white;
+	background-color: #2a7ae4;
 }
 
-.action_button:disabled {
-	background-color: #ccc;
-	cursor: not-allowed;
+.loading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	font-size: 1.2rem;
+	color: var(--color-text-secondary);
 }

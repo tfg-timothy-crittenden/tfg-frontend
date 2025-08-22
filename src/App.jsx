@@ -5,6 +5,7 @@ import Header from "@/components/Header/Header";
 import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
 import RoleRoute from "@/components/RoleRoute/RoleRoute";
 import AuthCallback from "@/views/AuthCallback/AuthCallback";
+import { ROUTES, ADMIN_SEGMENTS } from "@/routes/routeConfig";
 
 import {
 	OAuthLogin,
@@ -27,43 +28,92 @@ function App() {
 			<Header />
 			<Suspense fallback={<Fallback />}>
 				<Routes>
-					{/* Public */}
-					<Route path="/login" element={<OAuthLogin />} />
-					<Route path="/auth/callback" element={<AuthCallback />} />
+					{/* Public routes */}
+					<Route path={ROUTES.LOGIN} element={<OAuthLogin />} />
+					<Route path={ROUTES.AUTH_CALLBACK} element={<AuthCallback />} />
+					<Route path={ROUTES.UNAUTHORISED} element={<Unauthorised />} />
+					<Route path={ROUTES.SIGNUP} element={<StudentSignup />} />
+					<Route path={ROUTES.SIGNUP_WITH_CODE} element={<StudentSignup />} />
+					<Route
+						path={ROUTES.VERIFY_EMAIL_WITH_TOKEN}
+						element={<EmailVerification />}
+					/>
+					<Route path={ROUTES.VERIFY_EMAIL} element={<EmailVerification />} />
 
-					{/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
-
-					<Route path="/unauthorised" element={<Unauthorised />} />
-					{/* <Route path="/invite/accept" element={<AcceptInvite />} /> */}
-					<Route path="/signup" element={<StudentSignup />} />
-					<Route path="/signup/:classCode" element={<StudentSignup />} />
-					<Route path="/verify-email/:token" element={<EmailVerification />} />
-					<Route path="/verify-email" element={<EmailVerification />} />
-					{/* Private */}
+					{/* Private routes */}
 					<Route element={<PrivateRoute />}>
-						<Route path="/my/classrooms" element={<UserClassrooms />}>
+						<Route path={ROUTES.CLASSROOMS} element={<UserClassrooms />}>
 							{/* Welcome route - no test selected */}
 							<Route path=":id" element={<Classroom />} />
-							{/* Test routes */}
+
+							{/* Global test instructions route */}
 							<Route
-								path=":id/test/:testId/part/:partNumber/*"
+								path={ROUTES.TEST_INSTRUCTIONS.replace(
+									`/${ROUTES.CLASSROOMS}/`,
+									""
+								)}
+								element={<Classroom />}
+							/>
+
+							{/* Part routes */}
+							<Route
+								path={ROUTES.TEST_PART.replace(`/${ROUTES.CLASSROOMS}/`, "")}
+								element={<Classroom />}
+							/>
+
+							{/* Topic route for Part 1 */}
+							<Route
+								path={ROUTES.PART_TOPIC.replace(`/${ROUTES.CLASSROOMS}/`, "")}
+								element={<Classroom />}
+							/>
+
+							{/* Part-specific mode routes */}
+							<Route
+								path={ROUTES.PART_INSTRUCTIONS.replace(
+									`/${ROUTES.CLASSROOMS}/`,
+									""
+								)}
 								element={<Classroom />}
 							/>
 							<Route
-								path=":id/test/:testId/instructions"
+								path={ROUTES.PART_PREPARE.replace(`/${ROUTES.CLASSROOMS}/`, "")}
+								element={<Classroom />}
+							/>
+							<Route
+								path={ROUTES.PART_SPEAK.replace(`/${ROUTES.CLASSROOMS}/`, "")}
+								element={<Classroom />}
+							/>
+							<Route
+								path={ROUTES.PART_READ.replace(`/${ROUTES.CLASSROOMS}/`, "")}
+								element={<Classroom />}
+							/>
+							<Route
+								path={ROUTES.PART_LISTEN.replace(`/${ROUTES.CLASSROOMS}/`, "")}
 								element={<Classroom />}
 							/>
 						</Route>
 					</Route>
-					{/* Admin-only */}
+
+					{/* Admin-only routes */}
 					<Route element={<RoleRoute allowedRoles={["admin"]} />}>
-						<Route path="/admin_dashboard" element={<AdminDashboard />}>
-							<Route path="teachers" element={<AdminTeachers />} />
-							<Route path="classes" element={<AdminClasses />} />
-							<Route path="materials" element={<AdminMaterial />} />
+						<Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />}>
+							<Route
+								path={ADMIN_SEGMENTS.TEACHERS}
+								element={<AdminTeachers />}
+							/>
+							<Route path={ADMIN_SEGMENTS.CLASSES} element={<AdminClasses />} />
+							<Route
+								path={ADMIN_SEGMENTS.MATERIALS}
+								element={<AdminMaterial />}
+							/>
 						</Route>
 					</Route>
-					{/* 404 */}
+
+					{/* Default redirect */}
+					<Route
+						path="/"
+						element={<Navigate to={ROUTES.CLASSROOMS} replace />}
+					/>
 				</Routes>
 			</Suspense>
 		</>

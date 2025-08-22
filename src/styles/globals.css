@@ -1,3 +1,4 @@
+/* src/styles/globals.css */
 /* Global CSS Variables - TOEFL Speaking App Color System */
 :root {
 	/* Primary Brand Colors */
@@ -53,6 +54,7 @@
 	/* Additional semantic colors */
 	--color-accent: #2563eb;
 	--color-accent-hover: #1d4ed8;
+	--color-accent-light: #eff6ff;
 
 	/* Card/Surface colors */
 	--color-surface: #ffffff;
@@ -62,6 +64,34 @@
 	--color-hover: rgba(93, 146, 192, 0.1);
 	--color-focus: rgba(93, 146, 192, 0.2);
 	--color-disabled: #9ca3af;
+
+	/* === BREAKPOINT VARIABLES === */
+	--breakpoint-tablet: 769px;
+	--breakpoint-desktop: 1025px;
+	--breakpoint-large-desktop: 1200px;
+
+	/* Layout Variables */
+	--content-max-width: 1080px;
+	--sidebar-width: 350px;
+	--sidebar-collapsed-width: 50px;
+
+	/* Mobile-first Spacing */
+	--spacing-xs: 0.25rem;
+	--spacing-sm: 0.5rem;
+	--spacing-md: 1rem;
+	--spacing-lg: 1.5rem;
+	--spacing-xl: 2rem;
+	--spacing-xxl: 3rem;
+
+	/* Mobile-first Typography */
+	--font-size-xs: 0.75rem;
+	--font-size-sm: 0.875rem;
+	--font-size-base: 1rem;
+	--font-size-lg: 1.125rem;
+	--font-size-xl: 1.25rem;
+	--font-size-2xl: 1.5rem;
+	--font-size-3xl: 1.875rem;
+	--font-size-4xl: 2.25rem;
 
 	/* Spacing (for consistency) */
 	--spacing-xs: 4px;
@@ -82,4 +112,35 @@
 	--shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
 	--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.15);
 	--shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Base mobile styles (no media query needed) */
+body {
+	font-size: var(--font-size-base);
+	line-height: 1.5;
+	font-family: "Roboto", sans-serif;
+	background-color: var(--color-background);
+}
+
+/* Progressive enhancement for larger screens */
+@media (min-width: var(--breakpoint-tablet)) {
+	:root {
+		--font-size-base: 1.125rem;
+		--font-size-lg: 1.25rem;
+		--font-size-xl: 1.375rem;
+		--spacing-md: 1.25rem;
+		--spacing-lg: 2rem;
+		--spacing-xl: 2.5rem;
+	}
+}
+
+@media (min-width: var(--breakpoint-desktop)) {
+	:root {
+		--font-size-base: 1.25rem;
+		--font-size-lg: 1.375rem;
+		--font-size-xl: 1.5rem;
+		--spacing-lg: 2.5rem;
+		--spacing-xl: 3rem;
+		--spacing-xxl: 4rem;
+	}
 }

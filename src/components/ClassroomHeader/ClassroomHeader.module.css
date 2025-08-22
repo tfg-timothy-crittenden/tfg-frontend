@@ -1,15 +1,18 @@
+/* src/components/ClassroomHeader/ClassroomHeader.module.css */
+
+/* Mobile-first: Base styles */
 .classroomHeader_container {
-	height: 90px;
+	height: 60px;
 	width: 100%;
 	background-color: rgba(255, 255, 255, 0.63);
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
-	padding: 20px;
-	font-size: 1.8rem;
-	z-index: 2;
+	padding: var(--spacing-sm);
+	font-size: var(--font-size-lg);
+	z-index: 3;
 	box-shadow: var(--shadow-sm);
-	gap: 15px;
+	gap: var(--spacing-sm);
 	overflow: hidden;
 }
 
@@ -17,280 +20,140 @@
 	color: var(--color-secondary);
 	white-space: nowrap;
 	flex-shrink: 0;
+	font-size: var(--font-size-base);
+	background: red; /* TEST: Mobile color */
 }
 
+/* TEST: PostCSS custom media */
+@media (--tablet-up) {
+	.classroomHeader_title {
+		background: blue; /* TEST: Should show blue on tablet+ */
+		font-size: var(--font-size-lg);
+	}
+}
+
+@media (--desktop-up) {
+	.classroomHeader_title {
+		background: green; /* TEST: Should show green on desktop+ */
+		font-size: var(--font-size-xl);
+	}
+}
+
+/* Rest of your styles... */
 .classroom_selector {
-	font-size: 1.3rem;
+	font-size: var(--font-size-sm);
 	cursor: pointer;
-	padding: 5px 15px 5px 5px;
+	padding: var(--spacing-xs) var(--spacing-sm);
 	border: solid 1px var(--color-border);
-	border-radius: 5px;
+	border-radius: var(--radius-sm);
 	background: var(--color-background-light);
 	color: var(--color-text-secondary);
-	min-width: 120px;
-	max-width: 200px;
+	min-width: 100px;
+	max-width: 120px;
 	flex-shrink: 1;
+	min-height: 44px; /* Touch target */
 }
 
 .classroom_join_code_container {
 	color: var(--color-secondary);
-	font-size: 1.2rem;
-	display: flex;
-	align-items: center;
-	flex-shrink: 1;
-	min-width: 0; /* Allow shrinking */
-}
-
-.classroom_join_code {
-	color: var(--color-secondary);
-	font-weight: 550;
-	cursor: pointer;
-}
-
-.classroom_join_code_card {
-	border: solid 1px var(--color-border);
-	border-radius: 5px;
-	padding: 5px 10px;
-	display: flex;
-	align-items: center;
-	margin-left: 10px;
-	transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.classroom_join_code_card:hover {
-	background-color: var(--color-background-light);
-}
-
-.classroom_join_code_card:hover .maximize {
-	color: var(--color-success);
-	transform: scale(1.1);
-}
-
-.maximize {
-	cursor: pointer;
-	transition: all 0.3s ease;
-	display: flex;
-	align-items: center;
-	margin-left: 10px;
+	font-size: var(--font-size-sm);
+	display: none; /* Hidden on mobile */
 }
 
 .classroom_nav_group_right {
-	align-self: center;
-	display: flex;
-	gap: 20px;
-	align-items: center;
 	margin-left: auto;
-	color: var(--color-text);
-	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-xs);
 }
 
 .classroom_nav_group_right > div {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 5px;
 	cursor: pointer;
-	padding: 8px 12px;
-	border-radius: 8px;
+	padding: var(--spacing-xs);
+	border-radius: var(--radius-sm);
 	transition: background-color 0.2s ease;
-	min-width: 60px;
+	color: var(--color-text-secondary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 44px;
+	min-height: 44px;
 }
 
 .classroom_nav_group_right > div:hover {
 	background-color: var(--color-background-alt);
+	color: var(--color-text);
 }
 
 .classroomHeader_iconText {
-	font-size: 0.8rem;
-	font-weight: 550;
-	color: var(--color-text);
-	text-transform: capitalize;
+	display: none; /* Hide text on mobile */
 }
 
-/* Class code modal */
-.classroom_join_code_big {
-	font-size: 5rem;
-	font-weight: 800;
-	color: var(--color-text);
-}
-
-/* Tablet responsive */
-@media (max-width: 1024px) {
-	.classroomHeader_container {
-		height: 80px;
-		padding: 15px;
-		font-size: 1.6rem;
-		gap: 12px;
-	}
-
-	.classroom_selector {
-		font-size: 1.1rem;
-		max-width: 180px;
-	}
-
-	.classroom_join_code_container {
-		font-size: 1.1rem;
-	}
-
-	.classroom_nav_group_right {
-		gap: 15px;
-	}
-
-	.classroom_nav_group_right > div {
-		min-width: 55px;
-		padding: 6px 10px;
-	}
-
-	.classroomHeader_iconText {
-		font-size: 0.75rem;
-	}
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
+/* Progressive enhancement for tablets - NOW USING POSTCSS! */
+@media (--tablet-up) {
 	.classroomHeader_container {
 		height: 70px;
-		padding: 10px;
-		font-size: 1.4rem;
-		gap: 8px;
-	}
-
-	.classroomHeader_title {
-		font-size: 1.2rem;
+		padding: var(--spacing-md);
+		font-size: var(--font-size-xl);
+		gap: var(--spacing-md);
 	}
 
 	.classroom_selector {
-		font-size: 1rem;
-		padding: 4px 12px 4px 4px;
-		max-width: 150px;
+		font-size: var(--font-size-base);
+		padding: var(--spacing-sm) var(--spacing-md);
+		max-width: 180px;
+		min-height: auto;
 	}
 
 	.classroom_join_code_container {
-		font-size: 1rem;
-	}
-
-	.classroom_join_code_card {
-		padding: 4px 8px;
-		margin-left: 6px;
+		display: block;
+		font-size: var(--font-size-base);
 	}
 
 	.classroom_nav_group_right {
-		gap: 12px;
+		gap: var(--spacing-md);
 	}
 
 	.classroom_nav_group_right > div {
-		min-width: 50px;
-		padding: 4px 8px;
+		padding: var(--spacing-sm) var(--spacing-md);
+		min-width: 55px;
+		min-height: auto;
 	}
 
 	.classroomHeader_iconText {
-		font-size: 0.7rem;
-	}
-
-	.maximize {
-		margin-left: 6px;
+		display: block;
+		font-size: var(--font-size-sm);
 	}
 }
 
-/* Small mobile responsive */
-@media (max-width: 640px) {
+/* Desktop enhancements */
+@media (--desktop-up) {
 	.classroomHeader_container {
-		height: 60px;
-		padding: 8px;
-		font-size: 1.2rem;
-		gap: 6px;
-	}
-
-	.classroomHeader_title {
-		font-size: 1rem;
+		height: 90px;
+		padding: var(--spacing-lg);
+		font-size: var(--font-size-2xl);
+		gap: var(--spacing-lg);
 	}
 
 	.classroom_selector {
-		font-size: 0.9rem;
-		max-width: 120px;
-		padding: 3px 10px 3px 3px;
+		font-size: var(--font-size-lg);
+		max-width: 200px;
 	}
 
 	.classroom_join_code_container {
-		font-size: 0.9rem;
-		/* Hide join code on very small screens to save space */
-		display: none;
+		font-size: var(--font-size-lg);
 	}
 
 	.classroom_nav_group_right {
-		gap: 8px;
+		gap: var(--spacing-lg);
 	}
 
 	.classroom_nav_group_right > div {
-		min-width: 44px;
-		padding: 4px 6px;
-	}
-
-	/* Hide text labels on small screens, show only icons */
-	.classroomHeader_iconText {
-		display: none;
+		padding: var(--spacing-md) var(--spacing-lg);
 	}
 }
 
-/* Very small mobile responsive */
-@media (max-width: 480px) {
-	.classroomHeader_container {
-		height: 56px;
-		padding: 6px;
-		gap: 4px;
-	}
-
-	.classroomHeader_title {
-		font-size: 0.9rem;
-	}
-
-	.classroom_selector {
-		font-size: 0.8rem;
-		max-width: 100px;
-		padding: 2px 8px 2px 2px;
-	}
-
-	.classroom_nav_group_right {
-		gap: 6px;
-	}
-
-	.classroom_nav_group_right > div {
-		min-width: 40px;
-		padding: 3px 4px;
-	}
-}
-
-/* Large screens */
-@media (min-width: 1200px) {
-	.classroomHeader_container {
-		padding: 25px;
-		gap: 20px;
-	}
-
-	.classroom_selector {
-		font-size: 1.4rem;
-		max-width: 250px;
-	}
-
-	.classroom_join_code_container {
-		font-size: 1.3rem;
-	}
-
-	.classroom_nav_group_right {
-		gap: 25px;
-	}
-
-	.classroom_nav_group_right > div {
-		min-width: 70px;
-		padding: 10px 15px;
-	}
-
-	.classroomHeader_iconText {
-		font-size: 0.85rem;
-	}
-}
-
-/* Accessibility - Ensure touch targets are adequate */
+/* Ensure accessibility on touch devices */
 @media (hover: none) and (pointer: coarse) {
 	.classroom_nav_group_right > div {
 		min-height: 44px;
@@ -298,10 +161,6 @@
 	}
 
 	.classroom_selector {
-		min-height: 44px;
-	}
-
-	.classroom_join_code_card {
 		min-height: 44px;
 	}
 }

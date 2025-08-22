@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { routeMatchers, buildRoute } from "@/routes/routeConfig";
 import SpeakingPart1Presentation from "./SpeakingPart1Presentation";
 import {
 	getRandomSpeakingTaskOneByTopic,
@@ -11,12 +12,8 @@ const SpeakingPart1Container = () => {
 	const navigate = useNavigate();
 	const { id: classroomId, testId } = useParams();
 
-	// Extract the wildcard portion of the path
-	// Expected format: ".../part/1/topic/<topicName>"
-	const pathSegments = location.pathname.split("/");
-	const topicIndex = pathSegments.indexOf("topic");
-	const currentTopic =
-		topicIndex !== -1 ? decodeURIComponent(pathSegments[topicIndex + 1]) : null;
+	// Use route matcher to get topic
+	const currentTopic = routeMatchers.getTopicFromPath(location.pathname);
 
 	const modeEnum = Object.freeze({
 		INSTRUCTIONS: "INSTRUCTIONS",
@@ -29,10 +26,38 @@ const SpeakingPart1Container = () => {
 		[modeEnum.SPEAK]: 45,
 	};
 
+	// Determine mode based on URL using route matchers
+	const getModeFromUrl = () => {
+		const currentMode = routeMatchers.getPartModeFromPath(location.pathname);
+
+		switch (currentMode) {
+			case "prepare":
+				return modeEnum.PREPARE;
+			case "speak":
+				return modeEnum.SPEAK;
+			default:
+				return modeEnum.INSTRUCTIONS; // Default mode
+		}
+	};
+
 	const [time, setTime] = useState(modeTimeEnum.PREPARE * 1000);
-	const [mode, setMode] = useState(modeEnum.INSTRUCTIONS);
+	const [mode, setMode] = useState(getModeFromUrl());
 	const [question, setQuestion] = useState(null);
 	const [topics, setTopics] = useState([]);
+
+	// Update mode when URL changes
+	useEffect(() => {
+		const newMode = getModeFromUrl();
+		console.log("URL changed, new mode:", newMode);
+		setMode(newMode);
+
+		// Set appropriate time for the mode
+		if (newMode === modeEnum.PREPARE) {
+			setTime(modeTimeEnum.PREPARE * 1000);
+		} else if (newMode === modeEnum.SPEAK) {
+			setTime(modeTimeEnum.SPEAK * 1000);
+		}
+	}, [location.pathname]);
 
 	// Load topics
 	useEffect(() => {
@@ -60,9 +85,7 @@ const SpeakingPart1Container = () => {
 	}, [currentTopic]);
 
 	const handleTopicChange = (topicName) => {
-		navigate(
-			`/my/classrooms/${classroomId}/test/${testId}/part/1/topic/${topicName}`
-		);
+		navigate(buildRoute.partTopic(classroomId, testId, 1, topicName));
 	};
 
 	return (

@@ -1,5 +1,5 @@
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SpeakingPart1Container from "@/views/SpeakingPart1/SpeakingPart1Container";
 import SpeakingPart2Container from "@/views/SpeakingPart2/SpeakingPart2Container";
 import SpeakingPart3Container from "@/views/SpeakingPart3/SpeakingPart3Container";
@@ -9,13 +9,17 @@ import TestSelectionWelcome from "@/components/TestSelectionWelcome/TestSelectio
 
 import QuestionToggleSwitch from "../../components/QuestionToggleSwitch/QuestionToggleSwitch";
 import ClassroomHeader from "../../components/ClassroomHeader/ClassroomHeader";
-import SideNavBar from "../../components/SideNavBar/SideNavBar";
+import ResponsiveNavigation from "@/components/ResponsiveNavigation/ResponsiveNavigation";
 import ViewClassMembers from "@/components/ViewClassMembers/ViewClassMembers";
+import useResponsiveLayout from "@/hooks/useResponsiveLayout";
+import { routeMatchers, buildRoute } from "@/routes/routeConfig";
 
 import style from "./Classroom.module.css";
 
 const Classroom = () => {
 	const [showMaterial, setShowMaterial] = useState(true);
+	const [navExpanded, setNavExpanded] = useState(false);
+	const { isMobile } = useResponsiveLayout();
 
 	const { partNumber, testId } = useParams();
 	const { classrooms } = useOutletContext();
@@ -27,17 +31,35 @@ const Classroom = () => {
 		(c) => String(c.id) === String(classroomId)
 	);
 
+	// Auto-expand navigation when test is selected
+	useEffect(() => {
+		if (testId && partNumber && isMobile) {
+			setNavExpanded(true);
+		} else if (!testId && isMobile) {
+			setNavExpanded(false);
+		}
+	}, [testId, partNumber, isMobile]);
+
+	const handleClassroomChange = (newClassroomId) => {
+		if (partNumber && testId) {
+			navigate(buildRoute.testPart(newClassroomId, testId, partNumber));
+		} else {
+			navigate(buildRoute.classroom(newClassroomId));
+		}
+	};
+
 	const renderPart = () => {
 		// Show welcome message when no test is selected
 		if (!testId) {
 			return <TestSelectionWelcome classroomName={currentClassroom?.name} />;
 		}
 
-		// Check if we're on the instructions route
-		if (window.location.pathname.includes("/instructions")) {
+		// Check if we're on the global instructions route
+		if (routeMatchers.isGlobalInstructions(window.location.pathname)) {
 			return <TestInstructions />;
 		}
 
+		// Part-specific routes are handled by part containers
 		switch (partNumber) {
 			case "1":
 				return <SpeakingPart1Container />;
@@ -52,40 +74,55 @@ const Classroom = () => {
 		}
 	};
 
-	const handleClassroomChange = (newClassroomId) => {
-		// Navigate to welcome state when changing classrooms
-		navigate(`/my/classrooms/${newClassroomId}`);
-	};
-
 	return (
-		<div
-			style={{
-				display: "flex",
-				flexDirection: "column",
-				position: "relative",
-			}}
+		<main
+			className={`${style.classroom_layout} ${
+				isMobile ? style.mobile_layout : style.desktop_layout
+			}`}
 		>
+			{/* Header */}
 			<ClassroomHeader
 				classrooms={classrooms}
 				onClassroomChange={handleClassroomChange}
 				setShowMaterial={setShowMaterial}
 				showMaterial={showMaterial}
 			/>
-			{showMaterial ? (
-				<div style={{ display: "flex", flex: 1, position: "relative" }}>
-					<SideNavBar />
-					<div className={style.test_wrapper}>
-						{/* Only show QuestionToggleSwitch when a test is selected */}
-						{testId && <QuestionToggleSwitch />}
-						<div className={style.part_wrapper}>{renderPart()}</div>
-					</div>
+
+			{/* Main Content Area */}
+			<div className={style.content_wrapper}>
+				{/* Sidebar/Navigation */}
+				<ResponsiveNavigation
+					classrooms={classrooms}
+					onClassroomChange={handleClassroomChange}
+					setShowMaterial={setShowMaterial}
+					showMaterial={showMaterial}
+				/>
+
+				{/* Main Content */}
+				<div
+					className={`${style.main_content} ${
+						isMobile ? style.mobile_content : style.desktop_content
+					}`}
+				>
+					{/* Question Toggle (Desktop only) - MOVED OUTSIDE content wrapper */}
+					{!isMobile && testId && (
+						<>
+							<QuestionToggleSwitch />
+						</>
+					)}
+					{showMaterial ? renderPart() : <ViewClassMembers />}
 				</div>
-			) : (
-				<div className={style.test_wrapper}>
-					<ViewClassMembers />
-				</div>
+			</div>
+
+			{/* Mobile Bottom Navigation Spacer */}
+			{isMobile && (
+				<div
+					className={`${style.bottom_nav_spacer} ${
+						navExpanded ? style.expanded : ""
+					}`}
+				/>
 			)}
-		</div>
+		</main>
 	);
 };
 

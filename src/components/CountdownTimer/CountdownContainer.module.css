@@ -1,28 +1,47 @@
-@font-face {
-	font-family: "Digital-7";
-	src: url("/fonts/digital-7.ttf") format("truetype");
-	font-weight: normal;
-	font-style: normal;
-}
-
+/* Mobile-first: Base styles */
 .container {
 	color: var(--color-text-secondary);
 	text-align: center;
-
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	background-color: var(--color-background-alt);
-	padding: 10px 20px;
+	padding: var(--spacing-sm) var(--spacing-lg);
 	border-radius: 30px;
-	max-width: 600px;
+	width: 100%;
+	max-width: 400px;
 }
 
 .time_display {
-	padding: 0 15px;
+	padding: 0 var(--spacing-md);
 	display: inline-flex;
 	flex-direction: column;
 	justify-content: center;
-
 	font-weight: normal;
+
+	font-size: 1.1rem;
+}
+
+/* Tablet enhancements */
+@media (--tablet-up) {
+	.container {
+		padding: var(--spacing-md) var(--spacing-xl);
+		max-width: 600px;
+	}
+
+	.time_display {
+		font-size: 1rem;
+	}
+}
+
+/* Desktop enhancements - NOW USING POSTCSS! */
+@media (--desktop-up) {
+	.time_display {
+		font-size: 1.2rem;
+	}
+}
+
+/* Fullscreen styles */
+:fullscreen .time_display {
+	font-size: 3rem;
 }

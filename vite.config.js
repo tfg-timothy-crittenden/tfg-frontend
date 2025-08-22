@@ -11,6 +11,11 @@ export default defineConfig({
 		},
 	},
 	server: {
+		port: 5173, // Dev server port
 		historyApiFallback: true, // esto es crítico para SPA routin	g
+	},
+	preview: {
+		port: 5173, // Preview server port (same as dev)
+		host: true, // Allow external connections
 	},
 });

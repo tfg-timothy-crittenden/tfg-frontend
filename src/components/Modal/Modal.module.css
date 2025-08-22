@@ -5,7 +5,7 @@
 	width: 100%;
 	height: 100%;
 	background: rgba(0, 0, 0, 0.5);
-	z-index: 999;
+	z-index: 1000;
 }
 
 .modal_container {
@@ -18,6 +18,8 @@
 	box-shadow: var(--shadow-lg);
 	z-index: 1000;
 	border-radius: 5px;
+	width: 100%;
+	height: 100%;
 }
 
 .modal_header {
@@ -46,4 +48,13 @@
 
 .modal_body {
 	padding: 20px;
+}
+
+@media (--tablet-up) {
+	.modal_container {
+		width: fit-content;
+		max-width: 50%;
+		height: fit-content;
+		max-height: 70%;
+	}
 }
