@@ -1,3 +1,2 @@
-/api/*    https://toefl-backend-ancient-brook-7139.fly.dev/api/:splat    200
-/oauth/*  https://toefl-backend-ancient-brook-7139.fly.dev/oauth/:splat  200
-/*        /index.html   
+/api/*  https://toefl-backend-ancient-brook-7139.fly.dev/api/:splat  200
+/*      /index.html                         200
