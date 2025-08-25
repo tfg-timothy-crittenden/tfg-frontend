@@ -2,10 +2,9 @@ import Read from "@/components/Read/Read";
 import Listen from "@/components/Listen/ListenPresentation";
 import PrepareSpeak from "@/components/PrepareSpeak/PrepareSpeak";
 import Instructions from "@/components/Instructions/Instructions";
-import image from "@/assets/question_two_1.png";
-
 import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
-
+import image from "@/assets/question_two_1.png";
+import sharedStyles from "@/styles/speakingPartLayout.module.css";
 import styles from "./SpeakingPart2.module.css";
 
 const SpeakingPart2Presentation = ({
@@ -35,8 +34,10 @@ const SpeakingPart2Presentation = ({
 							and <strong>60 seconds</strong> to speak.
 						</p>
 						<p>
-							Take notes while reading and listening as they will help you
-							organize your response.
+							<em>
+								Take notes during the reading and listening sections to help you
+								organize your response.
+							</em>
 						</p>
 					</Instructions>
 				);
@@ -51,13 +52,7 @@ const SpeakingPart2Presentation = ({
 				);
 
 			case modeEnum.LISTEN:
-				return (
-					<Listen
-						key={testData.listeningAudio}
-						audio={testData.listeningAudio}
-						image={image}
-					/>
-				);
+				return <Listen audio={testData.listeningAudio} image={image} />;
 
 			case modeEnum.PREPARE:
 			case modeEnum.SPEAK:
@@ -78,9 +73,12 @@ const SpeakingPart2Presentation = ({
 	};
 
 	return (
-		<article className={styles.container}>
-			<ToggleSwitch modeEnum={modeEnum} mode={mode} />
-			<div>{renderContent()}</div>
+		<article className={sharedStyles.container}>
+			<div className={sharedStyles.mode_selector_row}>
+				<ToggleSwitch modeEnum={modeEnum} mode={mode} />
+			</div>
+
+			{renderContent()}
 		</article>
 	);
 };

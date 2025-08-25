@@ -60,8 +60,8 @@ const CountdownContainer = ({ initialTime }) => {
 				onReset={handleReset}
 			/>
 			<span className={styles.time_display}>
-				{currentTime > 0 ? formatTime(currentTime) : formatTime(0)}/
-				{formatTime(totalTime)}
+				{currentTime > 0 ? formatTime(currentTime) : formatTime(0)}
+				
 			</span>
 			<CountdownTimerBar currentTime={currentTime} totalTime={totalTime} />
 		</div>

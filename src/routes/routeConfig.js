@@ -74,7 +74,7 @@ export const ROUTES = {
 };
 
 /**
- * Route builders - these generate URLs with actual values
+ * Route builders - generate URLs with actual values
  */
 export const buildRoute = {
 	classroom: (classroomId) =>
@@ -95,19 +95,14 @@ export const buildRoute = {
 		}
 		return `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.TEST}/${testId}/${ROUTE_SEGMENTS.PART}/${partNumber}/${mode}`;
 	},
+	partTopic: (classroomId, testId, mode, topic) =>
+		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.TEST}/${testId}/${ROUTE_SEGMENTS.PART}/1/${mode}?topic=${topic}`,
 
 	signupWithCode: (classCode) =>
 		`/${ROUTE_SEGMENTS.SIGNUP}/${encodeURIComponent(classCode)}`,
 
 	signupWithQuery: (classCode) =>
 		`/${ROUTE_SEGMENTS.SIGNUP}?classCode=${encodeURIComponent(classCode)}`,
-
-	partTopic: (classroomId, testId, partNumber, topicName) =>
-		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${
-			ROUTE_SEGMENTS.TEST
-		}/${testId}/${ROUTE_SEGMENTS.PART}/${partNumber}/topic/${encodeURIComponent(
-			topicName
-		)}`,
 };
 
 /**

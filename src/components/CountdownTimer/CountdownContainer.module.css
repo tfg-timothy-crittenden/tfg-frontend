@@ -9,7 +9,7 @@
 	padding: var(--spacing-sm) var(--spacing-lg);
 	border-radius: 30px;
 	width: 100%;
-	max-width: 400px;
+	border: 1px solid var(--color-text-secondary);
 }
 
 .time_display {

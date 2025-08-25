@@ -1,7 +1,8 @@
 .tags_container {
-	margin: 20px auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
 	max-width: 1080px;
-	padding: 20px;
+	padding: 10px 0;
 	background-color: var(--color-background-alt);
 	border-radius: var(--radius-lg);
 	border: 1px solid var(--color-border);
@@ -12,4 +13,9 @@
 	margin-bottom: 15px;
 	color: var(--color-text);
 	text-align: center;
+}
+.tags {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
 }

@@ -45,7 +45,6 @@ function App() {
 						<Route path={ROUTES.CLASSROOMS} element={<UserClassrooms />}>
 							{/* Welcome route - no test selected */}
 							<Route path=":id" element={<Classroom />} />
-
 							{/* Global test instructions route */}
 							<Route
 								path={ROUTES.TEST_INSTRUCTIONS.replace(
@@ -54,19 +53,13 @@ function App() {
 								)}
 								element={<Classroom />}
 							/>
+							{/* Part 1: mode as path, topic as query param */}
 
-							{/* Part routes */}
+							{/* Generic part + mode route */}
 							<Route
 								path={ROUTES.TEST_PART.replace(`/${ROUTES.CLASSROOMS}/`, "")}
 								element={<Classroom />}
 							/>
-
-							{/* Topic route for Part 1 */}
-							<Route
-								path={ROUTES.PART_TOPIC.replace(`/${ROUTES.CLASSROOMS}/`, "")}
-								element={<Classroom />}
-							/>
-
 							{/* Part-specific mode routes */}
 							<Route
 								path={ROUTES.PART_INSTRUCTIONS.replace(

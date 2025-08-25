@@ -24,7 +24,6 @@
 .classroom_layout {
 	display: flex;
 	flex-direction: column;
-	min-height: 100vh;
 	background: var(--color-background);
 }
 
@@ -40,7 +39,7 @@
 	background: var(--color-background);
 	position: relative;
 	max-width: 1080px;
-	border: 1px grey solid;
+	border: 1px solid var(--color-border);
 	margin: 0 auto;
 }
 

@@ -1,4 +1,9 @@
-import { useParams, useOutletContext, useNavigate } from "react-router-dom";
+import {
+	useParams,
+	useOutletContext,
+	useNavigate,
+	useSearchParams,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
 import SpeakingPart1Container from "@/views/SpeakingPart1/SpeakingPart1Container";
 import SpeakingPart2Container from "@/views/SpeakingPart2/SpeakingPart2Container";
@@ -22,6 +27,7 @@ const Classroom = () => {
 	const { isMobile } = useResponsiveLayout();
 
 	const { partNumber, testId } = useParams();
+	console.log("PartNumber: ", partNumber);
 	const { classrooms } = useOutletContext();
 	const navigate = useNavigate();
 
@@ -30,6 +36,9 @@ const Classroom = () => {
 	const currentClassroom = classrooms?.find(
 		(c) => String(c.id) === String(classroomId)
 	);
+	// Get topic from query string for part 1
+	const [searchParams] = useSearchParams();
+	const topicName = searchParams.get("topic") || "Education";
 
 	// Auto-expand navigation when test is selected
 	useEffect(() => {
@@ -59,10 +68,9 @@ const Classroom = () => {
 			return <TestInstructions />;
 		}
 
-		// Part-specific routes are handled by part containers
 		switch (partNumber) {
 			case "1":
-				return <SpeakingPart1Container />;
+				return <SpeakingPart1Container topicName={topicName} />;
 			case "2":
 				return <SpeakingPart2Container />;
 			case "3":
@@ -70,7 +78,7 @@ const Classroom = () => {
 			case "4":
 				return <SpeakingPart4Container />;
 			default:
-				return <TestSelectionWelcome classroomName={currentClassroom?.name} />;
+				return <span>partNumber was not provided</span>;
 		}
 	};
 

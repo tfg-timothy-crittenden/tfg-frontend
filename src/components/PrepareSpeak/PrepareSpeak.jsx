@@ -73,14 +73,14 @@ const PrepareSpeak = ({
 
 				<TimeInformation modeTimes={modeTimes} />
 			</TestWrapper>
-			{mode === modeEnum.PREPARE && (
-				<p className={styles.instruction}>Prepare your response</p>
-			)}
-			{mode === modeEnum.SPEAK && (
-				<span className={styles.instruction}>Give your response</span>
-			)}
-			<hr></hr>
+
 			<TimerWrapper>
+				{mode === modeEnum.PREPARE && (
+					<p className={styles.instruction}>Prepare your response</p>
+				)}
+				{mode === modeEnum.SPEAK && (
+					<span className={styles.instruction}>Give your response</span>
+				)}
 				<CountdownContainer initialTime={time} />
 			</TimerWrapper>
 		</>

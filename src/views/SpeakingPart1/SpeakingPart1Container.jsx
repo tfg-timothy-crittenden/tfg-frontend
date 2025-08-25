@@ -7,13 +7,13 @@ import {
 	getSpeakingTaskOneTopics,
 } from "@/api/tasks/tasksAPI";
 
-const SpeakingPart1Container = () => {
+const SpeakingPart1Container = ({ topicName }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const { id: classroomId, testId } = useParams();
 
 	// Use route matcher to get topic
-	const currentTopic = routeMatchers.getTopicFromPath(location.pathname);
+	const currentTopic = topicName || "Education";
 
 	const modeEnum = Object.freeze({
 		INSTRUCTIONS: "INSTRUCTIONS",
@@ -29,7 +29,7 @@ const SpeakingPart1Container = () => {
 	// Determine mode based on URL using route matchers
 	const getModeFromUrl = () => {
 		const currentMode = routeMatchers.getPartModeFromPath(location.pathname);
-
+		console.log("Classroom: current mode is: ", currentMode);
 		switch (currentMode) {
 			case "prepare":
 				return modeEnum.PREPARE;
@@ -85,7 +85,9 @@ const SpeakingPart1Container = () => {
 	}, [currentTopic]);
 
 	const handleTopicChange = (topicName) => {
-		navigate(buildRoute.partTopic(classroomId, testId, 1, topicName));
+		navigate(
+			buildRoute.partTopic(classroomId, testId, mode.toLowerCase(), topicName)
+		);
 	};
 
 	return (

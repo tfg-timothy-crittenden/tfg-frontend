@@ -1,0 +1,21 @@
+/* src/styles/speakingPartLayout.module.css */
+.container {
+	display: grid;
+	grid-template-rows: [mode_selector] 100px [test_content] 5fr [test_tools] 5fr;
+	height: calc(100vh - 140px);
+}
+
+.mode_selector_row {
+	grid-row: mode_selector;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.test_content_row {
+	grid-row: test_content;
+}
+
+.test_tools_row {
+	grid_row: test_tools;
+}

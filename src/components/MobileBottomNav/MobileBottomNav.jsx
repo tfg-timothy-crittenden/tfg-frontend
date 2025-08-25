@@ -62,14 +62,27 @@ const MobileBottomNav = () => {
 		}
 	};
 
-	const handleTestSelect = (test, part, section = null) => {
+	const handleTestSelect = (
+		test,
+		part,
+		section = null,
+		topic = DEFAULT_TOPIC
+	) => {
 		setSelectedSection(section);
 		closeModal();
-		navigate(
-			`/my/classrooms/${classroomId}/test/${
-				test.testId || test.id
-			}/part/${part}`
-		);
+		if (part === 1) {
+			navigate(
+				`/my/classrooms/${classroomId}/test/${
+					test.testId || test.id
+				}/part/1/instructions?topic=${encodeURIComponent(topic)}`
+			);
+		} else {
+			navigate(
+				`/my/classrooms/${classroomId}/test/${
+					test.testId || test.id
+				}/part/${part}`
+			);
+		}
 	};
 
 	// Helper functions from original SideNavBar

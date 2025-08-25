@@ -5,6 +5,7 @@ import Instructions from "@/components/Instructions/Instructions";
 import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
 import TimerWrapper from "@/components/TimerWrapper/TimerWrapper";
 import CountdownContainer from "@/components/CountdownTimer/CountdownContainer";
+import sharedStyles from "@/styles/speakingPartLayout.module.css";
 import styles from "./SpeakingPart1.module.css";
 
 const SpeakingPart1Presentation = ({
@@ -88,10 +89,12 @@ const SpeakingPart1Presentation = ({
 	};
 
 	return (
-		<article className={styles.container}>
-			<ToggleSwitch modeEnum={modeEnum} mode={mode} />
+		<article className={sharedStyles.container}>
+			<div className={sharedStyles.mode_selector_row}>
+				<ToggleSwitch modeEnum={modeEnum} mode={mode} />
+			</div>
 
-			<div>{renderContent()}</div>
+			{renderContent()}
 
 			{/* Topic selector - only show for prepare/speak modes when topics are loaded */}
 			{(mode === modeEnum.PREPARE || mode === modeEnum.SPEAK) &&

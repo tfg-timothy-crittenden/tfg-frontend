@@ -1,6 +1,6 @@
 import React from "react";
 import { BookOpen, Headphones, Mic, Info, Brain } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { buildRoute, MODE_SEGMENTS } from "@/routes/routeConfig";
 
 import styles from "./ToggleSwitch.module.css";
@@ -8,6 +8,9 @@ import styles from "./ToggleSwitch.module.css";
 const ToggleSwitch = ({ mode, modeEnum }) => {
 	const navigate = useNavigate();
 	const { id: classroomId, testId, partNumber } = useParams();
+	// Get topic from query string for part 1
+	const [searchParams] = useSearchParams();
+	const topicName = searchParams.get("topic") || "Education";
 
 	const modeIcons = {
 		INSTRUCTIONS: <Info size={24} />,
@@ -21,35 +24,33 @@ const ToggleSwitch = ({ mode, modeEnum }) => {
 		if (!testId || !partNumber || !classroomId) return;
 
 		let routePath;
-
-		if (targetMode === "INSTRUCTIONS") {
+		const modeMap = {
+			PREPARE: MODE_SEGMENTS.PREPARE,
+			SPEAK: MODE_SEGMENTS.SPEAK,
+			READ: MODE_SEGMENTS.READ,
+			LISTEN: MODE_SEGMENTS.LISTEN,
+			INSTRUCTIONS: MODE_SEGMENTS.INSTRUCTIONS,
+		};
+		const routeMode = modeMap[targetMode];
+		console.log("part number seen in toggle switch", partNumber);
+		if (partNumber === "1") {
+			console.log("using partTopic", topicName);
+			// For part 1, always include topic in route
+			routePath = buildRoute.partTopic(
+				classroomId,
+				testId,
+				routeMode,
+				topicName
+			);
+		} else if (routeMode) {
 			routePath = buildRoute.partMode(
 				classroomId,
 				testId,
 				partNumber,
-				MODE_SEGMENTS.INSTRUCTIONS
+				routeMode
 			);
 		} else {
-			// Map the mode enum to route segments
-			const modeMap = {
-				PREPARE: MODE_SEGMENTS.PREPARE,
-				SPEAK: MODE_SEGMENTS.SPEAK,
-				READ: MODE_SEGMENTS.READ,
-				LISTEN: MODE_SEGMENTS.LISTEN,
-			};
-
-			const routeMode = modeMap[targetMode];
-			if (routeMode) {
-				routePath = buildRoute.partMode(
-					classroomId,
-					testId,
-					partNumber,
-					routeMode
-				);
-			} else {
-				// Default to the part route without mode
-				routePath = buildRoute.testPart(classroomId, testId, partNumber);
-			}
+			routePath = buildRoute.testPart(classroomId, testId, partNumber);
 		}
 
 		navigate(routePath);

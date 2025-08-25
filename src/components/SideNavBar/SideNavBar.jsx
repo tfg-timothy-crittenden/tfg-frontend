@@ -10,6 +10,8 @@ import {
 import { useSelector } from "react-redux";
 import { selectHasRole } from "@/store/auth/authSlice";
 
+const DEFAULT_TOPIC = "General";
+
 const SideNavBar = () => {
 	const { id: classroomId, testId, partNumber } = useParams();
 	const navigate = useNavigate();
@@ -43,9 +45,22 @@ const SideNavBar = () => {
 	const studentCurrentList = studentTaskSummaries?.[activePart] || [];
 	const teacherCurrentList = teacherTaskSummaries?.[activePart] || [];
 
-	const handleSelectTestPart = (newTestId, part = 1, section = null) => {
+	const handleSelectTestPart = (
+		newTestId,
+		part = 1,
+		section = null,
+		topic = DEFAULT_TOPIC
+	) => {
 		setSelectedSection(section);
-		navigate(`/my/classrooms/${classroomId}/test/${newTestId}/part/${part}`);
+		if (part === 1) {
+			navigate(
+				`/my/classrooms/${classroomId}/test/${newTestId}/part/1/instructions?topic=${encodeURIComponent(
+					topic
+				)}`
+			);
+		} else {
+			navigate(`/my/classrooms/${classroomId}/test/${newTestId}/part/${part}`);
+		}
 	};
 
 	// For Part 1, create separate teacher and student lists based on available tasks

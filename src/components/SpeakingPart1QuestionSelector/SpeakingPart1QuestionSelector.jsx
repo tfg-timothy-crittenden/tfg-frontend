@@ -7,16 +7,18 @@ const SpeakingPart1QuestionSelector = ({
 	handleTopicChange,
 }) => {
 	return (
-		<aside className={styles.tags_container}>
+		<aside className={styles.tags_container + ' ' + "mobile_side_margin " + "mobile_side_padding"}>
 			<p className={styles.instruction}>Random question by topic</p>
-			{topics.map((topic) => (
-				<Tag
-					key={topic}
-					tagName={topic}
-					handleSetTag={handleTopicChange}
-					selected={currentTopic === topic}
-				/>
-			))}
+			<div className={styles.tags}>
+				{topics.map((topic) => (
+					<Tag
+						key={topic}
+						tagName={topic}
+						handleSetTag={handleTopicChange}
+						selected={currentTopic === topic}
+					/>
+				))}
+			</div>
 		</aside>
 	);
 };
