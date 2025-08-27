@@ -1,8 +1,8 @@
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { getUserClassrooms } from "@/api/user/user";
-import { joinClassByCode } from "@/api/classes/classesAPI"; // ⬅️ add this helper
-import { Plus } from "lucide-react";
+import { joinClassByCode } from "@/api/classes/classesAPI";
+import { Plus, GraduationCap } from "lucide-react";
 import styles from "./UserClassrooms.module.css";
 
 const UserClassrooms = () => {
@@ -47,11 +47,19 @@ const UserClassrooms = () => {
 		setJoinErr("");
 		try {
 			const res = await joinClassByCode(code);
-			// res may return { classroomId } — navigate if present
 			await refresh();
-			setJoinOpen(false);
-			setJoinCode("");
+			const alreadyInClass = classrooms.some(
+				(c) => String(c.code) === String(code)
+			);
+			if (alreadyInClass) {
+				setJoinErr("You are already enrolled in this class.");
+				setJoining(false);
+				// Do NOT collapse the join box
+				return;
+			}
 			if (res?.classroomId) {
+				setJoinOpen(false);
+				setJoinCode("");
 				navigate(`/my/classrooms/${res.classroomId}/test/1/part/1`);
 			}
 		} catch (e) {
@@ -60,6 +68,7 @@ const UserClassrooms = () => {
 				e?.response?.data?.error ||
 				"Could not join class";
 			setJoinErr(msg);
+			// Do NOT collapse the join box
 		} finally {
 			setJoining(false);
 		}
@@ -87,8 +96,6 @@ const UserClassrooms = () => {
 							c.teachers && c.teachers.length
 								? c.teachers.join(", ")
 								: "Unassigned";
-						const showTeacherCount =
-							c.materials && typeof c.materials.teacher === "number";
 
 						return (
 							<li
@@ -112,20 +119,14 @@ const UserClassrooms = () => {
 
 								<div className={styles.card_meta}>
 									<div className={styles.meta_row}>
-										<span className={styles.meta_label}>Teacher</span>
+										<span className={styles.meta_label}>
+											<GraduationCap
+												size={18}
+												style={{ verticalAlign: "middle" }}
+											/>
+										</span>
 										<span className={styles.meta_value}>{teacherLabel}</span>
 									</div>
-								</div>
-
-								<div className={styles.materials_row}>
-									<span className={styles.badge}>
-										Student material: {c.materials?.student ?? 0}
-									</span>
-									{showTeacherCount && (
-										<span className={`${styles.badge} ${styles.badge_alt}`}>
-											Teacher material: {c.materials.teacher}
-										</span>
-									)}
 								</div>
 
 								<div className={styles.card_cta}>View class</div>
@@ -144,25 +145,19 @@ const UserClassrooms = () => {
 							(e.key === "Enter" || e.key === " ") && setJoinOpen((v) => !v)
 						}
 					>
-						<div className={styles.card_header}>
-							<div
-								className={styles.card_title}
-								style={{ display: "flex", alignItems: "center", gap: 8 }}
-							>
-								<Plus size={34} />
-							</div>
-						</div>
-
 						{!joinOpen ? (
 							<>
 								<div className={styles.card_meta}>
-									<div className={styles.meta_row}></div>
+									<div className={styles.meta_row}>
+										<Plus size={34} />
+									</div>
 								</div>
+								<div className={styles.card_cta}>Join a class</div>
 							</>
 						) : (
 							<>
 								<div className={styles.card_meta}>
-									<div className={styles.meta_row} style={{ width: "100%" }}>
+									<div className={styles.meta_row}>
 										<label
 											htmlFor="join-code"
 											className={styles.meta_label}
@@ -174,7 +169,10 @@ const UserClassrooms = () => {
 											id="join-code"
 											type="text"
 											value={joinCode}
-											onChange={(e) => setJoinCode(e.target.value)}
+											onChange={(e) => {
+												setJoinCode(e.target.value);
+												if (joinErr) setJoinErr(""); // Clear error when editing
+											}}
 											onClick={(e) => e.stopPropagation()}
 											onKeyDown={(e) => {
 												if (e.key === "Enter") {
@@ -196,12 +194,9 @@ const UserClassrooms = () => {
 									)}
 								</div>
 
-								<div
-									className={styles.materials_row}
-									style={{ justifyContent: "flex-end", gap: 8 }}
-								>
+								<div className={styles.buttons_row}>
 									<button
-										className={styles.badge}
+										className="action_button"
 										onClick={(e) => {
 											e.stopPropagation();
 											setJoinOpen(false);
@@ -213,7 +208,7 @@ const UserClassrooms = () => {
 										Cancel
 									</button>
 									<button
-										className={`${styles.badge} ${styles.badge_alt}`}
+										className={`${styles.join_btn} action_button`}
 										onClick={(e) => {
 											e.stopPropagation();
 											handleJoin();

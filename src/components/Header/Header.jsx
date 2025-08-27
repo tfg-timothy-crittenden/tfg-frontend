@@ -9,6 +9,7 @@ import {
 } from "@/store/auth/authSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CircleUser, Home, Settings } from "lucide-react";
+import { NavLink } from "react-router";
 
 const Header = () => {
 	const dispatch = useDispatch();
@@ -81,27 +82,27 @@ const Header = () => {
 			{isAuthenticated && (
 				<div className={styles.buttonGroup}>
 					{/* My Classrooms Link */}
-					<a
-						href="/my/classrooms"
+					<NavLink
+						to="/my/classrooms"
 						className={`${styles.nav_item_container} ${
 							isClassroomsActive ? styles.activeNavItem : ""
 						}`}
 					>
 						<Home size={20} />
 						<span className={styles.nav_label}>My Classrooms</span>
-					</a>
+					</NavLink>
 
 					{/* Admin Dashboard Link (only for admins) */}
 					{isAdmin && (
-						<a
-							href="/admin_dashboard"
+						<NavLink
+							to="/admin_dashboard"
 							className={`${styles.nav_item_container} ${
 								isAdminActive ? styles.activeNavItem : ""
 							}`}
 						>
 							<Settings size={20} />
 							<span className={styles.nav_label}>Admin</span>
-						</a>
+						</NavLink>
 					)}
 
 					{/* User Menu */}

@@ -1,3 +1,4 @@
+/* Add global variable usage to module styles */
 .classrooms_container {
 	background: var(--color-background);
 	min-height: 100vh;
@@ -56,13 +57,13 @@
 }
 .meta_row {
 	display: flex;
+	align-items: center;
 	gap: 8px;
 	font-size: 0.9rem;
 	margin-top: 4px;
 }
 .meta_label {
 	color: var(--color-text-light);
-	min-width: 90px;
 }
 .meta_value {
 	color: var(--color-text);
@@ -106,15 +107,53 @@
 }
 
 .join_class_card {
-	display: flex;
-	justify-content: center;
+	display: grid;
 	align-items: center;
 	background: var(--color-background);
-	border: 1px dashed var(--color-border);
+	border: 1px dashed var(--color-border-dark);
 	border-radius: 14px;
 	padding: 16px;
 	cursor: pointer;
 	transition: box-shadow 0.2s ease, transform 0.06s ease;
 	width: fit-content;
-	border-radius: 50%;
+}
+
+/* Center align + icon */
+.join_class_card .meta_row {
+	justify-content: center;
+}
+
+.buttons_row {
+	width: 100%;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.classroom_input {
+	padding: 10px;
+	background: var(--color-background-code);
+	color: var(--color-text);
+	border: 1px solid var(--color-border);
+	border-radius: 5px;
+	font-size: var(--font-size-lg);
+	width: 130px;
+}
+
+/* .cancel_btn {
+	background: var(--color-primary-light);
+	color: var(--color-primary);
+	border: 1px solid var(--color-border);
+	padding: 5px 10px;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 0.9rem;
+} */
+
+.join_btn {
+	background: var(--color-success);
+}
+
+.join_btn:hover {
+	background: var(--color-success-hover);
 }

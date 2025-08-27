@@ -1,0 +1,12 @@
+[
+	{
+		"id": "CIC_2_task3",
+		"title": "CIC 2 Task 3",
+		"reading_title": "The Law of Diminishing Returns",
+		"listening_audio": "/audio/CIC/part_3/cic_2_task3_listening.mp3",
+		"listening_script": "",
+		"question_text": "Using the examples from the lecture, explain the law of diminishing returns and its effects.",
+		"question_audio": "/audio/part_3/cic_2_task3_question.mp3",
+		"reading_body": "In economics, the law of diminishing returns describes a situation in which adding more of one input to a fixed quantity of other inputs eventually results in smaller and smaller increases in output. At first, additional resources may significantly boost productivity, but after a certain point, each new unit of input contributes less to the overall result. In some cases, output may even decrease. This principle applies to many areas, including agriculture, manufacturing, and studying. It emphasizes the importance of balancing resources efficiently, rather than assuming that more input will always lead to proportionally greater productivity."
+	}
+]

@@ -99,6 +99,7 @@ hr {
 	margin: 10px 10px 0 0;
 	width: fit-content;
 	font-size: 0.9rem;
+	transition: all ease 0.3s;
 }
 
 .action_button:hover {
