@@ -1,0 +1,85 @@
+.spinner_container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* Inherit text color for easy theming; cubes use currentColor */
+	color: #bcd8ff; /* tailwind gray-600-ish as a sensible default */
+	height: 100%;
+}
+
+/* Grid wrapper */
+.sk_cube_grid {
+	width: 40px;
+	height: 40px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+/* One cube (9 total) */
+.sk_cube {
+	width: 33.3333%;
+	height: 33.3333%;
+	background: currentColor;
+	/* animate scale in/out */
+	animation: sk-cube-grid-scale 1.3s infinite ease-in-out both;
+}
+
+/* Staggered delays for each cube */
+.sk_cube1 {
+	animation-delay: 0.2s;
+}
+.sk_cube2 {
+	animation-delay: 0.3s;
+}
+.sk_cube3 {
+	animation-delay: 0.4s;
+}
+.sk_cube4 {
+	animation-delay: 0.1s;
+}
+.sk_cube5 {
+	animation-delay: 0.2s;
+}
+.sk_cube6 {
+	animation-delay: 0.3s;
+}
+.sk_cube7 {
+	animation-delay: 0s;
+}
+.sk_cube8 {
+	animation-delay: 0.1s;
+}
+.sk_cube9 {
+	animation-delay: 0.2s;
+}
+
+@keyframes sk-cube-grid-scale {
+	0%,
+	70%,
+	100% {
+		transform: scale3d(1, 1, 1);
+	}
+	35% {
+		transform: scale3d(0, 0, 1);
+	}
+}
+
+/* Screen-reader only text */
+.sr_only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	.sk_cube {
+		animation: none;
+	}
+}

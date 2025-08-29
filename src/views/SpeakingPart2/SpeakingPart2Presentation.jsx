@@ -4,6 +4,7 @@ import PrepareSpeak from "@/components/PrepareSpeak/PrepareSpeak";
 import Instructions from "@/components/Instructions/Instructions";
 import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
 import image from "@/assets/question_two_1.png";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import sharedStyles from "@/styles/speakingPartLayout.module.css";
 import styles from "./SpeakingPart2.module.css";
 
@@ -13,9 +14,10 @@ const SpeakingPart2Presentation = ({
 	modeEnum,
 	time,
 	modeTimeEnum,
+	loading,
 }) => {
 	const renderContent = () => {
-		if (!testData) return <h2 className={styles.no_test}>Loading test...</h2>;
+		if (loading) return <LoadingSpinner />;
 
 		switch (mode) {
 			case modeEnum.INSTRUCTIONS:

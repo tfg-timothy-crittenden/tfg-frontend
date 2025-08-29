@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, ArrowUpDown } from "lucide-react";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import styles from "./AdminList.module.css";
 
 /**
@@ -72,7 +73,7 @@ const AdminList = ({
 	};
 
 	if (loading) {
-		return <div className={styles.loading}>{loadingMessage}</div>;
+		return <LoadingSpinner />;
 	}
 
 	if (items.length === 0) {

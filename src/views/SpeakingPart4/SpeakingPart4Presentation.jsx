@@ -3,6 +3,7 @@ import PrepareSpeak from "@/components/PrepareSpeak/PrepareSpeak";
 import Instructions from "@/components/Instructions/Instructions";
 import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
 import sharedStyles from "@/styles/speakingPartLayout.module.css";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 const SpeakingPart4Presentation = ({
 	mode,
@@ -15,7 +16,7 @@ const SpeakingPart4Presentation = ({
 }) => {
 	const renderContent = () => {
 		if (!testData) {
-			return <p>Loading test...</p>;
+			return <LoadingSpinner />;
 		}
 
 		switch (mode) {

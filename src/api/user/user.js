@@ -8,3 +8,11 @@ export const getUserClassrooms = async () => {
 	}
 	return response.data; // Assuming the API returns an array of classrooms
 };
+
+export const checkEmailExists = async (email) => {
+	if (!email) return false;
+	const res = await httpClient.get(
+		`/student/check-email?email=${encodeURIComponent(email)}`
+	);
+	return res.data.exists;
+};

@@ -57,6 +57,16 @@
 	--color-accent-hover: #1d4ed8;
 	--color-accent-light: #eff6ff;
 
+	/* Background gradients */
+	--background-gradient: radial-gradient(
+		circle,
+		#5d92c0,
+		#588cb8,
+		#5386b0,
+		#4f81a8,
+		#4a7ba0
+	);
+
 	/* Card/Surface colors */
 	--color-surface: #ffffff;
 	--color-surface-elevated: #f8fafc;

@@ -3,6 +3,7 @@ import Part3ListenContainer from "@/components/Listen/ListenLectureContainer";
 import PrepareSpeak from "@/components/PrepareSpeak/PrepareSpeak";
 import Instructions from "@/components/Instructions/Instructions";
 import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import image from "@/assets/male_professor.png";
 import sharedStyles from "@/styles/speakingPartLayout.module.css";
 import styles from "./SpeakingPart3.module.css";
@@ -18,7 +19,7 @@ const SpeakingPart3Presentation = ({
 }) => {
 	const renderContent = () => {
 		if (!testData) {
-			return <p>Loading test...</p>;
+			return <LoadingSpinner />;
 		}
 
 		switch (mode) {

@@ -5,12 +5,12 @@
 	height: 60px;
 	width: 100%;
 	background-color: rgba(255, 255, 255, 0.63);
-	
+
 	padding: var(--spacing-sm);
 	font-size: var(--font-size-lg);
 	z-index: 3;
 	box-shadow: var(--shadow-sm);
-	
+
 	overflow: hidden;
 	display: none; /*Hidden on mobile*/
 }
@@ -20,28 +20,24 @@
 	white-space: nowrap;
 	flex-shrink: 0;
 	font-size: var(--font-size-base);
-	background: red; /* TEST: Mobile color */
 }
 
 /* TEST: PostCSS custom media */
 @media (--tablet-up) {
 	.classroomHeader_title {
-		background: blue; /* TEST: Should show blue on tablet+ */
 		font-size: var(--font-size-lg);
 	}
 	.classroomHeader_container {
 		display: flex;
 		display: flex;
-	align-items: center;
-	justify-content: flex-start;
-	gap: var(--spacing-sm);
+		align-items: center;
+		justify-content: flex-start;
+		gap: var(--spacing-sm);
 	}
-	
 }
 
 @media (--desktop-up) {
 	.classroomHeader_title {
-		background: green; /* TEST: Should show green on desktop+ */
 		font-size: var(--font-size-xl);
 	}
 }

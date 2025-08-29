@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { QrCode, Maximize2, Copy, Check, UserRoundPlus } from "lucide-react";
 import styles from "./JoinCodeBar.module.css";
 
-const JoinCodeBar = ({ code, onOpenModal }) => {
+const JoinCodeBar = ({ code, onOpenModal, showLabel }) => {
 	return (
-		<div className={styles.wrap} role="group" aria-label="Class join code">
-			<span className={styles.label}>Invite</span>
-
+		<>
 			<UserRoundPlus />
-		</div>
+			{showLabel && <span className={styles.label}>Invite</span>}
+		</>
 	);
 };
 

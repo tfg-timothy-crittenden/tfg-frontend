@@ -20,48 +20,35 @@ const SpeakingPart2Container = () => {
 		[modeEnum.SPEAK]: 60,
 	};
 
-	// Determine mode based on URL
 	const getModeFromUrl = () => {
 		const pathname = location.pathname;
-
-		if (pathname.includes("/instructions")) {
-			return modeEnum.INSTRUCTIONS;
-		} else if (pathname.includes("/read")) {
-			return modeEnum.READ;
-		} else if (pathname.includes("/listen")) {
-			return modeEnum.LISTEN;
-		} else if (pathname.includes("/prepare")) {
-			return modeEnum.PREPARE;
-		} else if (pathname.includes("/speak")) {
-			return modeEnum.SPEAK;
-		} else {
-			return modeEnum.INSTRUCTIONS; // Default mode
-		}
+		if (pathname.includes("/instructions")) return modeEnum.INSTRUCTIONS;
+		if (pathname.includes("/read")) return modeEnum.READ;
+		if (pathname.includes("/listen")) return modeEnum.LISTEN;
+		if (pathname.includes("/prepare")) return modeEnum.PREPARE;
+		if (pathname.includes("/speak")) return modeEnum.SPEAK;
+		return modeEnum.INSTRUCTIONS;
 	};
 
 	const [mode, setMode] = useState(getModeFromUrl());
 	const [time, setTime] = useState(0);
 	const [testData, setTestData] = useState(null);
+	const [loading, setLoading] = useState(false);
 
-	// Update mode when URL changes
 	useEffect(() => {
 		const newMode = getModeFromUrl();
-		console.log("Part 2 URL changed, new mode:", newMode);
 		setMode(newMode);
-
-		// Set appropriate time for the mode
-		if (newMode === modeEnum.PREPARE) {
-			setTime(modeTimes.PREPARE * 1000);
-		} else if (newMode === modeEnum.SPEAK) {
-			setTime(modeTimes.SPEAK * 1000);
-		}
+		if (newMode === modeEnum.PREPARE) setTime(modeTimes.PREPARE * 1000);
+		else if (newMode === modeEnum.SPEAK) setTime(modeTimes.SPEAK * 1000);
 	}, [location.pathname]);
 
 	useEffect(() => {
 		if (!testId) return;
+		setLoading(true);
 		getSpeakingTaskTwoById(testId)
-			.then(setTestData)
-			.catch((err) => console.error("Error loading Part 2:", err));
+			.then((data) => setTestData(data))
+			.catch((err) => console.error("Error loading Part 2:", err))
+			.finally(() => setLoading(false));
 	}, [testId]);
 
 	return (
@@ -73,6 +60,7 @@ const SpeakingPart2Container = () => {
 			time={time}
 			setTime={setTime}
 			testData={testData}
+			loading={loading}
 		/>
 	);
 };
