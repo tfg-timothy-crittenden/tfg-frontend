@@ -1,0 +1,124 @@
+.accordion_container {
+	/* Optional: add spacing between sections */
+	margin-bottom: 10px;
+}
+
+.accordion_header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	cursor: pointer;
+	padding: 10px 16px;
+	border-radius: 8px;
+	background: var(--color-background, #fff);
+	border: 1px solid var(--color-border, #eee);
+	min-width: 50px; /*maintain size when label and chevron hidden*/
+}
+
+.icon_label {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.icon {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+}
+
+.label {
+	opacity: 0;
+	transition: opacity 0.2s, width 0.2s;
+	white-space: nowrap;
+	pointer-events: none;
+	width: 100px;
+}
+
+.labelVisible {
+	opacity: 1;
+	pointer-events: auto;
+	width: 100px;
+}
+
+.labelHidden {
+	opacity: 0;
+	pointer-events: none;
+	width: 0;
+}
+
+.chevron {
+	opacity: 0;
+	transition: opacity 0.2s, width 0.2s;
+	width: 24px;
+	pointer-events: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.chevronVisible {
+	opacity: 1;
+	pointer-events: auto;
+	width: 24px;
+}
+
+.chevronHidden {
+	opacity: 0;
+	pointer-events: none;
+	width: 0;
+}
+
+/* To avoid having to set a max-height to allow animation, use grid-template-rows */
+.accordion_wrapper {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordion_wrapper.open {
+	grid-template-rows: 1fr;
+}
+
+.test_list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.list_item {
+	padding: 12px 16px;
+	border-bottom: 1px solid var(--color-border);
+	background: var(--color-background);
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	border-left: 4px solid transparent;
+	display: flex;
+	flex-direction: column;
+}
+
+.list_item:hover:not(.active) {
+	background-color: var(--color-background-alt);
+}
+
+.active {
+	background-color: var(--color-primary-light);
+	border-left-color: var(--color-primary);
+}
+
+.active_header {
+	background-color: var(--color-primary-light);
+}
+
+.test_title {
+	font-weight: 600;
+	font-size: 15px;
+	color: var(--color-text);
+}
+
+.reading_title {
+	font-size: 0.9rem;
+	color: var(--color-text-light);
+	margin-left: 8px;
+}

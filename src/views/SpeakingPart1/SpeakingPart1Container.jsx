@@ -6,13 +6,13 @@ import {
 	getRandomSpeakingTaskOneByTopic,
 	getSpeakingTaskOneTopics,
 } from "@/api/tasks/tasksAPI";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 const SpeakingPart1Container = ({ topicName }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const { id: classroomId, testId } = useParams();
 
-	// Use route matcher to get topic
 	const currentTopic = topicName || "Education";
 
 	const modeEnum = Object.freeze({
@@ -26,17 +26,15 @@ const SpeakingPart1Container = ({ topicName }) => {
 		[modeEnum.SPEAK]: 45,
 	};
 
-	// Determine mode based on URL using route matchers
 	const getModeFromUrl = () => {
 		const currentMode = routeMatchers.getPartModeFromPath(location.pathname);
-		console.log("Classroom: current mode is: ", currentMode);
 		switch (currentMode) {
 			case "prepare":
 				return modeEnum.PREPARE;
 			case "speak":
 				return modeEnum.SPEAK;
 			default:
-				return modeEnum.INSTRUCTIONS; // Default mode
+				return modeEnum.INSTRUCTIONS;
 		}
 	};
 
@@ -44,11 +42,11 @@ const SpeakingPart1Container = ({ topicName }) => {
 	const [mode, setMode] = useState(getModeFromUrl());
 	const [question, setQuestion] = useState(null);
 	const [topics, setTopics] = useState([]);
+	const [loading, setLoading] = useState(false);
 
 	// Update mode when URL changes
 	useEffect(() => {
 		const newMode = getModeFromUrl();
-		console.log("URL changed, new mode:", newMode);
 		setMode(newMode);
 
 		// Set appropriate time for the mode
@@ -61,9 +59,11 @@ const SpeakingPart1Container = ({ topicName }) => {
 
 	// Load topics
 	useEffect(() => {
+		setLoading(true);
 		getSpeakingTaskOneTopics()
 			.then(setTopics)
-			.catch((err) => console.error("Error loading topics:", err));
+			.catch((err) => console.error("Error loading topics:", err))
+			.finally(() => setLoading(false));
 	}, []);
 
 	// Load question when topic changes
@@ -71,6 +71,7 @@ const SpeakingPart1Container = ({ topicName }) => {
 		if (!currentTopic) return;
 
 		const asyncGetRandomQuestion = async () => {
+			setLoading(true);
 			try {
 				const newRandomQuestion = await getRandomSpeakingTaskOneByTopic(
 					currentTopic
@@ -78,6 +79,8 @@ const SpeakingPart1Container = ({ topicName }) => {
 				setQuestion(newRandomQuestion);
 			} catch (error) {
 				console.error("Error fetching random question:", error);
+			} finally {
+				setLoading(false);
 			}
 		};
 
@@ -102,6 +105,7 @@ const SpeakingPart1Container = ({ topicName }) => {
 			currentTopic={currentTopic}
 			topics={topics}
 			handleTopicChange={handleTopicChange}
+			loading={loading}
 		/>
 	);
 };

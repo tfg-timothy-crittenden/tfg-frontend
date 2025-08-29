@@ -1,6 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styles from "./SideNavBar.module.css";
 import { PanelLeftOpen, PanelLeftClose } from "lucide-react";
+import ClassroomSelector from "../ClassroomSelector/ClassroomSelector";
 
 const SideNavBarWrapper = ({ children }) => {
 	const [isOpen, setIsOpen] = useState(true);
@@ -9,33 +10,25 @@ const SideNavBarWrapper = ({ children }) => {
 
 	return (
 		<>
-			{/* Always-visible vertical toggle bar when closed */}
-			{!isOpen && (
-				<div
-					className={styles.sidebar_bar}
-					onClick={toggleSidebar}
-					title="Open sidebar"
-				>
-					<button className={`${styles.sidebar_toggle} `}>
-						<PanelLeftOpen size={36} strokeWidth={1} />
-					</button>
-				</div>
-			)}
-
-			{/* Sidebar itself */}
 			<nav
 				className={`${styles.expanded} ${isOpen ? styles.expandedVisible : ""}`}
 			>
-				{isOpen && (
-					<button
-						className={`${styles.sidebar_toggle} ${styles.align_right}`}
-						onClick={toggleSidebar}
-						title="Close sidebar"
-					>
+				<button
+					className={`${styles.sidebar_toggle} ${styles.align_right}`}
+					onClick={toggleSidebar}
+					title="Close sidebar"
+				>
+					{isOpen ? (
 						<PanelLeftClose size={36} strokeWidth={1} />
-					</button>
+					) : (
+						<PanelLeftOpen size={36} strokeWidth={1} />
+					)}
+				</button>
+				{React.Children.map(children, (child) =>
+					React.isValidElement(child)
+						? React.cloneElement(child, { isOpen, setIsOpen })
+						: child
 				)}
-				{children}
 			</nav>
 		</>
 	);

@@ -7,6 +7,7 @@ import TimerWrapper from "@/components/TimerWrapper/TimerWrapper";
 import CountdownContainer from "@/components/CountdownTimer/CountdownContainer";
 import sharedStyles from "@/styles/speakingPartLayout.module.css";
 import styles from "./SpeakingPart1.module.css";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 const SpeakingPart1Presentation = ({
 	question,
@@ -19,6 +20,7 @@ const SpeakingPart1Presentation = ({
 	currentTopic,
 	topics,
 	handleTopicChange,
+	loading,
 }) => {
 	const renderContent = () => {
 		switch (mode) {
@@ -49,10 +51,10 @@ const SpeakingPart1Presentation = ({
 
 			case modeEnum.PREPARE:
 			case modeEnum.SPEAK:
-				if (!question) {
+				if (loading) {
 					return (
 						<TestWrapper>
-							<p>Loading question...</p>
+							<LoadingSpinner />
 						</TestWrapper>
 					);
 				}

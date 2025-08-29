@@ -11,7 +11,6 @@ const EmailVerification = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	// Support either /verify-email/:token or /verify-email?token=...
 	const tokenFromQuery = useMemo(() => {
 		const sp = new URLSearchParams(location.search);
 		return sp.get("token");
@@ -22,10 +21,8 @@ const EmailVerification = () => {
 	const [serverError, setServerError] = useState("");
 	const [info, setInfo] = useState("");
 
-	// Hide token from URL after grabbing it (cleaner, safer)
 	useEffect(() => {
 		if (!token) return;
-		// Make sure your router supports /verify-email (no param) as well.
 		window.history.replaceState(null, "", "/verify-email");
 	}, [token]);
 
@@ -41,10 +38,8 @@ const EmailVerification = () => {
 		setInfo("");
 
 		try {
-			// Secure exchange: token in POST body, not URL
 			const { data } = await httpClient.post("/auth/verify-email", { token });
 
-			// If backend returns JWT+user, log in on explicit user action
 			if (data?.token && data?.user) {
 				dispatch(setCredentials({ token: data.token, user: data.user }));
 				setInfo(data?.message || "Verified! Redirecting…");
@@ -52,7 +47,6 @@ const EmailVerification = () => {
 				return;
 			}
 
-			// If no creds returned (your backend can choose this), just inform and route to login
 			setInfo(data?.message || "Email verified. You can now log in.");
 			setTimeout(() => navigate("/login"), 900);
 		} catch (err) {
@@ -60,7 +54,6 @@ const EmailVerification = () => {
 			const msg = err?.response?.data?.error;
 
 			if (status === 409) {
-				// Already verified (no token minted) – send them to login
 				setInfo("Your email is already verified. Please log in.");
 				setTimeout(() => navigate("/login"), 900);
 			} else if (status === 400) {
@@ -74,21 +67,49 @@ const EmailVerification = () => {
 	};
 
 	return (
-		<div style={{ maxWidth: 520, margin: "64px auto", textAlign: "center" }}>
-			<h1 style={{ marginBottom: 8 }}>Verify your email</h1>
-			<p style={{ color: "#6b7280", marginBottom: 24 }}>
+		<div
+			style={{
+				maxWidth: 480,
+				margin: "64px auto",
+				background: "var(--color-background)",
+				borderRadius: "var(--radius-lg)",
+				boxShadow: "var(--shadow-md)",
+				padding: "2rem",
+				textAlign: "center",
+				fontFamily: "Roboto, sans-serif",
+			}}
+		>
+			<h1
+				style={{
+					marginBottom: "0.5rem",
+					color: "var(--color-primary)",
+					fontSize: "2rem",
+					fontWeight: 700,
+					textAlign: "center",
+				}}
+			>
+				Verify your email
+			</h1>
+			<p
+				style={{
+					color: "var(--color-text-secondary)",
+					marginBottom: "1.5rem",
+					fontSize: "1.05rem",
+				}}
+			>
 				Click the button below to confirm your email and continue.
 			</p>
 
 			{serverError && (
 				<div
 					style={{
-						background: "#fee2e2",
-						color: "#991b1b",
+						background: "var(--color-error-light)",
+						color: "var(--color-error-dark)",
 						padding: "10px 12px",
-						borderRadius: 8,
-						marginBottom: 16,
+						borderRadius: "var(--radius-md)",
+						marginBottom: "1rem",
 						fontWeight: 600,
+						border: "1px solid var(--color-error-light)",
 					}}
 				>
 					{serverError}
@@ -98,12 +119,13 @@ const EmailVerification = () => {
 			{info && (
 				<div
 					style={{
-						background: "#ecfdf5",
-						color: "#065f46",
+						background: "var(--color-success-light)",
+						color: "var(--color-success)",
 						padding: "10px 12px",
-						borderRadius: 8,
-						marginBottom: 16,
+						borderRadius: "var(--radius-md)",
+						marginBottom: "1rem",
 						fontWeight: 600,
+						border: "1px solid var(--color-success-light)",
 					}}
 				>
 					{info}
@@ -115,23 +137,35 @@ const EmailVerification = () => {
 				disabled={!token || submitting}
 				style={{
 					padding: "12px 16px",
-					borderRadius: 10,
+					borderRadius: "var(--radius-lg)",
 					border: "none",
-					background: submitting ? "#93c5fd" : "#2563eb",
+					background: submitting
+						? "var(--color-primary-light)"
+						: "var(--color-primary)",
 					color: "#fff",
 					fontWeight: 700,
 					cursor: submitting ? "default" : "pointer",
 					width: "100%",
-					maxWidth: 360,
+					maxWidth: 320,
+					fontSize: "1rem",
+					boxShadow: "var(--shadow-sm)",
+					transition: "background 0.2s",
 				}}
 			>
 				{submitting ? "Verifying…" : "Verify & Continue"}
 			</button>
 
 			{!token && (
-				<p style={{ marginTop: 16, color: "#6b7280" }}>
+				<p style={{ marginTop: 16, color: "var(--color-text-secondary)" }}>
 					Don’t have a token?{" "}
-					<a href="/resend-verification" style={{ color: "#2563eb" }}>
+					<a
+						href="/resend-verification"
+						style={{
+							color: "var(--color-primary)",
+							textDecoration: "underline",
+							fontWeight: 500,
+						}}
+					>
 						Resend verification email
 					</a>
 				</p>

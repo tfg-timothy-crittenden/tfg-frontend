@@ -53,105 +53,111 @@ export default function OAuthLogin() {
 	};
 
 	return (
-		<div className={styles.login_container}>
-			<h2>Login</h2>
+		<div className={styles.login_outer}>
+			<div className={styles.login_card + " " + styles.animated_height}>
+				<div className={styles.login_left}>
+					<div className={styles.school_logo}>
+						<img src="/assets/cic_idiomes.svg" alt="CIC Speak" />
+					</div>
 
-			{/* Login Type Selector */}
-			<div className={styles.login_type_selector}>
-				<button
-					className={`${styles.type_button} ${
-						loginType === "teacher" ? styles.active : ""
-					}`}
-					onClick={() => setLoginType("teacher")}
-				>
-					Teacher
-				</button>
-				<button
-					className={`${styles.type_button} ${
-						loginType === "student" ? styles.active : ""
-					}`}
-					onClick={() => setLoginType("student")}
-				>
-					Student
-				</button>
-				<button
-					className={`${styles.type_button} ${
-						loginType === "admin" ? styles.active : ""
-					}`}
-					onClick={() => setLoginType("admin")}
-				>
-					Admin
-				</button>
+					<div className={styles.login_type_selector}>
+						<button
+							className={`${styles.type_button} ${
+								loginType === "teacher" ? styles.active : ""
+							}`}
+							onClick={() => setLoginType("teacher")}
+						>
+							Teacher
+						</button>
+						<button
+							className={`${styles.type_button} ${
+								loginType === "student" ? styles.active : ""
+							}`}
+							onClick={() => setLoginType("student")}
+						>
+							Student
+						</button>
+					</div>
+
+					{/* Teacher OAuth Login */}
+					{loginType === "teacher" && (
+						<div className={styles.teacher_login}>
+							<button
+								onClick={handleMicrosoftLogin}
+								className={styles.microsoft_button}
+							>
+								Log in @fundaciocic.org
+							</button>
+						</div>
+					)}
+
+					{/* Username/Password Login for students and admins only */}
+					{loginType !== "teacher" && (
+						<form
+							onSubmit={handleCredentialLogin}
+							className={styles.credential_form}
+						>
+							<div className={styles.form_group}>
+								<label htmlFor="username">
+									{loginType === "teacher" ? "Email" : "Username"}
+								</label>
+								<input
+									type={loginType === "teacher" ? "email" : "text"}
+									id="username"
+									name="username"
+									value={credentials.username}
+									onChange={handleInputChange}
+									placeholder={
+										loginType === "teacher"
+											? "teacher@fundaciocic.org"
+											: `Enter your ${loginType} username`
+									}
+									required
+								/>
+							</div>
+
+							<div className={styles.form_group}>
+								<label htmlFor="password">Password</label>
+								<input
+									type="password"
+									id="password"
+									name="password"
+									value={credentials.password}
+									onChange={handleInputChange}
+									placeholder="Enter your password"
+									required
+								/>
+							</div>
+
+							{error && <div className={styles.error_message}>{error}</div>}
+
+							<button
+								type="submit"
+								className={styles.login_button}
+								disabled={isLoading}
+							>
+								{isLoading ? "Logging in..." : `Log in as ${loginType}`}
+							</button>
+						</form>
+					)}
+
+					{loginType === "student" && (
+						<div className={styles.login_info}>
+							Don't have an account? Contact your teacher for registration.
+						</div>
+					)}
+					{loginType === "teacher" && (
+						<div className={styles.login_info}>
+							Can't log in? Contact coordination.
+						</div>
+					)}
+				</div>
+				{/* <div className={styles.login_right}>
+					<div className={styles.login_right_text}>
+						<p>Speaking Exam Practice</p>
+					</div>
+				</div> */}
 			</div>
-
-			{/* Teacher OAuth Login */}
-			{loginType === "teacher" && (
-				<div className={styles.teacher_login}>
-					<p>Sign in with your Microsoft account (@fundaciocic.org)</p>
-					<button
-						onClick={handleMicrosoftLogin}
-						className={styles.microsoft_button}
-					>
-						Sign in with Microsoft
-					</button>
-				</div>
-			)}
-
-			{/* Username/Password Login for students and admins only */}
-			{loginType !== "teacher" && (
-				<form
-					onSubmit={handleCredentialLogin}
-					className={styles.credential_form}
-				>
-					<div className={styles.form_group}>
-						<label htmlFor="username">
-							{loginType === "teacher" ? "Email" : "Username"}
-						</label>
-						<input
-							type={loginType === "teacher" ? "email" : "text"}
-							id="username"
-							name="username"
-							value={credentials.username}
-							onChange={handleInputChange}
-							placeholder={
-								loginType === "teacher"
-									? "teacher@fundaciocic.org"
-									: `Enter your ${loginType} username`
-							}
-							required
-						/>
-					</div>
-
-					<div className={styles.form_group}>
-						<label htmlFor="password">Password</label>
-						<input
-							type="password"
-							id="password"
-							name="password"
-							value={credentials.password}
-							onChange={handleInputChange}
-							placeholder="Enter your password"
-							required
-						/>
-					</div>
-
-					{error && <div className={styles.error_message}>{error}</div>}
-
-					<button
-						type="submit"
-						className={styles.login_button}
-						disabled={isLoading}
-					>
-						{isLoading ? "Signing in..." : `Sign in as ${loginType}`}
-					</button>
-				</form>
-			)}
-
-			{loginType === "student" && (
-				<div className={styles.student_info}>
-					<p>Don't have an account? Contact your teacher for registration.</p>
-				</div>
-			)}
 		</div>
 	);
 }

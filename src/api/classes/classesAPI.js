@@ -14,3 +14,4 @@ export async function joinClassByCode(classCode) {
 	// recommended backend response: { message, classroomId }
 	return data;
 }
+

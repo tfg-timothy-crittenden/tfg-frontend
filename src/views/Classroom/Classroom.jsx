@@ -13,7 +13,7 @@ import TestInstructions from "@/components/TestInstructions/TestInstructions";
 import TestSelectionWelcome from "@/components/TestSelectionWelcome/TestSelectionWelcome";
 
 import QuestionToggleSwitch from "../../components/QuestionToggleSwitch/QuestionToggleSwitch";
-import ClassroomHeader from "../../components/ClassroomHeader/ClassroomHeader";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import ResponsiveNavigation from "@/components/ResponsiveNavigation/ResponsiveNavigation";
 import ViewClassMembers from "@/components/ViewClassMembers/ViewClassMembers";
 import useResponsiveLayout from "@/hooks/useResponsiveLayout";
@@ -83,53 +83,42 @@ const Classroom = () => {
 	};
 
 	return (
-		<main
-			className={`${style.classroom_layout} ${
-				isMobile ? style.mobile_layout : style.desktop_layout
-			}`}
-		>
-			{/* Header */}
-			<ClassroomHeader
-				classrooms={classrooms}
-				onClassroomChange={handleClassroomChange}
-				setShowMaterial={setShowMaterial}
-				showMaterial={showMaterial}
-			/>
-
-			{/* Main Content Area */}
-			<div className={style.content_wrapper}>
-				{/* Sidebar/Navigation */}
+		<main className={style.classroom_layout}>
+			{/* Sidebar */}
+			<div className={style.sidebar}>
 				<ResponsiveNavigation
+					navExpanded={navExpanded}
+					setNavExpanded={setNavExpanded}
 					classrooms={classrooms}
 					onClassroomChange={handleClassroomChange}
 					setShowMaterial={setShowMaterial}
 					showMaterial={showMaterial}
+					showButtonText={navExpanded}
 				/>
-
-				{/* Main Content */}
-				<div
-					className={`${style.main_content} ${
-						isMobile ? style.mobile_content : style.desktop_content
-					}`}
-				>
-					{/* Question Toggle (Desktop only) - MOVED OUTSIDE content wrapper */}
-					{!isMobile && testId && (
-						<>
-							<QuestionToggleSwitch />
-						</>
-					)}
-					{showMaterial ? renderPart() : <ViewClassMembers />}
-				</div>
 			</div>
 
-			{/* Mobile Bottom Navigation Spacer */}
-			{isMobile && (
-				<div
-					className={`${style.bottom_nav_spacer} ${
-						navExpanded ? style.expanded : ""
-					}`}
+			{/* Classroom Selector */}
+			<div className={style.header}>
+				<Breadcrumb
+					classrooms={classrooms}
+					onClassroomChange={handleClassroomChange}
 				/>
-			)}
+			</div>
+
+			{/* Main Content */}
+			<div
+				className={`${style.main_content} ${
+					navExpanded ? style.sidebar_open : ""
+				}`}
+			>
+				{/* Question Toggle (Desktop only) - MOVED OUTSIDE content wrapper */}
+				{!isMobile && testId && (
+					<>
+						<QuestionToggleSwitch />
+					</>
+				)}
+				{showMaterial ? renderPart() : <ViewClassMembers />}
+			</div>
 		</main>
 	);
 };
