@@ -16,15 +16,10 @@
 			"question": "Some teachers prefer announcing their quizzes in advance, while others prefer to give surprise quizzes. Talk about the advantages and disadvantages of surprise quizzes."
 		},
 		{
-			"question": "If you were assigned a project to complete in school, how would you prefer to work? ",
-			"choices": ["alone", "with a tutor"]
+			"question": "If you were assigned a project to complete in school, would you prefer to work alone or with a tutor? "
 		},
 		{
-			"question": "Your teacher has assigned a presentation for homework. However, you can choose the format of your presentation. Which one would you choose?",
-			"choices": [
-				"act out a scene from a play",
-				"present a review of a novel you recently read"
-			]
+			"question": "Your teacher has assigned a presentation for homework, but you can choose the format; would you rather act out a scene from a play or present a review of a novel you recently read?"
 		},
 		{
 			"question": "Do you agree or disagree that it is important that young people need to learn some domestic skills, like cooking, sewing, and taking care of children?"
@@ -196,8 +191,7 @@
 			"question": "What are the advantages and disadvantages of having a strong leader in your group?"
 		},
 		{
-			"question": "If you had to share your home with a new roommate, which would you prefer? ​",
-			"choices": ["a friend", "a stranger"]
+			"question": "If you had to share your home with a new roommate, would you prefer a friend or a stranger? ​"
 		},
 		{
 			"question": "Do you think it is better to address problems with a sense of humor or a serious tone? Provide reasons and examples to support your point. ​"
@@ -238,8 +232,7 @@
 			"question": "Some people enjoy going to parties and meeting new people, while others prefer to stay at home and relax. Which do you prefer? "
 		},
 		{
-			"question": "If you had to live in one area for the rest of your life, would you prefer to live in? ​",
-			"choices": ["the city", "the countryside"]
+			"question": "If you had to live in one area for the rest of your life, would you prefer to live in in the city or the countryside? ​"
 		},
 		{
 			"question": "Would you prefer to live in the mountains or on the beach? ​"
@@ -265,8 +258,7 @@
 			"question": "Do you agree or disagree with the following statement? Co-workers make the best friends. ​"
 		},
 		{
-			"question": "Which of the following people can give the most useful advice in your future career direction? ​",
-			"choices": ["family and friends", "teachers"]
+			"question": "Do you think it's better to get careers advice from family and friends or from teachers? ​"
 		},
 		{
 			"question": "Some people believe that a person needs a college education in order to have a successful career. Others believe that a college education is not necessary for success. Which point of view do you agree with? Explain why.",
@@ -295,11 +287,7 @@
 			"question": "Would you prefer to have a higher-paying job with longer hours or a lower-paying job with shorter hours? ​"
 		},
 		{
-			"question": "Which of the following companies would you prefer to work for?",
-			"choices": [
-				"A company that offers you challenging and interesting projects but very few vacation days",
-				"a company that offers you a job with boring work each day but long vacations each year"
-			]
+			"question": "Some people think it's better to have a job that offers challenging and interesting projects but very few vacation days. Others prefer to do a boring job but with long vacations. Which would you prefer and why?"
 		},
 		{
 			"question": "Some people prefer to get up early in the morning and start the day’s work. Others prefer to get up later in the day and work until late at night. Which do you prefer? ​"
@@ -323,8 +311,7 @@
 			"question": "Do you agree or disagree with the following statement? It is better to have your own small business than it is to work for a salary at a large company. "
 		},
 		{
-			"question": "Your university has made it mandatory for all seniors to volunteer for at least 100 hours in order to graduate. They have provided students with a list of various volunteer programs. If you had to volunteer, would you prefer to:",
-			"choices": ["work in an animal shelter", "feed the homeless"]
+			"question": "Your university requires all seniors to complete at least 100 volunteer hours in order to graduate; would you prefer to work in an animal shelter or feed the homeless?"
 		},
 		{
 			"question": "Do you agree or disagree with the following statement?\nAll workers should be required to stop working and retire by age 65.\nUse details and examples to explain your opinion.",
@@ -348,8 +335,7 @@
 			"audio_url": "https://ti.koocdn.com/upload/ti/2426000-2427000/2426842/5827201ff14241e6b40939651182a167.mp3"
 		},
 		{
-			"question": "Your local government has decided to improve their community. Do you think they should: ",
-			"choices": ["build a public swimming pool", "build a public park"]
+			"question": "Your local government has decided to improve their community. Do you think they should build a public swmming pool or build a public park?"
 		},
 		{
 			"question": "Your city government has decided to open an elementary school on your street. What are the advantages and disadvantages of this plan? ​"
@@ -361,16 +347,13 @@
 			"question": "You are planning to donate money to a charity and want it to have a major impact on people. Should you donate to a small local group or to a large international organization?"
 		},
 		{
-			"question": "The school administration has received additional funding and has decided to use the money to fund a new course that teaches practical skills. Which of the following courses do you think the school should create?",
-			"choices": ["​ a class on how to save money", "​ a class on how to cook"]
+			"question": "The school administration has received additional funding and decided to create a new course that teaches practical skills; should it be a class on how to save money or a class on how to cook?"
 		},
 		{
-			"question": "Which of the following choices do you think has the greatest impact on environmental protection? ​",
-			"choices": ["governmental regulations", "individual effort"]
+			"question": "Which do you think has the greatest impact on environmental protection: governmental regulations or individual effort? ​"
 		},
 		{
-			"question": "Most citizens have the right to vote. What do you believe is the type of background best suited for someone who will become a national leader?",
-			"choices": ["business background", "legal background"]
+			"question": "Most citizens have the right to vote; what type of background do you think is best suited for someone who will become a national leader—a business background or a legal background?"
 		},
 		{
 			"question": "Do you agree or disagree with the following statement? Eighteen-year-olds are not mature enough to vote. Use specific examples and details to support your opinion.",
@@ -401,8 +384,7 @@
 			"question": "Do you agree or disagree with the following statement? Technology has had a negative effect on relationships between friends and family."
 		},
 		{
-			"question": "Which of the following technological developments has had the greatest impact on students’ lives?",
-			"choices": ["digital books", "smartphones"]
+			"question": "Which technological development has had the greatest impact on students’ lives: digital books or smartphones?"
 		},
 		{
 			"question": "What are the advantages and disadvantages of giving smartphones to teenagers?"
@@ -420,11 +402,7 @@
 			"question": "What are the advantages and disadvantages of having a lot of friends on social media?"
 		},
 		{
-			"question": "The school administration has decided to change some aspects of campus life to help reduce their impact on the environment. Which of the following new policies do you think the school should implement?",
-			"choices": [
-				"​ Increase the amount of garbage cans and recycle bins on campus",
-				"​ Increase the amount of locally grown food in the campus cafeteria"
-			]
+			"question": "TThe school administration has decided to change aspects of campus life to reduce their environmental impact; should they increase the number of garbage cans and recycle bins on campus, or increase the amount of locally grown food in the campus cafeteria?"
 		},
 		{
 			"question": "Do you agree or disagree with the following statement? In the future, bicycles will be replaced by a more convenient means of transportation. ​"
@@ -467,8 +445,7 @@
 			"question": "Is it better to use your extra money to buy products, like clothes and electronics, or is it better to use the extra money to invest in experiences, like going on a vacation or to a concert?"
 		},
 		{
-			"question": "Imagine you have just been given $10,000. Would you:",
-			"choices": ["​ spend it", "​ invest it"]
+			"question": "Imagine you have just been given $10,000; would you prefer to spend it or invest it?"
 		},
 		{
 			"question": "Do you agree or disagree with the following statement? Use details and examples to explain your opinion.\nHaving power and money is the best definition of success.",
@@ -508,8 +485,7 @@
 			"question": "Some people prefer to read stories of fiction created by an author's imagination. Others prefer to read works of nonfiction or books based on facts, real events, or real people. Do you prefer to read fiction or nonfiction? Why?"
 		},
 		{
-			"question": "If you were going to learn a new hobby, which of the following would you choose? ​",
-			"choices": ["​ learn how to play an instrument", "​ join a sports team"]
+			"question": "If you were going to learn a new hobby, would you choose to learn how to play an instrument or join a sports team? ​"
 		},
 		{
 			"question": "Do you agree or disagree with the following statement?Artists and musicians are important to a society.\nUse details and examples to explain your answer.",
@@ -536,11 +512,7 @@
 			"question": "Your local community has a rising population of homeless people. Some people believe the best way to address this issue is to have more people in the community volunteer to help find jobs and secure housing for them. Others think that taxes should be raised, and the increase in revenue should be given as a basic income to each homeless person. Which option would you prefer?"
 		},
 		{
-			"question": "A community garden has just opened up in your neighborhood. Each member of the neighborhood is expected to contribute in some way. Would you rather:",
-			"choices": [
-				"help plant vegetables",
-				"sell vegetables in the local market"
-			]
+			"question": "A community garden has just opened in your neighborhood, and each member is expected to contribute; would you rather help plant vegetables or sell vegetables in the local market?"
 		},
 		{
 			"question": "Your university is located in a community with a struggling economy. The school administration has decided to make it mandatory for each student to volunteer at least 40 hours per year to one of the town’s many volunteer programs. Do you agree or disagree with this policy? ​"
@@ -557,19 +529,13 @@
 			"question": "Many students are asked to evaluate their professors at the end of the semester. What are the advantages and disadvantages of this approach?"
 		},
 		{
-			"question": "Imagine that you have just begun studying at a new university. Which of the following do you think would be the best way for you to learn about the new campus? ​",
-			"choices": [
-				"a second-year student gives you a personal tour of the whole campus",
-				"you are given a detailed map of the campus designed by the student services department"
-			]
+			"question": "Imagine you have just begun studying at a new university; would you prefer to learn about the campus by having a second-year student give you a personal tour or by receiving a detailed map designed by the student services department? ​"
 		},
 		{
-			"question": "You are required by your school to join a club. Which type of club would you choose? ​",
-			"choices": ["academic", "sports", "volunteer"]
+			"question": "You are required by your school to join a club; would you choose an academic, sports, or volunteer club? ​"
 		},
 		{
-			"question": "During your senior year of college, you must volunteer at the school library. Would you rather: ​",
-			"choices": ["stack books", "read to children"]
+			"question": "During your senior year of college, you must volunteer at the school library; would you rather stack books or read to children? ​"
 		},
 		{
 			"question": "You have been asked to choose between two apartments to live in next semester: one apartment is near the campus but slightly expensive, and the other is a little far from campus but cheaper. Which one would you prefer and why? ​"
@@ -578,12 +544,10 @@
 			"question": "Do you agree or disagree with the following statement: Female and male university students should live in separate residence halls. ​"
 		},
 		{
-			"question": "If you could choose one way to commute to school, would you rather: ​",
-			"choices": ["ride a bicycle", "drive your own car"]
+			"question": "If you could choose one way to commute to school, would you rather ride a bicycle or drive your own car?​"
 		},
 		{
-			"question": "If you were going to choose a roommate, which of the following characteristics would be the most important to you? ​",
-			"choices": ["cleanness", "friendliness"]
+			"question": "If you were going to choose a roommate, would cleanness or friendliness be the most important characteristic to you?​"
 		},
 		{
 			"question": "Some universities allow students to watch TV in their dormitories. What are the advantages and disadvantages of watching TV in dorms?"

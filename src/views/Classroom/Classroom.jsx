@@ -1,9 +1,4 @@
-import {
-	useParams,
-	useOutletContext,
-	useNavigate,
-	useSearchParams,
-} from "react-router-dom";
+import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import SpeakingPart1Container from "@/views/SpeakingPart1/SpeakingPart1Container";
 import SpeakingPart2Container from "@/views/SpeakingPart2/SpeakingPart2Container";
@@ -16,6 +11,8 @@ import QuestionToggleSwitch from "../../components/QuestionToggleSwitch/Question
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import ResponsiveNavigation from "@/components/ResponsiveNavigation/ResponsiveNavigation";
 import ViewClassMembers from "@/components/ViewClassMembers/ViewClassMembers";
+import ClassroomHeader from "@/components/ClassroomHeader/ClassroomHeader";
+
 import useResponsiveLayout from "@/hooks/useResponsiveLayout";
 import { routeMatchers, buildRoute } from "@/routes/routeConfig";
 
@@ -36,9 +33,6 @@ const Classroom = () => {
 	const currentClassroom = classrooms?.find(
 		(c) => String(c.id) === String(classroomId)
 	);
-	// Get topic from query string for part 1
-	const [searchParams] = useSearchParams();
-	const topicName = searchParams.get("topic") || "Education";
 
 	// Auto-expand navigation when test is selected
 	useEffect(() => {
@@ -70,7 +64,7 @@ const Classroom = () => {
 
 		switch (partNumber) {
 			case "1":
-				return <SpeakingPart1Container topicName={topicName} />;
+				return <SpeakingPart1Container />;
 			case "2":
 				return <SpeakingPart2Container />;
 			case "3":
@@ -98,12 +92,11 @@ const Classroom = () => {
 			</div>
 
 			{/* Classroom Selector */}
-			<div className={style.header}>
-				<Breadcrumb
-					classrooms={classrooms}
-					onClassroomChange={handleClassroomChange}
-				/>
-			</div>
+
+			<ClassroomHeader
+				classrooms={classrooms}
+				onClassroomChange={handleClassroomChange}
+			/>
 
 			{/* Main Content */}
 			<div
