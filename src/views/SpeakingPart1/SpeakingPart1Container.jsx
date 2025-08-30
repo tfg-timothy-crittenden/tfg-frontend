@@ -1,17 +1,25 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+	useLocation,
+	useNavigate,
+	useParams,
+	useSearchParams,
+} from "react-router-dom";
 import { routeMatchers, buildRoute } from "@/routes/routeConfig";
 import SpeakingPart1Presentation from "./SpeakingPart1Presentation";
 import {
 	getRandomSpeakingTaskOneByTopic,
 	getSpeakingTaskOneTopics,
 } from "@/api/tasks/tasksAPI";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
-const SpeakingPart1Container = ({ topicName }) => {
+const SpeakingPart1Container = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const { id: classroomId, testId } = useParams();
+
+	// Get topic from query string for part 1
+	const [searchParams] = useSearchParams();
+	const topicName = searchParams.get("topic") || "Education";
 
 	const currentTopic = topicName || "Education";
 

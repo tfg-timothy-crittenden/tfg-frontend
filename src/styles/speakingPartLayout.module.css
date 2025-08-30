@@ -2,7 +2,9 @@
 .container {
 	display: grid;
 	grid-template-rows: [mode_selector] 100px [test_content] 5fr [test_tools] 5fr;
-	height: calc(100vh - 140px);
+	height: calc(100vh - 200px);
+	overflow-y: scroll;
+	padding-bottom: 22px;
 }
 
 .mode_selector_row {
@@ -17,5 +19,5 @@
 }
 
 .test_tools_row {
-	grid_row: test_tools;
+	grid-row: test_tools;
 }

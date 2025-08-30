@@ -12,11 +12,9 @@ import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 const SpeakingPart1Presentation = ({
 	question,
 	mode,
-
 	modeEnum,
 	modeTimeEnum,
 	time,
-
 	currentTopic,
 	topics,
 	handleTopicChange,
@@ -51,37 +49,30 @@ const SpeakingPart1Presentation = ({
 
 			case modeEnum.PREPARE:
 			case modeEnum.SPEAK:
-				if (loading) {
-					return (
-						<TestWrapper>
-							<LoadingSpinner />
-						</TestWrapper>
-					);
-				}
-
 				return (
 					<>
-						<TestWrapper>
-							<div>
-								<p>{question.question}</p>
-								{question.choices && (
-									<ul className={styles.choices}>
-										{question.choices.map((choice, index) => (
-											<li key={index} className={styles.option}>
-												{choice}
-											</li>
-										))}
-									</ul>
-								)}
-							</div>
-							<TimeInformation modeTimes={modeTimeEnum} />
-						</TestWrapper>
-
-						<hr />
-
-						<TimerWrapper>
-							<CountdownContainer initialTime={time} />
-						</TimerWrapper>
+						{loading ? (
+							<LoadingSpinner />
+						) : (
+							<TestWrapper>
+								<div>
+									{question && (
+										<>
+											<p>{question.question}</p>
+											{question.choices && (
+												<ul className={styles.choices}>
+													{question.choices.map((choice, index) => (
+														<li key={index} className={styles.option}>
+															{choice}
+														</li>
+													))}
+												</ul>
+											)}
+										</>
+									)}
+								</div>
+							</TestWrapper>
+						)}
 					</>
 				);
 
@@ -98,15 +89,19 @@ const SpeakingPart1Presentation = ({
 
 			{renderContent()}
 
-			{/* Topic selector - only show for prepare/speak modes when topics are loaded */}
-			{(mode === modeEnum.PREPARE || mode === modeEnum.SPEAK) &&
-				topics.length > 0 && (
-					<SpeakingPart1QuestionSelector
-						topics={topics}
-						currentTopic={currentTopic}
-						handleTopicChange={handleTopicChange}
-					/>
-				)}
+			<TimerWrapper>
+				<TimeInformation modeTimes={modeTimeEnum} />
+				<CountdownContainer initialTime={time} />
+				{/* Topic selector - only show for prepare/speak modes when topics are loaded */}
+				{(mode === modeEnum.PREPARE || mode === modeEnum.SPEAK) &&
+					topics.length > 0 && (
+						<SpeakingPart1QuestionSelector
+							topics={topics}
+							currentTopic={currentTopic}
+							handleTopicChange={handleTopicChange}
+						/>
+					)}
+			</TimerWrapper>
 		</article>
 	);
 };
