@@ -2,7 +2,7 @@
 .container {
 	display: grid;
 	grid-template-rows: [mode_selector] 100px [test_content] 5fr [test_tools] 5fr;
-	height: calc(100vh - 200px);
+	height: calc(100vh - 141px);
 	overflow-y: scroll;
 	padding-bottom: 22px;
 }
