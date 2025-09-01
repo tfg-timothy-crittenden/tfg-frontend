@@ -1,7 +1,6 @@
 .tags_container {
 	margin-top: 20px;
 	margin-bottom: 20px;
-	max-width: 1080px;
 	padding: 10px 0;
 	background-color: var(--color-background-alt);
 	border-radius: var(--radius-lg);

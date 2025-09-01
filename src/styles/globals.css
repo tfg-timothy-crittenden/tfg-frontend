@@ -37,6 +37,7 @@
 	--color-text-disabled: #adadad;
 
 	/* Background Colors */
+	--color-background-neutral: #e1e1e1;
 	--color-background: #ffffff;
 	--color-background-alt: #f8f9fa;
 	--color-background-light: #f9fafb;
@@ -125,16 +126,8 @@
 	--shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* Base mobile styles (no media query needed) */
-body {
-	font-size: var(--font-size-base);
-	line-height: 1.5;
-	font-family: "Roboto", sans-serif;
-	background-color: var(--color-background);
-}
-
-/* Progressive enhancement for larger screens */
-@media (min-width: var(--breakpoint-tablet)) {
+/* Responsive font and spacing variables */
+@media (--tablet-up) {
 	:root {
 		--font-size-base: 1.125rem;
 		--font-size-lg: 1.25rem;
@@ -144,8 +137,7 @@ body {
 		--spacing-xl: 2.5rem;
 	}
 }
-
-@media (min-width: var(--breakpoint-desktop)) {
+@media (--desktop-up) {
 	:root {
 		--font-size-base: 1.25rem;
 		--font-size-lg: 1.375rem;

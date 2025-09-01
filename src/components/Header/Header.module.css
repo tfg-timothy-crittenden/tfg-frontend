@@ -203,12 +203,12 @@
 	}
 
 	.nav_item_container {
-		padding: var(--spacing-lg) var(--spacing-xl);
+		padding: var(--spacing-md) var(--spacing-xl);
 		font-size: var(--font-size-lg);
 	}
 }
 
-/* Large desktop enhancements */
+/* Large desktop enhancements
 @media (--large-desktop-up) {
 	.header {
 		padding: 0 var(--spacing-xxl);
@@ -217,7 +217,7 @@
 	.nav_item_container {
 		padding: var(--spacing-lg) var(--spacing-xxl);
 	}
-}
+} */
 
 /* High DPI screens */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {

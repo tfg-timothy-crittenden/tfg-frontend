@@ -25,23 +25,17 @@
 /* Tablet enhancements */
 @media (--tablet-up) {
 	.container {
-		padding: var(--spacing-md) var(--spacing-xl);
-		max-width: 600px;
+		max-width: 500px;
 	}
 
 	.time_display {
-		font-size: 1rem;
+		font-size: 0.8rem;
 	}
 }
 
 /* Desktop enhancements - NOW USING POSTCSS! */
 @media (--desktop-up) {
 	.time_display {
-		font-size: 1.2rem;
+		font-size: 1rem;
 	}
-}
-
-/* Fullscreen styles */
-:fullscreen .time_display {
-	font-size: 3rem;
 }

@@ -3,6 +3,7 @@ import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import styles from "./ClassroomHeader.module.css";
 import { PanelTopOpen, PanelTopClose } from "lucide-react";
 import useResponsiveLayout from "@/hooks/useResponsiveLayout";
+import JoinCodeBar from "@/components/JoinCodeBar/JoinCodeBar";
 
 const ClassroomHeader = ({ classrooms, onClassroomChange }) => {
 	const { isMobile } = useResponsiveLayout();
@@ -23,6 +24,7 @@ const ClassroomHeader = ({ classrooms, onClassroomChange }) => {
 					classrooms={classrooms}
 					onClassroomChange={onClassroomChange}
 				/>
+				{/* <JoinCodeBar /> */}
 			</div>
 			{isMobile && (
 				<button

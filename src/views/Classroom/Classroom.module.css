@@ -6,12 +6,11 @@
 		"header"
 		"sidebar"
 		"main";
-	background: var(--color-background);
+	background: red;
 }
 
 .sidebar {
-	border-right: none;
-	/* border-top: 1px solid var(--color-border); */
+	border-top: 1px solid var(--color-border);
 }
 
 .main_content {
@@ -21,6 +20,9 @@
 	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
+	max-width: 1080px;
+	width: 100%;
+	margin: 0 auto;
 }
 
 /* Responsive: stack layout on small screens */
@@ -36,10 +38,13 @@
 		gap: var(--gap);
 		position: fixed;
 		width: 100%;
-		background: var(--color-background);
+		background: var(--color-background-neutral);
 	}
 	.main_content {
-		margin-left: 10px;
+		max-height: calc(100vh - 141px);
+		width: 100%;
+		max-width: 1080px;
+		margin: 0 auto;
 	}
 	.sidebar {
 		grid-area: sidebar;

@@ -17,6 +17,7 @@
 .image {
 	filter: grayscale(1) brightness(1.2);
 	width: 100%;
+	max-width: 400px;
 	max-height: auto;
 	display: block;
 	margin: 20px auto;

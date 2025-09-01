@@ -7,7 +7,7 @@
 	justify-content: center;
 	background-color: white;
 	font-size: var(--font-size-base);
-	max-width: var(--content-max-width);
+
 	width: 100%;
 	margin: 0 auto;
 }

@@ -1,17 +1,18 @@
 /* src/styles/speakingPartLayout.module.css */
 .container {
 	display: grid;
-	grid-template-rows: [mode_selector] 100px [test_content] 5fr [test_tools] 5fr;
+	grid-template-rows: [mode_selector] 100px [test_content] auto [test_tools] 1fr;
 	height: calc(100vh - 141px);
-	overflow-y: scroll;
-	padding-bottom: 22px;
+	overflow-y: auto;
+	padding: 0 10px 22px 10px;
+	/* padding-bottom: 22px; */
 }
 
 .mode_selector_row {
 	grid-row: mode_selector;
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items: flex-start;
 }
 
 .test_content_row {
@@ -20,4 +21,29 @@
 
 .test_tools_row {
 	grid-row: test_tools;
+}
+
+@media (--tablet-up) {
+	.container {
+		padding: 0 25px 22px 25px;
+		height: auto;
+		max-height: calc(100vh - 141px);
+		margin-top: 40px;
+	}
+}
+
+@media (--desktop-up) {
+	.container {
+		padding: 0 100px 22px 100px;
+
+		/* background: red; */
+	}
+}
+
+@media (--large-desktop-up) {
+	.container {
+		padding: 0 150px 22px 150px;
+
+		/* background: red; */
+	}
 }

@@ -7,7 +7,7 @@ const SpeakingPart1QuestionSelector = ({
 	handleTopicChange,
 }) => {
 	return (
-		<aside className={styles.tags_container + ' ' + "mobile_side_margin " + "mobile_side_padding"}>
+		<aside className={styles.tags_container}>
 			<p className={styles.instruction}>Random question by topic</p>
 			<div className={styles.tags}>
 				{topics.map((topic) => (
