@@ -21,6 +21,7 @@
 .test_tools_row {
 	grid-row: test_tools;
 }
-media (--tablet-up-)  {
+
+@media (--tablet-up) {
 	height: calc(100vh - 202px);
 }
