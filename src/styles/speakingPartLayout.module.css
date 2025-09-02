@@ -1,13 +1,12 @@
 /* src/styles/speakingPartLayout.module.css */
-.container {
+._container_t1vnw_3 {
 	display: grid;
-	grid-template-rows: [mode_selector] 100px [test_content] auto [test_tools] 1fr;
-	height: calc(100vh - 141px);
+	grid-template-rows: [mode_selector] auto [test_content] auto [test_tools] auto;
+	height: calc(100vh - 142px);
 	overflow-y: auto;
 	padding: 0 10px 22px 10px;
-	/* padding-bottom: 22px; */
+	background: red;
 }
-
 .mode_selector_row {
 	grid-row: mode_selector;
 	display: flex;
