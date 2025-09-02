@@ -1,11 +1,10 @@
 /* src/styles/speakingPartLayout.module.css */
-._container_t1vnw_3 {
+.container {
 	display: grid;
 	grid-template-rows: [mode_selector] auto [test_content] auto [test_tools] auto;
 	height: calc(100vh - 142px);
 	overflow-y: auto;
 	padding: 0 10px 22px 10px;
-	background: red;
 }
 .mode_selector_row {
 	grid-row: mode_selector;
