@@ -8,8 +8,6 @@
 	margin: var(--spacing-sm) var(--spacing-sm);
 	padding: var(--spacing-sm) var(--spacing-sm);
 	grid-row: test_content;
-	margin-left: auto;
-	margin-right: auto;
 }
 
 .test_wrapper_container p {
