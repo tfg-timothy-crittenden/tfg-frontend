@@ -1,9 +1,7 @@
 .tags_container {
-	margin-top: 20px;
-	margin-bottom: 20px;
 	padding: 10px 0;
 	background-color: var(--color-background-alt);
-	border-radius: var(--radius-lg);
+
 	border: 1px solid var(--color-border);
 }
 
@@ -17,4 +15,12 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
+}
+
+@media (--tablet-up-) {
+	.tags_container {
+		margin-top: 20px;
+		margin-bottom: 20px;
+		border-radius: var(--radius-lg);
+	}
 }

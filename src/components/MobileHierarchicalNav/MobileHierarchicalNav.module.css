@@ -2,14 +2,10 @@
 
 /* Mobile-first: Base styles (no media query) */
 .mobile_nav_container {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
 	background: var(--color-background);
 	border-top: 1px solid var(--color-border);
 	z-index: 1000;
-	box-shadow: var(--shadow-lg);
+	/* box-shadow: var(--shadow-lg); */
 }
 
 .mode_strip {

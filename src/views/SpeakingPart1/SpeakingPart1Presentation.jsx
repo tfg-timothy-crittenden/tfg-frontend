@@ -90,8 +90,6 @@ const SpeakingPart1Presentation = ({
 			{renderContent()}
 
 			<TimerWrapper>
-				<TimeInformation modeTimes={modeTimeEnum} />
-				<CountdownContainer initialTime={time} />
 				{/* Topic selector - only show for prepare/speak modes when topics are loaded */}
 				{(mode === modeEnum.PREPARE || mode === modeEnum.SPEAK) &&
 					topics.length > 0 && (
@@ -101,6 +99,8 @@ const SpeakingPart1Presentation = ({
 							handleTopicChange={handleTopicChange}
 						/>
 					)}
+				<TimeInformation modeTimes={modeTimeEnum} />
+				<CountdownContainer initialTime={time} />
 			</TimerWrapper>
 		</article>
 	);

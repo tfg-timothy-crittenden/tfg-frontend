@@ -8,7 +8,6 @@ const SpeakingPart1QuestionSelector = ({
 }) => {
 	return (
 		<aside className={styles.tags_container}>
-			<p className={styles.instruction}>Random question by topic</p>
 			<div className={styles.tags}>
 				{topics.map((topic) => (
 					<Tag

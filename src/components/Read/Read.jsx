@@ -16,7 +16,6 @@ const Read = ({ title, body, author }) => {
 					</>
 				)}
 			</TestWrapper>
-			<hr></hr>
 
 			<TimerWrapper>
 				<CountdownContainer initialTime={45000} />

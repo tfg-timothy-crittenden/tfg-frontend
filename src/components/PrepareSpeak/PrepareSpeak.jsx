@@ -70,11 +70,10 @@ const PrepareSpeak = ({
 					</button>
 				</div>
 				<p>{question}</p>
-
-				<TimeInformation modeTimes={modeTimes} />
 			</TestWrapper>
 
 			<TimerWrapper>
+				<TimeInformation modeTimes={modeTimes} />
 				{mode === modeEnum.PREPARE && (
 					<p className={styles.instruction}>Prepare your response</p>
 				)}
