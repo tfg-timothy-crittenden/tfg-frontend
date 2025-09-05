@@ -57,7 +57,7 @@ const SpeakingPart1Presentation = ({
 							<TestWrapper>
 								<div>
 									{question && (
-										<>
+										<div key={question.question} className="fade_in">
 											<p>{question.question}</p>
 											{question.choices && (
 												<ul className={styles.choices}>
@@ -68,7 +68,7 @@ const SpeakingPart1Presentation = ({
 													))}
 												</ul>
 											)}
-										</>
+										</div>
 									)}
 								</div>
 							</TestWrapper>
@@ -89,19 +89,19 @@ const SpeakingPart1Presentation = ({
 
 			{renderContent()}
 
-			<TimerWrapper>
-				{/* Topic selector - only show for prepare/speak modes when topics are loaded */}
-				{(mode === modeEnum.PREPARE || mode === modeEnum.SPEAK) &&
-					topics.length > 0 && (
-						<SpeakingPart1QuestionSelector
-							topics={topics}
-							currentTopic={currentTopic}
-							handleTopicChange={handleTopicChange}
-						/>
-					)}
-				<TimeInformation modeTimes={modeTimeEnum} />
-				<CountdownContainer initialTime={time} />
-			</TimerWrapper>
+			{/* Only display timer and topic selector for prepare/speak modes */}
+			{(mode === modeEnum.PREPARE || mode === modeEnum.SPEAK) && (
+				<TimerWrapper>
+					{/* Topic selector - only show for prepare/speak modes when topics are loaded */}
+					<SpeakingPart1QuestionSelector
+						topics={topics}
+						currentTopic={currentTopic}
+						handleTopicChange={handleTopicChange}
+					/>
+					<TimeInformation modeTimes={modeTimeEnum} />
+					<CountdownContainer initialTime={time} />
+				</TimerWrapper>
+			)}
 		</article>
 	);
 };

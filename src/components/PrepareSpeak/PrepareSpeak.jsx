@@ -64,7 +64,7 @@ const PrepareSpeak = ({
 			<TestWrapper>
 				{question_audio && <audio ref={audioRef} src={question_audio}></audio>}
 				<div className={styles.question_container}>
-					<h3>Question</h3>
+					<h2>Question</h2>
 					<button className={styles.play_button} onClick={handleAudioToggle}>
 						{isPlaying ? <StopButton size="12" /> : <PlayButton size="12" />}
 					</button>

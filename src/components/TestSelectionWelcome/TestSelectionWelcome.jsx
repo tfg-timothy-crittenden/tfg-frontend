@@ -1,9 +1,10 @@
 import { BookOpen, ChevronRight, Users } from "lucide-react";
 import styles from "./TestSelectionWelcome.module.css";
+import sharedStyles from '@/styles/speakingPartLayout.module.css'
 
 const TestSelectionWelcome = ({ classroomName }) => {
 	return (
-		<div className={styles.welcome_container}>
+		<div className={sharedStyles.container}>
 			<div className={styles.welcome_content}>
 				<div className={styles.icon_container}>
 					<BookOpen size={80} className={styles.main_icon} />

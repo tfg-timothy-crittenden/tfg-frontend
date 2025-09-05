@@ -1,6 +1,16 @@
+import { useEffect, useState } from "react";
 import styles from "./LoadingSpinner.module.css";
 
 const LoadingSpinner = ({ label = "Loading…" }) => {
+	const [show, setShow] = useState(false);
+
+	useEffect(() => {
+		const timer = setTimeout(() => setShow(true), 1000); // 1 second delay
+		return () => clearTimeout(timer);
+	}, []);
+
+	if (!show) return null;
+
 	return (
 		<div className={styles.spinner_container} role="status" aria-live="polite">
 			{/* Decorative visual */}

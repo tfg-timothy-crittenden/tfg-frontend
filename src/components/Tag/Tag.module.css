@@ -15,6 +15,7 @@
 	transition: 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
 		border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
 		color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+	width: fit-content;
 }
 
 .tag_item:focus {

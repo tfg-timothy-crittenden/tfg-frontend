@@ -2,7 +2,7 @@
 .container {
 	display: grid;
 	grid-template-rows: [mode_selector] 60px [test_content] 1fr [test_tools] auto;
-	height: calc(100vh - 142px);
+	height: calc(100vh - 141.5px);
 	overflow-y: auto;
 	padding: 15px;
 }
@@ -25,7 +25,7 @@
 	.container {
 		padding: 0 25px 22px 25px;
 		height: auto;
-		max-height: calc(100vh - 141px);
+		min-height: 720px;
 		margin-top: 40px;
 	}
 }

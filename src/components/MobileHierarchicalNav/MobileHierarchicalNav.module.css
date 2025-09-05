@@ -154,7 +154,7 @@
 
 /* When centered, make tests button slightly larger */
 .nav_container.centered .tests_button {
-	padding: var(--spacing-md) var(--spacing-lg);
+	padding: var(--spacing-sm) var(--spacing-lg);
 	min-width: 80px;
 }
 

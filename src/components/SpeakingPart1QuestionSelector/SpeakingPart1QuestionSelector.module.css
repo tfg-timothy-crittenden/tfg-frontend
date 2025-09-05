@@ -1,13 +1,18 @@
 .tags_container {
 	padding: 10px 0;
 	background-color: var(--color-background-alt);
-
 	border: 1px solid var(--color-border);
+	width: 100%;
+
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	justify-content: center;
 }
 
 .instruction {
 	font-size: 1rem;
-	margin-bottom: 15px;
+
 	color: var(--color-text);
 	text-align: center;
 }
@@ -17,10 +22,8 @@
 	justify-content: center;
 }
 
-@media (--tablet-up-) {
+@media (--tablet-up) {
 	.tags_container {
-		margin-top: 20px;
-		margin-bottom: 20px;
-		border-radius: var(--radius-lg);
+		position: static; /* Ensure it's in normal flow */
 	}
 }

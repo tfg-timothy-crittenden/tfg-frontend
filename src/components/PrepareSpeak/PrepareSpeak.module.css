@@ -15,7 +15,10 @@
 }
 
 .question_container {
+	margin-top: 25px;
 	display: flex;
+	align-items: center;
+	color: var(--color-primary)
 }
 
 .instruction {
