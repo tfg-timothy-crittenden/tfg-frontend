@@ -39,7 +39,7 @@
 		background: var(--color-background-neutral);
 	}
 	.main_content {
-		max-height: calc(100vh - 141px);
+		max-height: calc(100dvh - 141px);
 		width: 100%;
 		max-width: 1080px;
 		margin: 0 auto;

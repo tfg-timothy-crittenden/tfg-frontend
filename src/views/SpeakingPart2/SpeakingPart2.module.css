@@ -1,7 +1,7 @@
 .container {
 	display: grid;
 	grid-template-rows: [mode_selector] 1fr [test_content] 5fr [test_tools] 5fr;
-	height: calc(100vh - 150px);
+	height: calc(100dvh - 150px);
 }
 
 /* Color each grid row area for development */
