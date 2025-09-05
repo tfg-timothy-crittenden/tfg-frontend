@@ -1,6 +1,6 @@
 /* === Sidebar Container === */
 .expanded {
-	height: 100vh;
+	height: 100dvh;
 	background: var(--color-background);
 	z-index: 2;
 	transition: width 0.3s ease;

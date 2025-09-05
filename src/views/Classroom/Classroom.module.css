@@ -26,7 +26,7 @@
 /* Responsive: stack layout on small screens */
 @media (--tablet-up) {
 	.classroom_layout {
-		min-height: 100vh;
+		min-height: 100dvh;
 		display: grid;
 		grid-template-columns: auto 1fr;
 		grid-template-rows: auto 1fr;

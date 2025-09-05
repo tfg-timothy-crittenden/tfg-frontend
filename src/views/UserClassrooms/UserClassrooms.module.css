@@ -1,7 +1,7 @@
 /* Add global variable usage to module styles */
 .classrooms_container {
 	background: var(--color-background);
-	min-height: 100vh;
+	min-height: 100dvh;
 	padding: 20px;
 	max-width: 1080px;
 	margin: 0 auto;
