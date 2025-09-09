@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import styles from "./ClassroomTeacherMenu.module.css";
 import { ChevronUp, ChevronDown, NotebookTabs, UsersRound } from "lucide-react";
 import Modal from "../Modal/Modal";
 import useModal from "../Modal/useModal";
 import ClassInvite from "../ClassInvite/ClassInvite";
 import JoinCodeBar from "../JoinCodeBar/JoinCodeBar";
+import { buildRoute, routeMatchers } from "@/routes/routeConfig"; // <-- added
 
 const ClassroomTeacherMenu = ({
 	classrooms = [],
@@ -14,8 +15,9 @@ const ClassroomTeacherMenu = ({
 	showMaterial,
 	showButtonText,
 }) => {
-	const { id: classroomId } = useParams();
+	const { id: classroomId, testId, partNumber } = useParams(); // <-- include testId, partNumber
 	const navigate = useNavigate();
+	const location = useLocation(); // <-- added
 	const { modalRef, isOpen, openModal, closeModal } = useModal();
 
 	const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -28,16 +30,35 @@ const ClassroomTeacherMenu = ({
 	const classCode = selectedClassroom?.code || "";
 	const classroomName = selectedClassroom?.name || "";
 
+	// Determine if current route is the members view (route-based, not local state)
+	const isMembersRoute = routeMatchers.isClassroomMembers(location.pathname);
+
+	const handleMembersClick = () => {
+		setShowMaterial?.(false); // keep legacy state in sync
+		navigate(buildRoute.classroomMembers(classroomId));
+	};
+
+	const handleMaterialClick = () => {
+		setShowMaterial?.(true);
+		if (testId && partNumber) {
+			// Return to the current test & part
+			navigate(buildRoute.testPart(classroomId, testId, partNumber));
+		} else {
+			// Just the classroom root
+			navigate(buildRoute.classroom(classroomId));
+		}
+	};
+
 	return (
 		<>
 			<div className={styles.test_menu_section}>
 				<div
-					onClick={() => setShowMaterial(false)}
+					onClick={handleMembersClick}
 					role="button"
 					tabIndex={0}
 					aria-label="View members"
 					className={`${styles.list_item} ${
-						!showMaterial ? styles.active : ""
+						isMembersRoute ? styles.active : ""
 					}`}
 				>
 					<UsersRound size={20} />
@@ -50,11 +71,13 @@ const ClassroomTeacherMenu = ({
 					</span>
 				</div>
 				<div
-					onClick={() => setShowMaterial(true)}
+					onClick={handleMaterialClick}
 					role="button"
 					tabIndex={0}
 					aria-label="View materials"
-					className={`${styles.list_item} ${showMaterial ? styles.active : ""}`}
+					className={`${styles.list_item} ${
+						!isMembersRoute ? styles.active : ""
+					}`}
 				>
 					<NotebookTabs size={20} />
 					<span

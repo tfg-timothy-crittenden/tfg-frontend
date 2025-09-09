@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useRef, useCallback, useEffect, useState } from "react";
 import useModal from "@/components/Modal/useModal";
 
 /**
@@ -15,6 +15,7 @@ const useAdminList = ({
 	// Core state
 	const [items, setItems] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
 	const [selectedItems, setSelectedItems] = useState(new Set());
 
 	// Dropdown state
@@ -37,6 +38,15 @@ const useAdminList = ({
 	// Refs for click-outside detection
 	const actionsDropdownRef = useRef(null);
 	const kebabDropdownRefs = useRef(new Map());
+
+	// Prevent overlapping loads / loops
+	const loadingRef = useRef(false);
+	const latestLoadFnRef = useRef(loadItems);
+
+	// Update ref if function identity changes (without triggering effect loops)
+	useEffect(() => {
+		latestLoadFnRef.current = loadItems;
+	}, [loadItems]);
 
 	// Handle click outside to close dropdowns
 	useEffect(() => {
@@ -65,19 +75,22 @@ const useAdminList = ({
 	}, [activeKebabMenu]);
 
 	// Load items function
-	const refreshItems = async () => {
+	const refreshItems = useCallback(async () => {
+		if (loadingRef.current) return;
+		loadingRef.current = true;
+		setLoading(true);
+		setError(null);
 		try {
-			setLoading(true);
-			const result = await loadItems();
-			setItems(result);
-			// Clear selections when data reloads
-			setSelectedItems(new Set());
-		} catch (err) {
-			console.error(`Failed to load ${itemNamePlural}:`, err);
+			const data = await latestLoadFnRef.current();
+			setItems(Array.isArray(data) ? data : []);
+		} catch (e) {
+			console.error("Failed to load items:", e);
+			setError("Failed to load items");
 		} finally {
+			loadingRef.current = false;
 			setLoading(false);
 		}
-	};
+	}, []);
 
 	// Initial load
 	useEffect(() => {
@@ -111,35 +124,40 @@ const useAdminList = ({
 		openDeleteModal();
 	};
 
-	const handleDeleteConfirm = async () => {
-		if (deleteConfirmText.toLowerCase() !== "delete") {
-			return;
-		}
-
+	const handleDeleteConfirm = useCallback(async () => {
 		try {
 			if (bulkDelete) {
-				const selectedIds = Array.from(selectedItems);
 				if (deleteMultipleItems) {
-					await deleteMultipleItems(selectedIds);
-				} else {
-					// Fallback to individual deletes if bulk delete not provided
-					await Promise.all(
-						selectedIds.map((id) =>
-							deleteItem(items.find((item) => item.id === id))
-						)
-					);
+					await deleteMultipleItems(Array.from(selectedItems));
+				} else if (deleteItem) {
+					for (const id of selectedItems) await deleteItem(id);
 				}
 			} else if (itemToDelete) {
 				await deleteItem(itemToDelete);
 			}
-
-			await refreshItems();
-			closeDeleteModal();
+			await refreshItems(); // single refresh
 		} catch (err) {
-			console.error(`Failed to delete ${itemName}(s):`, err);
-			alert(`Failed to delete ${itemName}(s). Please try again.`);
+			console.error(
+				`Failed to delete ${bulkDelete ? itemNamePlural : itemName}:`,
+				err
+			);
+		} finally {
+			setItemToDelete(null);
+			setBulkDelete(false);
+			setDeleteConfirmText("");
+			closeDeleteModal();
 		}
-	};
+	}, [
+		bulkDelete,
+		deleteItem,
+		deleteMultipleItems,
+		itemToDelete,
+		itemName,
+		itemNamePlural,
+		refreshItems,
+		selectedItems,
+		closeDeleteModal,
+	]);
 
 	const cancelDelete = () => {
 		setItemToDelete(null);
@@ -160,6 +178,7 @@ const useAdminList = ({
 	// Bulk actions
 	const bulkActions = [
 		{
+			key: "delete",
 			label: `Delete Selected ${itemNamePlural}`,
 			action: confirmBulkDelete,
 			disabled: selectedItems.size === 0,
@@ -171,12 +190,13 @@ const useAdminList = ({
 		// Data
 		items,
 		loading,
-		selectedItems,
+		error,
 
 		// Selection
 		handleSelectionChange,
 		selectAll,
 		deselectAll,
+		selectedItems,
 
 		// Delete
 		confirmSingleDelete,

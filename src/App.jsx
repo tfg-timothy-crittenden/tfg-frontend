@@ -5,7 +5,7 @@ import Header from "@/components/Header/Header";
 import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
 import RoleRoute from "@/components/RoleRoute/RoleRoute";
 import AuthCallback from "@/views/AuthCallback/AuthCallback";
-import { ROUTES, ADMIN_SEGMENTS } from "@/routes/routeConfig";
+import { ROUTES, ADMIN_SEGMENTS, ROUTE_SEGMENTS } from "@/routes/routeConfig";
 
 import {
 	OAuthLogin,
@@ -45,6 +45,7 @@ function App() {
 						<Route path={ROUTES.CLASSROOMS} element={<UserClassrooms />}>
 							{/* Welcome route - no test selected */}
 							<Route path=":id" element={<Classroom />} />
+							<Route path=":id/members" element={<Classroom />} />
 							{/* Global test instructions route */}
 							<Route
 								path={ROUTES.TEST_INSTRUCTIONS.replace(

@@ -1,0 +1,324 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid var(--color-border);
+	background-color: var(--color-background);
+	border-radius: 10px;
+	padding: 14px 14px 18px;
+	box-shadow: var(--shadow-sm);
+	gap: 18px;
+}
+
+.container h2 {
+	font-size: 1.15rem;
+	color: var(--color-text);
+	text-align: left;
+	margin-bottom: 14px;
+	line-height: 1.2;
+}
+
+.search_input {
+	padding: 8px 10px;
+	margin-bottom: 10px;
+	border: 1px solid var(--color-border);
+	border-radius: 6px;
+	font-size: 0.9rem;
+	background: var(--color-background-alt);
+}
+
+.search_input:focus {
+	outline: none;
+	border-color: var(--color-primary);
+	background: var(--color-background);
+}
+
+.class_list {
+	height: 340px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	min-width: 0;
+	background-color: var(--color-background);
+	scrollbar-width: thin;
+}
+
+/* List items */
+.listItem {
+	cursor: pointer;
+	padding: 8px 10px;
+	border: 1px solid var(--color-background);
+	list-style: none;
+	font-size: 0.85rem;
+	border-radius: 6px;
+	transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.listItem + .listItem {
+	margin-top: 4px;
+}
+
+.listItem:hover:not(.selectedClass) {
+	background-color: var(--color-primary-light);
+}
+
+.selectedClass {
+	background-color: var(--color-primary-light);
+	border-color: var(--color-primary);
+}
+
+/* Materials panel */
+.materials_container {
+	padding: 4px 4px 0;
+}
+
+.materials_container h2 {
+	margin-bottom: 12px;
+}
+
+.disabled {
+	opacity: 0.4;
+	pointer-events: none;
+	filter: grayscale(1);
+	position: relative;
+}
+
+/* Library section (actions) */
+.library_section {
+	margin-top: 16px;
+	display: flex;
+	gap: 10px;
+}
+
+.library_section button {
+	min-height: 34px;
+	font-size: 0.8rem;
+	padding: 0 14px;
+}
+
+.materials_container_inner {
+	display: flex;
+	flex-direction: column;
+}
+
+/* Slightly reduce shadow & spacing on mobile */
+@media (--tablet-up) {
+	.container {
+		display: grid;
+		grid-template-columns: 1fr 2fr;
+		gap: 0;
+		padding: 20px;
+	}
+
+	.class_container {
+		border-right: 1px solid var(--color-border);
+		border-bottom: none;
+		padding: 18px 18px 22px;
+	}
+
+	.container h2 {
+		font-size: 1.25rem;
+		margin-bottom: 18px;
+	}
+
+	.search_input {
+		font-size: 0.95rem;
+	}
+
+	.class_list {
+		height: 420px;
+		min-width: 220px;
+	}
+
+	.listItem {
+		font-size: 0.9rem;
+		padding: 10px 12px;
+		border-radius: 8px;
+	}
+
+	.materials_container {
+		padding: 18px 20px 10px;
+	}
+
+	.tab_container {
+		margin-bottom: 18px;
+		gap: 28px;
+	}
+
+	.tab {
+		font-size: 0.9rem;
+		padding: 8px 0 10px;
+	}
+
+	.active_tab {
+		padding-bottom: 10px;
+	}
+
+	.library_section {
+		margin-top: 20px;
+	}
+
+	.library_section button {
+		font-size: 0.85rem;
+		min-height: 36px;
+	}
+}
+
+@media (--desktop-up) {
+	.container {
+		grid-template-columns: 300px 1fr;
+		padding: 24px 26px 28px;
+	}
+
+	.class_container {
+		padding: 20px 22px 26px;
+	}
+
+	.container h2 {
+		font-size: 1.35rem;
+	}
+
+	.class_list {
+		height: 460px;
+	}
+
+	.listItem {
+		font-size: 0.95rem;
+		padding: 12px 14px;
+	}
+
+	.materials_container {
+		padding: 20px 24px 12px;
+	}
+
+	.tab {
+		font-size: 0.95rem;
+	}
+
+	.library_section button {
+		min-height: 38px;
+		font-size: 0.9rem;
+	}
+}
+
+@media (--large-desktop-up) {
+	.container {
+		grid-template-columns: 320px 1fr;
+		max-width: 1400px;
+		margin: 0 auto;
+	}
+
+	.listItem {
+		font-size: 1rem;
+	}
+
+	.container h2 {
+		font-size: 1.45rem;
+	}
+
+	.class_list {
+		height: 500px;
+	}
+}
+
+/* Scroll enhancements (optional) */
+.class_list::-webkit-scrollbar {
+	width: 8px;
+}
+
+.class_list::-webkit-scrollbar-track {
+	background: var(--color-background-alt);
+	border-radius: 4px;
+}
+
+.class_list::-webkit-scrollbar-thumb {
+	background: var(--color-border);
+	border-radius: 4px;
+}
+
+.class_list::-webkit-scrollbar-thumb:hover {
+	background: var(--color-primary);
+}
+
+/* Additions for collapsible class list (keep existing rules above) */
+
+/* Simple slide effect */
+.slideDown {
+	animation: classSlideDown 180ms ease;
+}
+.slideUp {
+	animation: classSlideUp 180ms ease;
+}
+
+@keyframes classSlideDown {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes classSlideUp {
+	from {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	to {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+}
+
+/* Tablet and up: always show list, hide toggle */
+@media (--tablet-up) {
+	.toggleClassesBtn {
+		display: none;
+	}
+	.class_container {
+		display: block !important;
+	}
+}
+
+.toggleLabel {
+	flex: 1;
+	text-align: left;
+}
+
+.mobileHeading {
+	margin-top: 0;
+}
+
+/* Hide heading inside panel when not dropdown (desktop/tablet will reuse layout) */
+@media (--tablet-up) {
+	.classPanelWrapper {
+		position: static;
+	}
+
+	.toggleClassesBtn {
+		display: none;
+	}
+
+	.dropdownSurface {
+		position: static;
+		opacity: 1;
+		transform: none;
+		pointer-events: auto;
+		border: none;
+		border-right: 1px solid var(--color-border);
+		border-radius: 0;
+		box-shadow: none;
+		padding: 18px 18px 22px;
+		max-height: none;
+	}
+
+	.mobileHeading {
+		display: none;
+	}
+}
+
+/* Ensure desktop keeps grid layout intact (already defined earlier) */
+@media (--desktop-up) {
+	.dropdownSurface {
+		padding: 20px 22px 26px;
+	}
+}

@@ -3,14 +3,10 @@ import { ChevronDown, ArrowUpDown } from "lucide-react";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import styles from "./AdminList.module.css";
 
-/**
- * Reusable admin list component for managing collections of items
- * Supports selection, bulk actions, sorting, and individual item actions
- */
 const AdminList = ({
 	items = [],
 	loading = false,
-	selectedItems,
+	selectedItems = new Set(), // default so non‑selectable lists can omit it
 	onSelectionChange,
 	onBulkAction,
 	bulkActions = [],
@@ -20,8 +16,9 @@ const AdminList = ({
 	emptyMessage = "No items found.",
 	loadingMessage = "Loading...",
 	sortOptions = [],
-	currentSort,
-	onSortChange,
+	currentSort = null,
+	onSortChange = null,
+	isActionable = true,
 }) => {
 	const [showActionsDropdown, setShowActionsDropdown] = useState(false);
 	const [showSortDropdown, setShowSortDropdown] = useState(false);
@@ -49,66 +46,63 @@ const AdminList = ({
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, []);
 
-	// Selection logic
-	const isAllSelected = items.length > 0 && selectedItems.size === items.length;
+	// Selection logic (assumes each item has a stable unique item.id)
+	const isAllSelected =
+		isActionable && items.length > 0 && selectedItems.size === items.length;
 	const isSomeSelected =
-		selectedItems.size > 0 && selectedItems.size < items.length;
+		isActionable && selectedItems.size > 0 && selectedItems.size < items.length;
 
 	const handleSelectAll = () => {
+		if (!isActionable || !onSelectionChange) return;
 		if (isAllSelected) {
 			onSelectionChange(new Set());
 		} else {
-			onSelectionChange(new Set(items.map((item) => item.id)));
+			onSelectionChange(new Set(items.map((it) => it.id)));
 		}
 	};
 
 	const handleItemSelect = (itemId) => {
-		const newSelection = new Set(selectedItems);
-		if (newSelection.has(itemId)) {
-			newSelection.delete(itemId);
-		} else {
-			newSelection.add(itemId);
-		}
-		onSelectionChange(newSelection);
+		if (!isActionable || !onSelectionChange) return;
+		const next = new Set(selectedItems);
+		if (next.has(itemId)) next.delete(itemId);
+		else next.add(itemId);
+		onSelectionChange(next);
 	};
 
-	if (loading) {
-		return <LoadingSpinner />;
-	}
-
-	if (items.length === 0) {
-		return <div className={styles.empty}>{emptyMessage}</div>;
-	}
+	if (loading) return <LoadingSpinner label={loadingMessage} />;
+	if (items.length === 0)
+		return <div className={styles.empty + " fade_in"}>{emptyMessage}</div>;
 
 	return (
-		<div className={`${styles.adminList} ${className}`}>
+		<div className={`${styles.adminList} ${className} fade_in`}>
 			{/* Header with select all and bulk actions */}
-			<div className={styles.header}>
+			<div className={`${styles.header} fade_in`}>
 				<div className={styles.selectAllContainer}>
-					<div className={styles.checkbox_container}>
-						<input
-							type="checkbox"
-							checked={isAllSelected}
-							ref={(input) => {
-								if (input) input.indeterminate = isSomeSelected;
-							}}
-							onChange={handleSelectAll}
-						/>
-					</div>
+					{isActionable && (
+						<div className={styles.checkbox_container}>
+							<input
+								type="checkbox"
+								checked={isAllSelected}
+								ref={(el) => {
+									if (el) el.indeterminate = isSomeSelected;
+								}}
+								onChange={handleSelectAll}
+							/>
+						</div>
+					)}
 
-					{/* Always show actions button, but disable when nothing selected */}
-					{bulkActions.length > 0 && (
+					{isActionable && bulkActions.length > 0 && (
 						<div
 							className={styles.bulkActionsContainer}
 							ref={actionsDropdownRef}
 						>
 							<button
+								type="button"
 								className={`${styles.actionsButton} ${
 									selectedItems.size === 0 ? styles.actionsButtonDisabled : ""
 								}`}
 								onClick={() =>
-									selectedItems.size > 0 &&
-									setShowActionsDropdown(!showActionsDropdown)
+									selectedItems.size > 0 && setShowActionsDropdown((o) => !o)
 								}
 								disabled={selectedItems.size === 0}
 							>
@@ -117,11 +111,16 @@ const AdminList = ({
 
 							{showActionsDropdown && selectedItems.size > 0 && (
 								<div className={styles.actionsDropdown}>
-									{bulkActions.map((action, index) => (
+									{bulkActions.map((action) => (
 										<button
-											key={index}
+											type="button"
+											key={action.key || action.label}
 											onClick={() => {
-												onBulkAction(action.key, selectedItems);
+												if (onBulkAction) {
+													onBulkAction(action.key, selectedItems);
+												} else if (action.action) {
+													action.action(selectedItems);
+												}
 												setShowActionsDropdown(false);
 											}}
 											disabled={action.disabled}
@@ -135,12 +134,12 @@ const AdminList = ({
 						</div>
 					)}
 
-					{/* Sort dropdown */}
-					{sortOptions.length > 0 && (
+					{sortOptions.length > 0 && onSortChange && (
 						<div className={styles.sortContainer} ref={sortDropdownRef}>
 							<button
+								type="button"
 								className={styles.sortButton}
-								onClick={() => setShowSortDropdown(!showSortDropdown)}
+								onClick={() => setShowSortDropdown((o) => !o)}
 								title="Sort options"
 							>
 								<ArrowUpDown size={18} />
@@ -148,18 +147,19 @@ const AdminList = ({
 
 							{showSortDropdown && (
 								<div className={styles.sortDropdown}>
-									{sortOptions.map((option, index) => (
+									{sortOptions.map((opt) => (
 										<button
-											key={index}
+											type="button"
+											key={opt.key}
 											onClick={() => {
-												onSortChange(option.key);
+												onSortChange(opt.key);
 												setShowSortDropdown(false);
 											}}
 											className={`${styles.sortDropdownItem} ${
-												currentSort === option.key ? styles.activeSortItem : ""
+												currentSort === opt.key ? styles.activeSortItem : ""
 											}`}
 										>
-											{option.label}
+											{opt.label}
 										</button>
 									))}
 								</div>
@@ -173,12 +173,16 @@ const AdminList = ({
 
 			{/* Items container */}
 			<div className={styles.itemsContainer}>
-				{items.map((item) =>
-					renderItem(item, {
-						isSelected: selectedItems.has(item.id),
-						onSelect: () => handleItemSelect(item.id),
-					})
-				)}
+				{items.map((item) => (
+					<div key={item.id}>
+						{renderItem(item, {
+							isSelected: isActionable && selectedItems.has(item.id),
+							onSelect: isActionable
+								? () => handleItemSelect(item.id)
+								: undefined,
+						})}
+					</div>
+				))}
 			</div>
 		</div>
 	);

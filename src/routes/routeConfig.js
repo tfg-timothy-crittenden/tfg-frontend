@@ -52,6 +52,8 @@ export const ROUTES = {
 	CLASSROOMS: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}`,
 	CLASSROOM: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id`,
 
+	CLASSROOM_MEMBERS: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/members`,
+
 	// Test routes
 	TEST_INSTRUCTIONS: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.TEST}/:testId/${MODE_SEGMENTS.INSTRUCTIONS}`,
 	TEST_PART: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.TEST}/:testId/${ROUTE_SEGMENTS.PART}/:partNumber`,
@@ -79,6 +81,9 @@ export const ROUTES = {
 export const buildRoute = {
 	classroom: (classroomId) =>
 		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}`,
+
+	classroomMembers: (classroomId) =>
+		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/members`,
 
 	testInstructions: (classroomId, testId) =>
 		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.TEST}/${testId}/${MODE_SEGMENTS.INSTRUCTIONS}`,
@@ -141,4 +146,6 @@ export const routeMatchers = {
 		}
 		return null;
 	},
+	isClassroomMembers: (pathname) =>
+		/^\/my\/classrooms\/[^/]+\/members$/.test(pathname),
 };

@@ -1,4 +1,9 @@
-import { useParams, useOutletContext, useNavigate } from "react-router-dom";
+import {
+	useParams,
+	useOutletContext,
+	useNavigate,
+	useLocation,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
 import SpeakingPart1Container from "@/views/SpeakingPart1/SpeakingPart1Container";
 import SpeakingPart2Container from "@/views/SpeakingPart2/SpeakingPart2Container";
@@ -27,6 +32,7 @@ const Classroom = () => {
 	console.log("PartNumber: ", partNumber);
 	const { classrooms } = useOutletContext();
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	// Find current classroom for welcome message
 	const { id: classroomId } = useParams();
@@ -50,6 +56,8 @@ const Classroom = () => {
 			navigate(buildRoute.classroom(newClassroomId));
 		}
 	};
+
+	const isMembersRoute = routeMatchers.isClassroomMembers(location.pathname);
 
 	const renderPart = () => {
 		// Show welcome message when no test is selected
@@ -92,7 +100,6 @@ const Classroom = () => {
 			</div>
 
 			{/* Classroom Selector */}
-
 			<ClassroomHeader
 				classrooms={classrooms}
 				onClassroomChange={handleClassroomChange}
@@ -110,7 +117,13 @@ const Classroom = () => {
 						<QuestionToggleSwitch />
 					</>
 				)}
-				{showMaterial ? renderPart() : <ViewClassMembers />}
+				{isMembersRoute ? (
+					<ViewClassMembers />
+				) : showMaterial ? (
+					renderPart()
+				) : (
+					<ViewClassMembers />
+				)}
 			</div>
 		</main>
 	);

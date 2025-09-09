@@ -1,69 +1,186 @@
 /* ClassItem component styles */
+/* Mobile-first (base) */
 .classContainer {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	align-items: stretch;
 	width: 100%;
-	gap: 1rem;
+	gap: 0.75rem;
+	padding: 0.75rem 0.85rem;
+	border: 1px solid var(--color-border);
+	border-radius: 10px;
+	background: var(--color-background);
 }
 
-/* Class icon */
 .classIcon {
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 }
 
 .classroomIcon {
 	color: var(--color-primary);
 	fill: currentColor;
+	width: 40px;
+	height: 40px;
 }
 
 .classInfo {
 	flex: 1;
-	margin-right: 1rem;
+	margin-right: 0;
 }
 
 .classHeader {
 	display: flex;
 	align-items: center;
-	gap: 1rem;
-	margin-bottom: 0.5rem;
+	gap: 0.6rem;
+	margin-bottom: 0.35rem;
 }
 
 .className {
 	font-weight: 600;
 	color: var(--color-text);
-	font-size: 1.1rem;
+	font-size: 1rem;
+	line-height: 1.2;
+	word-break: break-word;
 }
 
 .classCode {
-	font-size: 0.9rem;
+	font-size: 0.75rem;
 	color: var(--color-text-secondary);
 }
 
 .classCode code {
 	background: var(--color-background-code);
-	padding: 0.25rem 0.5rem;
+	padding: 0.2rem 0.4rem;
 	border-radius: 4px;
 	font-family: "Courier New", monospace;
 	border: 1px solid var(--color-border);
+	font-size: 0.7rem;
 }
 
 .classSubject {
 	color: var(--color-text-secondary);
-	font-size: 0.9rem;
+	font-size: 0.75rem;
 	font-style: italic;
 }
 
 .teachersLabel {
 	display: block;
-	font-size: 0.9rem;
+	font-size: 0.75rem;
 	color: var(--color-text-secondary);
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.4rem;
 	font-weight: 500;
 }
 
+.teachersSection {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+}
+
+.teacherSelect :global(.react-select__control) {
+	min-height: 36px;
+	border-radius: 8px;
+}
+
 .teacherSelect {
-	font-size: 1.1rem;
+	font-size: 0.85rem;
+}
+
+/* Compact multi value chips on mobile */
+.teacherSelect :global(.react-select__multi-value) {
+	border-radius: 6px;
+}
+
+/* Tablet enhancements */
+@media (--tablet-up) {
+	.classContainer {
+		flex-direction: row;
+		align-items: center;
+		gap: 1rem;
+		padding: 1rem 1.1rem;
+	}
+
+	.classIcon {
+		align-self: flex-start;
+	}
+
+	.classroomIcon {
+		width: 46px;
+		height: 46px;
+	}
+
+	.classInfo {
+		margin-right: 1rem;
+	}
+
+	.classHeader {
+		margin-bottom: 0.45rem;
+		gap: 0.75rem;
+	}
+
+	.className {
+		font-size: 1.05rem;
+	}
+
+	.classSubject {
+		font-size: 0.8rem;
+	}
+
+	.teachersSection {
+		flex: 0 0 280px;
+		align-self: stretch;
+		justify-content: center;
+	}
+
+	.teacherSelect {
+		font-size: 0.9rem;
+	}
+}
+
+/* Desktop enhancements */
+@media (--desktop-up) {
+	.classContainer {
+		padding: 1.1rem 1.35rem;
+		gap: 1.25rem;
+	}
+
+	.classroomIcon {
+		width: 52px;
+		height: 52px;
+	}
+
+	.className {
+		font-size: 1.15rem;
+	}
+
+	.classSubject {
+		font-size: 0.85rem;
+	}
+
+	.teacherSelect {
+		font-size: 0.95rem;
+	}
+
+	.teacherSelect :global(.react-select__control) {
+		min-height: 42px;
+	}
+}
+
+/* Large desktop refinements (optional) */
+@media (--large-desktop-up) {
+	.classContainer {
+		padding: 1.25rem 1.6rem;
+	}
+
+	.className {
+		font-size: 1.2rem;
+	}
+
+	.teacherSelect :global(.react-select__value-container) {
+		padding-top: 4px;
+		padding-bottom: 4px;
+	}
 }

@@ -1,0 +1,63 @@
+/* UserListItem component styles */
+
+/* Main user container */
+.userContainer {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+/* User icon */
+.userIcon {
+    margin-right: 1rem;
+    flex-shrink: 0;
+    color: var(--color-primary);
+}
+
+/* User information section */
+.userInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+}
+
+.userName {
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.userEmail {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    font-weight: normal;
+}
+
+/* Invited user status styles */
+.invited {
+    opacity: 0.6;
+}
+
+.invitedIcon {
+    color: var(--color-text-muted) !important;
+    opacity: 0.7;
+}
+
+.invitedName {
+    color: var(--color-text-muted);
+}
+
+.invitedEmail {
+    color: var(--color-text-muted);
+}
+
+.invitedStatus {
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    background-color: var(--color-background-alt);
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    text-transform: lowercase;
+}

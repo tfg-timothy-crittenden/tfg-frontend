@@ -1,0 +1,19 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# Static assets
+public
+
+# Optional: test coverage, logs, and lock files
+coverage
+*.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore minified or generated files
+*.min.js
+*.min.css

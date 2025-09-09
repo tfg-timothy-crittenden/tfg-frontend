@@ -10,7 +10,7 @@ import {
 import BatchInviteTeachers from "./BatchInviteTeachersNew";
 import AdminDeleteModal from "@/components/AdminDeleteModal";
 import { AdminList, ListItem } from "@/components/AdminList";
-import { TeacherItem } from "@/components/TeacherItem";
+import { UserListItem } from "@/components/UserListItem";
 import useAdminList from "@/hooks/useAdminList";
 import styles from "@/components/AdminList/AdminList.module.css"; // Use shared admin list styles
 
@@ -162,7 +162,7 @@ const AdminTeachers = () => {
 				isSelected={isSelected}
 				onSelect={onSelect}
 				actions={actions}
-				renderContent={() => <TeacherItem teacher={teacher} />}
+				renderContent={() => <UserListItem user={teacher} />}
 			/>
 		);
 	};

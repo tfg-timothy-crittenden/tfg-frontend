@@ -101,6 +101,19 @@ const SpeakingPart1Container = () => {
 		);
 	};
 
+	const handleShuffleClick = async () => {
+		try {
+			const newRandomQuestion = await getRandomSpeakingTaskOneByTopic(
+				currentTopic
+			);
+			setQuestion(newRandomQuestion);
+		} catch (error) {
+			console.error("Error fetching random question:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return (
 		<SpeakingPart1Presentation
 			question={question}
@@ -113,6 +126,7 @@ const SpeakingPart1Container = () => {
 			currentTopic={currentTopic}
 			topics={topics}
 			handleTopicChange={handleTopicChange}
+			handleShuffleClick={handleShuffleClick}
 			loading={loading}
 		/>
 	);

@@ -11,7 +11,7 @@ import {
 
 const AdminDashboard = () => {
 	return (
-		<article className={styles.container}>
+		<article className={styles.container + " full-height-mobile-no-bottom-nav"}>
 			<h2 className={styles.admin_dashboard_heading}>Admin Panel</h2>
 
 			{/* Hovering the sidebar warms all admin chunks */}
@@ -31,7 +31,7 @@ const AdminDashboard = () => {
 							onFocus={_importAdminTeachers}
 							onTouchStart={_importAdminTeachers}
 						>
-							Manage Teachers
+							Teachers
 						</NavLink>
 					</li>
 
@@ -45,7 +45,7 @@ const AdminDashboard = () => {
 							onFocus={_importAdminClasses}
 							onTouchStart={_importAdminClasses}
 						>
-							Manage Classes
+							Classes
 						</NavLink>
 					</li>
 
@@ -59,7 +59,7 @@ const AdminDashboard = () => {
 							onFocus={_importAdminMaterial}
 							onTouchStart={_importAdminMaterial}
 						>
-							Manage Materials
+							Materials
 						</NavLink>
 					</li>
 				</ul>

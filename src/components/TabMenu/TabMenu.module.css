@@ -1,0 +1,30 @@
+/* Tabs */
+.tab_container {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 0 14px;
+	padding: 0;
+	border-bottom: 1px solid var(--color-border);
+	list-style: none;
+	gap: 18px;
+}
+
+.tab {
+	cursor: pointer;
+	padding: 6px 0 8px;
+	border-bottom: 2px solid transparent;
+	font-weight: 500;
+	color: var(--color-text-disabled);
+	font-size: 0.85rem;
+	transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab_text {
+	font-size: inherit;
+}
+
+.active_tab {
+	color: var(--color-text);
+	border-bottom: 2px solid var(--color-primary);
+	padding-bottom: 8px;
+}

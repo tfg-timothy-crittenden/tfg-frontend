@@ -25,7 +25,7 @@ export const _importAdminClasses = once(() =>
 	import("@/views/AdminDashboard/AdminClasses")
 );
 export const _importAdminMaterial = once(() =>
-	import("@/views/AdminDashboard/AdminMaterial")
+	import("@/views/AdminDashboard/AdminMaterial/AdminMaterial")
 );
 
 // Prefetch all admin chunks at once (handy for the parent link)

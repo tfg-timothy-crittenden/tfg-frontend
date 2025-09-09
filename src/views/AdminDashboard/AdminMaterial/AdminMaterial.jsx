@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import TransferListItem from "@/components/TransferList/TransferListItem";
 import RoleMaterialTransfer from "@/components/RoleMaterialTransger/RoleMaterialTransfer";
+import useResponsiveLayout from "@/hooks/useResponsiveLayout";
+import AdminMaterialClassPanel from "./AdminMaterialClassPanel/AdminMaterialClassPanel";
+import TabMenu from "@/components/TabMenu/TabMenu";
 
 import styles from "./AdminMaterial.module.css";
 
-import { fetchAllClassesAndTeachers } from "@/api/admin/admin";
 import {
 	getTestsByClassId,
 	getAllSpeakingTests,
@@ -12,10 +14,12 @@ import {
 } from "@/api/tasks/tasksAPI";
 
 const AdminMaterial = () => {
-	const [classes, setClasses] = useState([]);
+	// Data state
+
 	const [allMaterials, setAllMaterials] = useState([]);
 	const [sortedMaterials, setSortedMaterials] = useState([]);
 
+	// Assignment state
 	const [selectedTeacherItemIds, setSelectedTeacherItemIds] = useState(
 		new Set()
 	);
@@ -23,21 +27,26 @@ const AdminMaterial = () => {
 		new Set()
 	);
 
+	// Current class
 	const [selectedClassId, setSelectedClassId] = useState(null);
 	const [selectedClassName, setSelectedClassName] = useState("");
 
+	// UI state
 	const [activeRoleTab, setActiveRoleTab] = useState("teacher");
 	const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 	const [hasChanges, setHasChanges] = useState(false);
-
+	const { isMobile } = useResponsiveLayout();
+	const [dropdownOpen, setDropdownOpen] = useState(false);
+	// Refs
+	const toggleBtnRef = useRef(null);
+	// Original fetched assignments
 	const lastFetchedTeacherIds = useRef(new Set());
 	const lastFetchedStudentIds = useRef(new Set());
 
-	// Compare two sets
 	const setsAreEqual = (a, b) =>
 		a.size === b.size && [...a].every((val) => b.has(val));
 
-	// Track unsaved changes
+	// Detect unsaved changes
 	useEffect(() => {
 		const teacherChanged = !setsAreEqual(
 			selectedTeacherItemIds,
@@ -50,71 +59,101 @@ const AdminMaterial = () => {
 		setHasChanges(teacherChanged || studentChanged);
 	}, [selectedTeacherItemIds, selectedStudentItemIds]);
 
+	// Adjust dropdown open state on breakpoint changes
+
+	// Track whether materials have finished loading
+	const [materialsLoaded, setMaterialsLoaded] = useState(false);
+
+	// Fetch classes + materials
 	useEffect(() => {
 		const fetchData = async () => {
-			try {
-				const result = await fetchAllClassesAndTeachers();
-				setClasses(result.data);
-			} catch (error) {
-				console.error("Error fetching classes and teachers:", error);
-			}
-
 			try {
 				const speakingTests = await getAllSpeakingTests();
 				setAllMaterials(speakingTests);
 				setSortedMaterials(speakingTests);
-			} catch (error) {
-				console.error("Error fetching speaking tests:", error);
+				setMaterialsLoaded(true);
+			} catch (err) {
+				console.error("Error fetching speaking tests:", err);
+				setMaterialsLoaded(true);
 			}
 		};
-
 		fetchData();
 	}, []);
 
-	const fetchClassMaterials = async (classId) => {
-		try {
-			const { teacherMaterial = [], studentMaterial = [] } =
-				await getTestsByClassId(classId);
+	// Wrap fetchClassMaterials so it always uses latest allMaterials
+	const fetchClassMaterials = useCallback(
+		async (classId) => {
+			if (!classId) return;
+			try {
+				const { teacherMaterial = [], studentMaterial = [] } =
+					await getTestsByClassId(classId);
 
-			const teacherIds = new Set(teacherMaterial.map((t) => t.id));
-			const studentIds = new Set(studentMaterial.map((t) => t.id));
+				const teacherIds = new Set(teacherMaterial.map((t) => t.id));
+				const studentIds = new Set(studentMaterial.map((t) => t.id));
 
-			setSelectedTeacherItemIds(teacherIds);
-			setSelectedStudentItemIds(studentIds);
+				setSelectedTeacherItemIds(teacherIds);
+				setSelectedStudentItemIds(studentIds);
 
-			lastFetchedTeacherIds.current = teacherIds;
-			lastFetchedStudentIds.current = studentIds;
+				lastFetchedTeacherIds.current = teacherIds;
+				lastFetchedStudentIds.current = studentIds;
 
-			const selectedIds = new Set([...teacherIds, ...studentIds]);
+				// Rebuild sorted list with CURRENT allMaterials
+				const selectedIds = new Set([...teacherIds, ...studentIds]);
+				const sorted = [
+					...allMaterials.filter((item) => selectedIds.has(item.id)),
+					...allMaterials.filter((item) => !selectedIds.has(item.id)),
+				];
+				setSortedMaterials(sorted);
+			} catch (err) {
+				console.error("Error fetching class materials:", err);
+			}
+		},
+		[allMaterials]
+	);
 
-			const sorted = [
-				...allMaterials.filter((item) => selectedIds.has(item.id)),
-				...allMaterials.filter((item) => !selectedIds.has(item.id)),
-			];
-			setSortedMaterials(sorted);
-		} catch (error) {
-			console.error("Error fetching class materials:", error);
+	const selectClass = useCallback(
+		async (classObj) => {
+			if (!classObj) return;
+			if (hasChanges) {
+				const confirmed = window.confirm(
+					"You have unsaved changes. Switch classes and lose changes?"
+				);
+				if (!confirmed) return;
+			}
+			setSelectedClassId(classObj.id);
+			setSelectedClassName(classObj.name);
+
+			// If materials not yet loaded, defer fetching until they are
+			if (materialsLoaded && allMaterials.length) {
+				await fetchClassMaterials(classObj.id);
+			}
+
+			setIsLibraryOpen(false);
+			if (isMobile) {
+				setDropdownOpen(false);
+				setTimeout(() => toggleBtnRef.current?.focus(), 0);
+			}
+		},
+		[
+			hasChanges,
+			isMobile,
+			materialsLoaded,
+			allMaterials.length,
+			fetchClassMaterials,
+		]
+	);
+
+	// When allMaterials finish loading, (re)fetch materials for the already selected class (no prompt)
+	useEffect(() => {
+		if (materialsLoaded && selectedClassId) {
+			fetchClassMaterials(selectedClassId);
 		}
-	};
+	}, [materialsLoaded, selectedClassId, fetchClassMaterials]);
 
-	const handleClassSelect = async (classId, className) => {
-		if (hasChanges) {
-			const confirmed = window.confirm(
-				"You have unsaved changes. Are you sure you want to switch classes and lose your changes?"
-			);
-			if (!confirmed) return;
-		}
-
-		setSelectedClassId(classId);
-		setSelectedClassName(className);
-		await fetchClassMaterials(classId);
-		setIsLibraryOpen(false);
-	};
-
+	// Save assignments
 	const handleSave = async () => {
 		try {
 			const assignments = [];
-
 			selectedTeacherItemIds.forEach((testId) =>
 				assignments.push({ testId, role: "teacher" })
 			);
@@ -130,8 +169,8 @@ const AdminMaterial = () => {
 			setHasChanges(false);
 			setIsLibraryOpen(false);
 			alert("Materials assigned successfully.");
-		} catch (error) {
-			console.error("Error assigning materials:", error);
+		} catch (err) {
+			console.error("Error assigning materials:", err);
 			alert("Failed to assign materials.");
 		}
 	};
@@ -142,62 +181,37 @@ const AdminMaterial = () => {
 		setIsLibraryOpen(false);
 	};
 
+	// Keyboard nav (only when dropdown open + mobile)
+	const focusItem = (idx) => {
+		const node = listRef.current?.querySelector(`[data-index="${idx}"]`);
+		node?.focus();
+	};
+
 	return (
 		<div className={styles.container}>
-			{/* CLASS LIST */}
-			<div className={styles.class_container}>
-				<h2>Classes</h2>
-				<input
-					placeholder="Search classes..."
-					className={styles.search_input}
-				/>
-				<div className="scrollable_outer">
-					<ul className={`${styles.class_list} scrollable_inner`}>
-						{classes.map((cls) => (
-							<li
-								key={cls.id}
-								onClick={() => handleClassSelect(cls.id, cls.name)}
-								className={`${
-									cls.id === selectedClassId ? styles.selectedClass : ""
-								} ${styles.listItem}`}
-							>
-								{cls.name}
-							</li>
-						))}
-					</ul>
-				</div>
-			</div>
+			{/* CLASS DROPDOWN / PANEL */}
+			<AdminMaterialClassPanel
+				isMobile={isMobile}
+				selectedClassId={selectedClassId}
+				selectClass={selectClass}
+				selectedClassName={selectedClassName}
+				dropdownOpen={dropdownOpen}
+				setDropdownOpen={setDropdownOpen}
+				toggleBtnRef={toggleBtnRef}
+			/>
 
 			{/* MATERIAL PANEL */}
-			<div className={styles.materials_container}>
+			<div
+				className={`${styles.materials_container} ${
+					!selectedClassId ? styles.disabled : ""
+				}`}
+			>
 				<h2>Materials</h2>
-
-				<ul className={styles.tab_container}>
-					<li
-						onClick={() => setActiveRoleTab("teacher")}
-						className={styles.tab}
-					>
-						<span
-							className={`${styles.tab_text} ${
-								activeRoleTab === "teacher" ? styles.active_tab : ""
-							}`}
-						>
-							Teacher
-						</span>
-					</li>
-					<li
-						onClick={() => setActiveRoleTab("student")}
-						className={styles.tab}
-					>
-						<span
-							className={`${styles.tab_text} ${
-								activeRoleTab === "student" ? styles.active_tab : ""
-							}`}
-						>
-							Student
-						</span>
-					</li>
-				</ul>
+				<TabMenu
+					activeRoleTab={activeRoleTab}
+					setActiveRoleTab={setActiveRoleTab}
+					tabLabels={["teacher", "student"]}
+				/>
 
 				<div className={styles.materials_container_inner}>
 					{activeRoleTab === "teacher" && (
@@ -232,7 +246,7 @@ const AdminMaterial = () => {
 						<button
 							className="action_button save_button"
 							onClick={handleSave}
-							disabled={!isLibraryOpen || !hasChanges}
+							disabled={!isLibraryOpen || !hasChanges || !selectedClassId}
 						>
 							Save
 						</button>

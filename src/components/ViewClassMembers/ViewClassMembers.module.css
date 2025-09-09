@@ -1,6 +1,9 @@
 .wrap {
-	display: grid;
-	gap: 16px;
+	margin: 80px 20px 20px 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	/* height: 100%; */
 }
 
 .headerRow {
@@ -28,7 +31,7 @@
 .group {
 	border: 1px solid var(--color-border);
 	border-radius: 12px;
-	overflow: hidden;
+	overflow-y: visible;
 }
 .groupHeader {
 	display: flex;
@@ -164,6 +167,12 @@
 	border-radius: 12px;
 	animation: shimmer 1.2s infinite;
 }
+
+.dumb_list_item {
+	margin-left: 50px;
+	padding: 10px;
+}
+
 @keyframes shimmer {
 	0% {
 		background-position: 200% 0;

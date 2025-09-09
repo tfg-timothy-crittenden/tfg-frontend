@@ -8,6 +8,7 @@ import CountdownContainer from "@/components/CountdownTimer/CountdownContainer";
 import sharedStyles from "@/styles/speakingPartLayout.module.css";
 import styles from "./SpeakingPart1.module.css";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { Shuffle } from "lucide-react";
 
 const SpeakingPart1Presentation = ({
 	question,
@@ -18,6 +19,7 @@ const SpeakingPart1Presentation = ({
 	currentTopic,
 	topics,
 	handleTopicChange,
+	handleShuffleClick,
 	loading,
 }) => {
 	const renderContent = () => {
@@ -98,6 +100,12 @@ const SpeakingPart1Presentation = ({
 						currentTopic={currentTopic}
 						handleTopicChange={handleTopicChange}
 					/>
+					<Shuffle
+						size={24}
+						className={styles.dice_icon}
+						onClick={handleShuffleClick}
+					/>
+
 					<TimeInformation modeTimes={modeTimeEnum} />
 					<CountdownContainer initialTime={time} />
 				</TimerWrapper>

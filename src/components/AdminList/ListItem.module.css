@@ -1,12 +1,14 @@
 /* ListItem component styles */
 
-/* Main item row */
+/* Mobile-first: compact base */
 .itemRow {
 	display: flex;
 	align-items: center;
-	padding: 0.75rem 1rem;
+	padding: 0.5rem 0.75rem; /* tighter on mobile */
 	border-bottom: 1px solid var(--color-border);
 	transition: background-color 0.2s ease;
+	font-size: var(--font-size-sm); /* smaller text base */
+	line-height: 1.25;
 }
 
 .itemRow:last-child {
@@ -21,26 +23,30 @@
 	background-color: var(--color-background-disabled);
 }
 
-/* Checkbox container */
+/* (Optional) selected state */
+.itemRow.selected {
+	background: var(--color-primary-light);
+}
+
 .checkbox_container {
 	display: flex;
 	align-items: center;
-	margin-right: 1rem;
+	margin-right: 0.75rem;
 	justify-content: center;
 }
 
 .checkbox_container input {
-	transform: scale(1.2);
+	transform: scale(1.1);
 	cursor: pointer;
 }
 
-/* Content container */
 .content {
 	flex: 1;
-	margin: 0 20px;
+	margin: 0 12px; /* tighter on mobile */
+	min-width: 0;
 }
 
-/* Kebab menu styles */
+/* Kebab menu */
 .kebabContainer {
 	margin-left: auto;
 	position: relative;
@@ -61,7 +67,7 @@
 	position: absolute;
 	top: 100%;
 	right: 0;
-	background: white;
+	background: var(--color-background);
 	border: 1px solid var(--color-border);
 	border-radius: 6px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -69,21 +75,21 @@
 	z-index: 1000;
 }
 
-/* Dropdown items */
 .dropdownItem {
 	display: block;
 	width: 100%;
-	padding: 0.75rem 1rem;
+	padding: 0.6rem 0.9rem;
 	border: none;
 	background: none;
 	text-align: left;
 	cursor: pointer;
 	transition: background-color 0.2s ease;
-	font-size: 0.9rem;
+	font-size: 0.8rem;
+	line-height: 1.2;
 }
 
 .dropdownItem:hover {
-	background-color: #f5f5f5;
+	background-color: var(--color-background-alt);
 }
 
 .dropdownItem:first-child {
@@ -92,4 +98,41 @@
 
 .dropdownItem:last-child {
 	border-radius: 0 0 6px 6px;
+}
+
+/* Tablet enhancements */
+@media (--tablet-up) {
+	.itemRow {
+		padding: 0.65rem 1rem;
+		font-size: var(--font-size-base);
+	}
+
+	.checkbox_container input {
+		transform: scale(1.15);
+	}
+
+	.content {
+		margin: 0 16px;
+	}
+
+	.dropdownItem {
+		font-size: 0.85rem;
+		padding: 0.65rem 1rem;
+	}
+}
+
+/* Desktop enhancements */
+@media (--desktop-up) {
+	.itemRow {
+		padding: 0.75rem 1.25rem;
+		font-size: var(--font-size-lg);
+	}
+
+	.content {
+		margin: 0 20px;
+	}
+
+	.dropdownItem {
+		font-size: 0.9rem;
+	}
 }

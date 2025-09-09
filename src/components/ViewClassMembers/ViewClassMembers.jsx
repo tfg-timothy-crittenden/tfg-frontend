@@ -1,47 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { getClassMembers } from "@/api/classes/classesAPI";
+import {
+	getClassroomTeachers,
+	getClassroomStudents,
+	removeStudentsFromClass,
+} from "@/api/classes/classesAPI";
 import { Users, GraduationCap } from "lucide-react";
+import useAdminList from "@/hooks/useAdminList";
+import { AdminList, ListItem } from "@/components/AdminList";
+import { UserListItem } from "@/components/UserListItem";
+import {
+	personSortOptions,
+	sortPeople,
+} from "@/components/AdminList/adminUtils";
 import styles from "./ViewClassMembers.module.css";
-
-const Avatar = ({ name = "?", size = 36 }) => {
-	const initials =
-		name
-			.split(" ")
-			.filter(Boolean)
-			.slice(0, 2)
-			.map((s) => s[0]?.toUpperCase())
-			.join("") || "?";
-	return (
-		<div className={styles.avatar} style={{ width: size, height: size }}>
-			{initials}
-		</div>
-	);
-};
-
-const GroupHeader = ({ icon, title, count }) => (
-	<div className={styles.groupHeader}>
-		<div className={styles.groupTitle}>
-			{icon}
-			<span>{title}</span>
-			<span className={styles.badge}>{count}</span>
-		</div>
-	</div>
-);
-
-const MemberRow = ({ m }) => (
-	<li className={styles.row} key={m.id}>
-		<Avatar name={m.name} />
-		<div className={styles.person}>
-			<div className={styles.name}>{m.name || "(unnamed)"}</div>
-			<div className={styles.meta}>
-				{m.username && <span className={styles.tag}>@{m.username}</span>}
-				{m.status && <span className={styles.dot} />}
-				{m.status && <span className={styles.muted}>{m.status}</span>}
-			</div>
-		</div>
-	</li>
-);
+import sharedStyles from "@/styles/speakingPartLayout.module.css";
+import AdminDeleteModal from "@/components/AdminDeleteModal";
 
 const ViewClassMembers = ({ classroomId: propId }) => {
 	const params = useParams();
@@ -50,19 +24,23 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 	const [loading, setLoading] = useState(true);
 	const [err, setErr] = useState("");
 	const [teachers, setTeachers] = useState([]);
-	const [students, setStudents] = useState([]);
+	const [studentSort, setStudentSort] = useState("name-asc");
+	// (Optional local cache if you want immediate student list before hook refresh)
+	const [initialStudents, setInitialStudents] = useState([]);
 
 	useEffect(() => {
 		let mounted = true;
 		setLoading(true);
 		setErr("");
 
-		getClassMembers(classroomId)
-			.then(({ teachers, students }) => {
+		Promise.all([
+			getClassroomTeachers(classroomId),
+			getClassroomStudents(classroomId),
+		])
+			.then(([teachersRes, studentsRes]) => {
 				if (!mounted) return;
-				const byName = (a, b) => (a.name || "").localeCompare(b.name || "");
-				setTeachers([...teachers].sort(byName));
-				setStudents([...students].sort(byName));
+				setTeachers(teachersRes || []);
+				setInitialStudents(studentsRes || []);
 			})
 			.catch((e) =>
 				setErr(e?.response?.data?.error || "Failed to load members")
@@ -74,51 +52,175 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 		};
 	}, [classroomId]);
 
-	if (loading) {
-		return (
-			<div className={styles.wrap}>
-				<div className={styles.skeleton} />
-			</div>
-		);
-	}
+	// Memoize API loaders so useAdminList doesn't see a new function each render
+	const loadStudents = useCallback(
+		async () => await getClassroomStudents(classroomId),
+		[classroomId]
+	);
+	const loadTeachers = useCallback(
+		async () => await getClassroomTeachers(classroomId),
+		[classroomId]
+	);
 
-	if (err) {
-		return <div className={styles.error}>{err}</div>;
-	}
+	// Single delete wraps API expecting array
+	const deleteOneStudent = useCallback(
+		async (student) => {
+			const id = typeof student === "object" ? student?.id : student;
+			if (!id) return;
+			await removeStudentsFromClass(classroomId, [id]);
+		},
+		[classroomId]
+	);
+
+	const deleteManyStudents = useCallback(
+		async (ids) => {
+			const valid = (ids || []).filter(Boolean);
+			if (!valid.length) return;
+			await removeStudentsFromClass(classroomId, valid);
+		},
+		[classroomId]
+	);
+
+	const studentAdmin = useAdminList({
+		loadItems: loadStudents,
+		deleteItem: deleteOneStudent,
+		deleteMultipleItems: deleteManyStudents,
+		itemName: "student",
+		itemNamePlural: "students",
+	});
+
+	const {
+		items: studentItems,
+		loading: studentsLoading,
+		selectedItems: selectedStudents,
+		handleSelectionChange: handleStudentSelectionChange,
+		confirmSingleDelete: confirmDeleteStudent,
+		confirmBulkDelete: confirmBulkDeleteStudents,
+		handleDeleteConfirm: handleStudentDeleteConfirm,
+		cancelDelete: cancelStudentDelete,
+		itemToDelete: studentToDelete,
+		bulkDelete: studentBulkDelete,
+		deleteConfirmText: studentDeleteConfirmText,
+		setDeleteConfirmText: setStudentDeleteConfirmText,
+		modalRef: studentDeleteModalRef,
+		isDeleteModalOpen: isStudentDeleteModalOpen,
+		bulkActions: studentBulkActions,
+		refreshItems: refreshStudentItems,
+	} = studentAdmin;
+
+	// Trigger a refresh when classroomId changes (after hook is ready)
+	useEffect(() => {
+		refreshStudentItems();
+	}, [classroomId, refreshStudentItems]);
+
+	//Usememo prevents rerender when items are selected, which would trigger fade_in effect. 
+	const GroupHeader = React.useMemo(
+		() =>
+			function GroupHeader({ icon, title, count }) {
+				return (
+					<div className={styles.groupHeader + " fade_in"}>
+						<div className={styles.groupTitle}>
+							{icon}
+							<span>{title}</span>
+							<span className={styles.badge}>{count}</span>
+						</div>
+					</div>
+				);
+			},
+		[classroomId]
+	);
+
+	const renderTeacher = (teacher, { isSelected, onSelect }) => (
+		<div className={styles.dumb_list_item}>
+			<UserListItem user={teacher} />
+		</div>
+	);
+
+	const renderStudentItem = (student, { isSelected, onSelect }) => (
+		<ListItem
+			key={student.id}
+			id={student.id}
+			isSelected={isSelected}
+			onSelect={onSelect}
+			actions={[
+				{
+					label: "Remove",
+					handler: () => confirmDeleteStudent(student),
+				},
+			]}
+			renderContent={() => <UserListItem user={student} key={student.id} />}
+		/>
+	);
+
+	// Fallback to initialStudents during the very first hook load after a classroom switch
+	const effectiveStudentItems =
+		studentItems.length === 0 && studentsLoading && initialStudents.length
+			? initialStudents
+			: studentItems;
 
 	return (
-		<div className={styles.wrap}>
-			<section className={styles.group}>
-				<GroupHeader
-					icon={<GraduationCap size={18} />}
-					title="Teachers"
-					count={teachers.length}
-				/>
-				<ul className={styles.list}>
-					{teachers.map((m) => (
-						<MemberRow key={m.id} m={m} />
-					))}
-					{teachers.length === 0 && (
-						<li className={styles.empty}>No teachers in this class.</li>
-					)}
-				</ul>
-			</section>
+		<div className="full-height-mobile-content">
+			<div className={styles.wrap + " " + "fade_in"}>
+				<section className={styles.group}>
+					<GroupHeader
+						icon={<GraduationCap size={18} />}
+						title="Teachers"
+						count={teachers.length}
+					/>
+					<AdminList
+						items={sortPeople(teachers, "name-asc")}
+						loading={loading}
+						selectedItems={new Set()}
+						onSelectionChange={() => {}}
+						onBulkAction={() => {}}
+						bulkActions={[]}
+						renderItem={renderTeacher}
+						emptyMessage="No teachers in this class."
+						className={styles.adminListNoBorder}
+						isActionable={false}
+					/>
+				</section>
 
-			<section className={styles.group}>
-				<GroupHeader
-					icon={<Users size={18} />}
-					title="Students"
-					count={students.length}
-				/>
-				<ul className={styles.list}>
-					{students.map((m) => (
-						<MemberRow key={m.id} m={m} />
-					))}
-					{students.length === 0 && (
-						<li className={styles.empty}>No students in this class yet.</li>
-					)}
-				</ul>
-			</section>
+				<section className={styles.group}>
+					<GroupHeader
+						icon={<Users size={18} />}
+						title="Students"
+						count={effectiveStudentItems.length}
+					/>
+					<AdminList
+						items={sortPeople(effectiveStudentItems, studentSort)}
+						loading={studentsLoading}
+						selectedItems={selectedStudents}
+						onSelectionChange={handleStudentSelectionChange}
+						onBulkAction={(key) => {
+							if (key === "delete") confirmBulkDeleteStudents();
+						}}
+						bulkActions={studentBulkActions}
+						renderItem={renderStudentItem}
+						emptyMessage="No students in this class."
+						className={styles.adminListNoBorder}
+						sortOptions={personSortOptions}
+						currentSort={studentSort}
+						onSortChange={setStudentSort}
+						isActionable={true}
+					/>
+
+					<AdminDeleteModal
+						isOpen={isStudentDeleteModalOpen}
+						modalRef={studentDeleteModalRef}
+						onClose={cancelStudentDelete}
+						onConfirm={handleStudentDeleteConfirm}
+						itemName="student"
+						itemNamePlural="students"
+						itemToDelete={studentToDelete}
+						bulkDelete={studentBulkDelete}
+						selectedCount={selectedStudents ? selectedStudents.size : 0} // guard
+						confirmText={studentDeleteConfirmText}
+						onConfirmTextChange={setStudentDeleteConfirmText}
+						requiresTypeDelete={true}
+					/>
+				</section>
+			</div>
 		</div>
 	);
 };

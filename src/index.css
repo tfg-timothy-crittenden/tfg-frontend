@@ -7,13 +7,13 @@
 	flex: 1;
 	margin: 0;
 	padding: 0;
+	overflow: hidden;
 }
 
 body {
 	font-family: "Roboto", sans-serif;
 	display: flex;
 	flex-direction: column;
-
 	width: 100dvw;
 	height: 100dvh;
 }
@@ -149,4 +149,14 @@ hr {
 	to {
 		opacity: 1;
 	}
+}
+
+/* Use for content that should extend from under the top nav bar down to the bottom nav bar, without pushing bottom navbar off the screen and with no vertical scrolling */
+.full-height-mobile-content {
+	height: calc(100dvh - 141.5px);
+}
+
+.full-height-mobile-no-bottom-nav {
+	height: calc(100dvh - 55.5px);
+	overflow-y: auto;
 }

@@ -1,6 +1,6 @@
 import { BookOpen, ChevronRight, Users } from "lucide-react";
 import styles from "./TestSelectionWelcome.module.css";
-import sharedStyles from '@/styles/speakingPartLayout.module.css'
+import sharedStyles from "@/styles/speakingPartLayout.module.css";
 
 const TestSelectionWelcome = ({ classroomName }) => {
 	return (
@@ -16,7 +16,7 @@ const TestSelectionWelcome = ({ classroomName }) => {
 
 				<p className={styles.welcome_description}>
 					Ready to practice your TOEFL Speaking skills? Choose a test from the
-					sidebar to get started.
+					menue to get started.
 				</p>
 
 				<div className={styles.steps_container}>
@@ -24,7 +24,7 @@ const TestSelectionWelcome = ({ classroomName }) => {
 						<div className={styles.step_number}>1</div>
 						<div className={styles.step_content}>
 							<h3>Select a Test</h3>
-							<p>Choose from available speaking tests in the sidebar</p>
+							<p>Choose from available speaking tests in the menu</p>
 						</div>
 					</div>
 
@@ -55,7 +55,6 @@ const TestSelectionWelcome = ({ classroomName }) => {
 						<li>Use headphones for better audio quality</li>
 						<li>Take notes during reading and listening sections</li>
 						<li>Practice speaking clearly and at a natural pace</li>
-						<li>Check your microphone before starting</li>
 					</ul>
 				</div>
 			</div>
