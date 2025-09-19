@@ -42,8 +42,7 @@ export const AdminTeachers = lazy(_importAdminTeachers);
 export const AdminClasses = lazy(_importAdminClasses);
 export const AdminMaterial = lazy(_importAdminMaterial);
 
-// ===== Public / Private views (optional: add prefetchers as needed) =====
-
+// ===== Public / Private views =====
 export const OAuthLogin = lazy(() => import("@/views/OAuthLogin/OAuthLogin"));
 export const Unauthorised = lazy(() =>
 	import("@/views/Unauthorised/Unauthorised")
@@ -60,4 +59,12 @@ export const StudentSignup = lazy(() =>
 );
 export const EmailVerification = lazy(() =>
 	import("@/views/EmailVerification/EmailVerification")
+);
+
+// ===== Password Reset views (ADD THESE) =====
+export const PasswordResetRequest = lazy(() =>
+	import("@/views/PasswordReset/PasswordResetRequest/PasswordResetRequest")
+);
+export const PasswordResetConfirm = lazy(() =>
+	import("@/views/PasswordReset/PasswordResetConfirm/PasswordResetConfirm")
 );

@@ -18,19 +18,21 @@ const ClassItem = ({ classItem, allTeachers, onTeacherAssignment }) => {
 
 	return (
 		<div className={styles.classContainer}>
-			{/* Class Icon */}
-			<div className={styles.classIcon}>
-				<ClassroomIcon size={48} className={styles.classroomIcon} />
-			</div>
-
-			{/* Class Info */}
-			<div className={styles.classInfo}>
-				<div className={styles.classHeader}>
-					<span className={styles.className}>{classItem.name}</span>
+			<div className={styles.class_info_and_logo}>
+				{/* Class Icon */}
+				<div className={styles.classIcon}>
+					<ClassroomIcon size={48} className={styles.classroomIcon} />
 				</div>
-				<span className={styles.classSubject}>
-					{classItem.subject || "No subject specified"}
-				</span>
+
+				{/* Class Info */}
+				<div className={styles.classInfo}>
+					<div className={styles.classHeader}>
+						<span className={styles.className}>{classItem.name}</span>
+					</div>
+					<span className={styles.classSubject}>
+						{classItem.subject || "No subject specified"}
+					</span>
+				</div>
 			</div>
 
 			{/* Teachers Assignment Section */}

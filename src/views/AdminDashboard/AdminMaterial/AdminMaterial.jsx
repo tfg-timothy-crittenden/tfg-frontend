@@ -36,9 +36,7 @@ const AdminMaterial = () => {
 	const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 	const [hasChanges, setHasChanges] = useState(false);
 	const { isMobile } = useResponsiveLayout();
-	const [dropdownOpen, setDropdownOpen] = useState(false);
-	// Refs
-	const toggleBtnRef = useRef(null);
+
 	// Original fetched assignments
 	const lastFetchedTeacherIds = useRef(new Set());
 	const lastFetchedStudentIds = useRef(new Set());
@@ -129,18 +127,8 @@ const AdminMaterial = () => {
 			}
 
 			setIsLibraryOpen(false);
-			if (isMobile) {
-				setDropdownOpen(false);
-				setTimeout(() => toggleBtnRef.current?.focus(), 0);
-			}
 		},
-		[
-			hasChanges,
-			isMobile,
-			materialsLoaded,
-			allMaterials.length,
-			fetchClassMaterials,
-		]
+		[hasChanges, materialsLoaded, allMaterials.length, fetchClassMaterials]
 	);
 
 	// When allMaterials finish loading, (re)fetch materials for the already selected class (no prompt)
@@ -182,10 +170,6 @@ const AdminMaterial = () => {
 	};
 
 	// Keyboard nav (only when dropdown open + mobile)
-	const focusItem = (idx) => {
-		const node = listRef.current?.querySelector(`[data-index="${idx}"]`);
-		node?.focus();
-	};
 
 	return (
 		<div className={styles.container}>
@@ -195,9 +179,6 @@ const AdminMaterial = () => {
 				selectedClassId={selectedClassId}
 				selectClass={selectClass}
 				selectedClassName={selectedClassName}
-				dropdownOpen={dropdownOpen}
-				setDropdownOpen={setDropdownOpen}
-				toggleBtnRef={toggleBtnRef}
 			/>
 
 			{/* MATERIAL PANEL */}

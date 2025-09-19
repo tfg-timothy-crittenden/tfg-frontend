@@ -35,6 +35,7 @@
 	padding: 6px;
 	list-style: none;
 	height: 400px;
+	scrollbar-width: thin;
 }
 
 .library_column {
@@ -50,7 +51,7 @@
 }
 
 .documents_icon {
-	height: 120px;
+	height: 70px;
 	margin-bottom: 10px;
 	filter: opacity(0.3);
 }
@@ -67,7 +68,7 @@
 }
 
 .empty_icon {
-	height: 80px;
+	height: 70px;
 	opacity: 0.6;
 	margin-bottom: 1rem;
 }
@@ -75,4 +76,13 @@
 .empty_description {
 	font-size: 0.9rem;
 	color: var(--color-text-muted);
+}
+
+@media (--tablet-up) {
+	.documents_icon {
+		height: 100px;
+	}
+	.empty_icon {
+		height: 100px;
+	}
 }

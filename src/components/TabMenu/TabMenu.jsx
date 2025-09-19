@@ -8,7 +8,11 @@ const AdminMaterialTabMenu = ({
 	return (
 		<ul className={styles.tab_container}>
 			{tabLabels.map((label) => (
-				<li onClick={() => setActiveRoleTab(label)} className={styles.tab}>
+				<li
+					onClick={() => setActiveRoleTab(label)}
+					className={styles.tab}
+					key={label}
+				>
 					<span
 						className={`${styles.tab_text} ${
 							activeRoleTab === label ? styles.active_tab : ""

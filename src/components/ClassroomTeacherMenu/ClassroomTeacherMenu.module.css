@@ -23,7 +23,7 @@
 	background: var(--color-background, #fff);
 	border: 1px solid var(--color-border, #eee);
 	position: relative;
-	z-index: 10;
+	/* z-index: 10; */
 }
 
 .list_item {

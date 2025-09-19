@@ -56,10 +56,9 @@
 }
 
 .actionsButtonDisabled {
-	background-color: var(--color-background-alt) !important;
-	color: var(--color-text-secondary) !important;
-	border-color: var(--color-border) !important;
-	cursor: not-allowed !important;
+	background-color: var(--color-background-alt);
+	border-color: var(--color-border);
+	cursor: not-allowed;
 }
 
 .actionsDropdown {
@@ -71,7 +70,7 @@
 	border-radius: 6px;
 	box-shadow: var(--shadow-md);
 	min-width: 140px;
-	z-index: 10;
+	z-index: 1;
 	padding: 0.25rem 0;
 }
 
@@ -103,6 +102,10 @@
 .itemsContainer {
 	display: flex;
 	flex-direction: column;
+}
+
+.item_container {
+	/* z-index: 0; */
 }
 
 /* Empty / Loading */
@@ -149,7 +152,7 @@
 	border-radius: 6px;
 	box-shadow: var(--shadow-md);
 	min-width: 150px;
-	z-index: 1000;
+	z-index: 1;
 	padding: 0.3rem 0;
 }
 

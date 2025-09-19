@@ -94,6 +94,11 @@
 	border-radius: 6px;
 }
 
+.class_info_and_logo {
+	display: flex;
+	gap: 15px;
+}
+
 /* Tablet enhancements */
 @media (--tablet-up) {
 	.classContainer {

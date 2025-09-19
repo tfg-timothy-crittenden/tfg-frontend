@@ -1,10 +1,5 @@
 /* src/components/Header/Header.module.css */
 
-/* Define PostCSS custom media at the top */
-@custom-media --tablet-up (min-width: 769px);
-@custom-media --desktop-up (min-width: 1025px);
-@custom-media --large-desktop-up (min-width: 1200px);
-
 /* Mobile-first: Base styles */
 .header {
 	display: flex;
@@ -17,7 +12,7 @@
 	height: 56px;
 	position: sticky;
 	top: 0;
-	z-index: 100;
+	z-index: 1;
 }
 
 .title {
@@ -113,7 +108,7 @@
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-md);
 	box-shadow: var(--shadow-lg);
-	z-index: 1000;
+	/* z-index: 2; */
 	min-width: 180px;
 	overflow: hidden;
 }

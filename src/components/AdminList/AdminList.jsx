@@ -76,7 +76,7 @@ const AdminList = ({
 	return (
 		<div className={`${styles.adminList} ${className} fade_in`}>
 			{/* Header with select all and bulk actions */}
-			<div className={`${styles.header} fade_in`}>
+			<div className={`${styles.header}`}>
 				<div className={styles.selectAllContainer}>
 					{isActionable && (
 						<div className={styles.checkbox_container}>
@@ -174,7 +174,7 @@ const AdminList = ({
 			{/* Items container */}
 			<div className={styles.itemsContainer}>
 				{items.map((item) => (
-					<div key={item.id}>
+					<div key={item.id} className={styles.item_container}>
 						{renderItem(item, {
 							isSelected: isActionable && selectedItems.has(item.id),
 							onSelect: isActionable

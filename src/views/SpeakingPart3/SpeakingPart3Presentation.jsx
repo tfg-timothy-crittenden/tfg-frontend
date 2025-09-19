@@ -63,6 +63,7 @@ const SpeakingPart3Presentation = ({
 						audio={testData.listeningAudio}
 						image={image}
 						voiceGender={testData.voiceGender}
+						listeningScript={testData.listeningScript}
 					/>
 				);
 

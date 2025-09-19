@@ -25,5 +25,5 @@
 }
 
 .no_transition {
-	transition: none !important;
+	transition: none;
 }

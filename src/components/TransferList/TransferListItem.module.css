@@ -19,6 +19,7 @@
 	justify-content: space-between;
 	gap: 0.5rem;
 	width: 100%;
+	font-size: var(--font-size-sm);
 }
 
 .selected {
@@ -34,17 +35,10 @@
 	opacity: 0.5;
 	pointer-events: none;
 	cursor: not-allowed;
+	color: var(--color-disabled);
 }
 
 /* Arrow for unselected items */
-.arrow {
-	opacity: 0;
-	transition: opacity 0.2s ease;
-}
-
-.container:hover .arrow {
-	opacity: 1;
-}
 
 .arrow::after {
 	content: "+";
@@ -52,17 +46,17 @@
 }
 
 /* X for selected items */
-.removeIcon {
-	opacity: 0;
-	transition: opacity 0.2s ease;
-}
-
-.selected:hover .removeIcon {
-	opacity: 1;
-}
 
 .removeIcon::after {
 	content: "×";
 	color: var(--color-error);
 	font-weight: bold;
 }
+
+.disabled .removeIcon::after {
+	display: none;
+}
+
+/* .removeIcon.disabled::after {
+	color: var(--color-disabled);
+} */

@@ -50,6 +50,7 @@ const SpeakingPart4Presentation = ({
 						key={testData.listeningAudio}
 						audio={testData.listeningAudio}
 						voiceGender={testData.voiceGender}
+						listeningScript={testData.listeningScript}
 					/>
 				);
 

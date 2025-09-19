@@ -18,6 +18,8 @@ import {
 	AdminMaterial,
 	StudentSignup,
 	EmailVerification,
+	PasswordResetRequest,
+	PasswordResetConfirm,
 } from "@/routes/lazyRoutes";
 
 const Fallback = () => <div style={{ padding: 24 }}>Loading…</div>;
@@ -39,6 +41,8 @@ function App() {
 						element={<EmailVerification />}
 					/>
 					<Route path={ROUTES.VERIFY_EMAIL} element={<EmailVerification />} />
+					<Route path="/password-reset" element={<PasswordResetRequest />} />
+					<Route path="/reset-password" element={<PasswordResetConfirm />} />
 
 					{/* Private routes */}
 					<Route element={<PrivateRoute />}>

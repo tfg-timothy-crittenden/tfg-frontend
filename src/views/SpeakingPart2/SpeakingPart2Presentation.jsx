@@ -54,7 +54,13 @@ const SpeakingPart2Presentation = ({
 				);
 
 			case modeEnum.LISTEN:
-				return <Listen audio={testData.listeningAudio} image={image} />;
+				return (
+					<Listen
+						audio={testData.listeningAudio}
+						image={image}
+						listeningScript={testData.listeningScript}
+					/>
+				);
 
 			case modeEnum.PREPARE:
 			case modeEnum.SPEAK:

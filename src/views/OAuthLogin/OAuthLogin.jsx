@@ -22,6 +22,10 @@ export default function OAuthLogin() {
 		window.location.href = `${apiBase}/oauth/teacher/microsoft`;
 	};
 
+	const handlePasswordResetClick = () => {
+		navigate("/password-reset");
+	};
+
 	const handleCredentialLogin = async (e) => {
 		e.preventDefault();
 		setIsLoading(true);
@@ -127,6 +131,16 @@ export default function OAuthLogin() {
 									placeholder="Enter your password"
 									required
 								/>
+							</div>
+							<div className={styles.options_row}>
+								<span></span> {/* spacer */}
+								<button
+									type="button"
+									onClick={handlePasswordResetClick}
+									className={styles.forgot_password}
+								>
+									Forgotten password?
+								</button>
 							</div>
 
 							{error && <div className={styles.error_message}>{error}</div>}

@@ -8,7 +8,7 @@
 .admin_dashboard_heading {
 	color: var(--color-text);
 	text-align: left;
-	margin-bottom: 60px;
+	margin-bottom: 30px;
 }
 
 .navList {
@@ -16,7 +16,7 @@
 	padding-bottom: 10px;
 	display: flex;
 	justify-content: start;
-	margin-bottom: 60px;
+	margin-bottom: 30px;
 	border-bottom: solid 1px var(--color-border);
 }
 
@@ -38,4 +38,13 @@
 
 .navList .activeLink {
 	border-bottom: solid 2px var(--color-primary);
+}
+
+@media (--tablet-up) {
+	.admin_dashboard_heading {
+		margin-bottom: 60px;
+	}
+	.navList {
+		margin-bottom: 60px;
+	}
 }
