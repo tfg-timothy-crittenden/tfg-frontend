@@ -17,7 +17,7 @@ const SpeakingPart2Presentation = ({
 	loading,
 }) => {
 	const renderContent = () => {
-		if (loading) return <LoadingSpinner />;
+		if (loading || !testData) return <LoadingSpinner />;
 
 		switch (mode) {
 			case modeEnum.INSTRUCTIONS:

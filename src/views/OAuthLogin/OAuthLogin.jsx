@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./OAuthLogin.module.css";
 import { login } from "../../store/auth/authSlice";
 
 export default function OAuthLogin() {
-	const [loginType, setLoginType] = useState("teacher"); // "teacher", "student", "admin"
+	const [loginType, setLoginType] = useState("teacher");
 	const [credentials, setCredentials] = useState({
 		username: "",
 		password: "",
@@ -13,12 +13,61 @@ export default function OAuthLogin() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 
+	const [searchParams] = useSearchParams();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const hasProcessedOAuthError = useRef(false); // Add this
+
+	// Check for OAuth errors in URL parameters when component loads
+	useEffect(() => {
+		const errorParam = searchParams.get("error");
+		const errorDescription = searchParams.get("error_description");
+		const reasonParam = searchParams.get("reason");
+
+		// Handle OAuth errors from URL
+		if (errorParam || reasonParam) {
+			hasProcessedOAuthError.current = true; // Mark as processed
+			let errorMessage = "Authentication failed";
+
+			if (reasonParam) {
+				errorMessage = decodeURIComponent(reasonParam);
+			} else if (errorDescription) {
+				errorMessage = errorDescription;
+			} else if (errorParam === "access_denied") {
+				errorMessage =
+					"Access denied. You may not be invited to use this system.";
+			} else if (errorParam === "unauthorized") {
+				errorMessage =
+					"You are not authorized to access this system. Please contact coordination.";
+			} else if (errorParam === "user_not_found") {
+				errorMessage =
+					"Teacher account not found. You must be invited by coordination before logging in.";
+			}
+
+			setError(errorMessage);
+
+			// Clear the error parameters from URL without page reload
+			const newSearchParams = new URLSearchParams(searchParams);
+			newSearchParams.delete("error");
+			newSearchParams.delete("error_description");
+			newSearchParams.delete("reason");
+			navigate({ search: newSearchParams.toString() }, { replace: true });
+		}
+	}, [searchParams, navigate]);
+
+	// Clear error when switching login types (but not if we just processed OAuth error)
+	useEffect(() => {
+		if (!hasProcessedOAuthError.current) {
+			setError("");
+		}
+		hasProcessedOAuthError.current = false; // Reset for next time
+	}, [loginType]);
 
 	const handleMicrosoftLogin = () => {
+		// Clear any existing errors
+		setError("");
+
 		const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
-		// Hit the BACKEND start route
 		window.location.href = `${apiBase}/oauth/teacher/microsoft`;
 	};
 
@@ -40,7 +89,6 @@ export default function OAuthLogin() {
 				})
 			).unwrap();
 
-			// Redirect to appropriate dashboard
 			navigate("/my/classrooms");
 		} catch (err) {
 			setError(err || "Login failed");
@@ -83,9 +131,15 @@ export default function OAuthLogin() {
 						</button>
 					</div>
 
+					{/* Display error message for all login types */}
+					{error && <div className={styles.error_message}>{error}</div>}
+
 					{/* Teacher OAuth Login */}
 					{loginType === "teacher" && (
 						<div className={styles.teacher_login}>
+							<span className={styles.teacher_message}>
+								Teachers must previously have been invited by coordination.
+							</span>
 							<button
 								onClick={handleMicrosoftLogin}
 								className={styles.microsoft_button}
@@ -114,7 +168,7 @@ export default function OAuthLogin() {
 									placeholder={
 										loginType === "teacher"
 											? "teacher@fundaciocic.org"
-											: `Enter your ${loginType} username`
+											: `Enter your username`
 									}
 									required
 								/>
@@ -133,17 +187,15 @@ export default function OAuthLogin() {
 								/>
 							</div>
 							<div className={styles.options_row}>
-								<span></span> {/* spacer */}
-								<button
+								<span></span>
+								<a
 									type="button"
 									onClick={handlePasswordResetClick}
 									className={styles.forgot_password}
 								>
 									Forgotten password?
-								</button>
+								</a>
 							</div>
-
-							{error && <div className={styles.error_message}>{error}</div>}
 
 							<button
 								type="submit"
@@ -166,11 +218,6 @@ export default function OAuthLogin() {
 						</div>
 					)}
 				</div>
-				{/* <div className={styles.login_right}>
-					<div className={styles.login_right_text}>
-						<p>Speaking Exam Practice</p>
-					</div>
-				</div> */}
 			</div>
 		</div>
 	);

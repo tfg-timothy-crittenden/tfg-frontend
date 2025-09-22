@@ -9,12 +9,11 @@
 @media (--tablet-up) {
 	.timer_wrapper {
 		position: static;
-		margin: 70px 0;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
 		align-items: center;
 		grid-row: test_tools;
-		margin-top: 30px;
+		/* margin-top: 30px; */
 	}
 }

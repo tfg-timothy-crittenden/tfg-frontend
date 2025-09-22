@@ -15,10 +15,11 @@
 }
 
 .image {
-	filter: grayscale(1) brightness(1.2);
-	width: 100%;
-	max-width: 400px;
+	/* filter: grayscale(1) brightness(1.2); */
+
+	max-width: 100%;
 	max-height: auto;
 	display: block;
-	margin: 20px auto;
+	margin: auto;
+	overflow: hidden;
 }

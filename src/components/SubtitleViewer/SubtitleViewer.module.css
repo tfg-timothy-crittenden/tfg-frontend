@@ -1,0 +1,184 @@
+.subtitle_viewer {
+	position: relative;
+	grid-row: 4;
+}
+
+.subtitles_container {
+	position: relative;
+	border-radius: 8px;
+	display: grid;
+	grid-template-rows: auto 0fr; /* Header takes auto space, content starts at 0fr */
+	opacity: 0;
+	transition: grid-template-rows 0.3s ease-out, opacity 0.3s ease-out;
+	overflow: hidden;
+	scrollbar-color: rgba(0, 0, 0, 0.3) transparent; /* Updated scrollbar color */
+}
+
+.subtitles_container.open {
+	grid-template-rows: auto 1fr; /* Header auto, content takes available space */
+	opacity: 1;
+	background: rgba(255, 255, 255, 0.95); /* Changed to white background */
+}
+
+.subtitles_container.closed {
+	grid-template-rows: auto 0fr; /* Header auto, content collapsed */
+	opacity: 1;
+	background: transparent;
+}
+
+.subtitle_header {
+	display: flex;
+	align-items: center;
+	padding: 8px 0px;
+	z-index: 10;
+	transition: all 0.3s ease-out;
+}
+
+/* Header styling when closed - center the button */
+.subtitles_container.closed .subtitle_header {
+	background: transparent;
+	border-bottom: none;
+
+	justify-content: center;
+}
+
+/* Header styling when open - left align with space between */
+.subtitles_container.open .subtitle_header {
+	justify-content: space-between;
+}
+
+.subtitle_content {
+	min-height: 0; /* Required for grid collapse */
+	overflow: hidden; /* Required for grid collapse */
+	transition: opacity 0.3s ease-out;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+}
+
+.subtitles_container.closed .subtitle_content {
+	opacity: 0;
+}
+
+.subtitles_container.open .subtitle_content {
+	opacity: 1;
+}
+
+.subtitle_content_inner {
+	padding: 12px;
+	height: 400px; /* Fixed height for scrollable area */
+	overflow-y: auto;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+	/* Ensure this container can be scrolled */
+	position: relative;
+	/* ADD: Rounded grey border using global styles */
+
+	background: var(--color-background);
+}
+
+/* Custom scrollbar for webkit browsers */
+.subtitle_content_inner::-webkit-scrollbar {
+	width: 6px;
+}
+
+.subtitle_content_inner::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.1); /* Darker track for white background */
+	border-radius: 3px;
+}
+
+.subtitle_content_inner::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.3); /* Darker thumb for white background */
+	border-radius: 3px;
+}
+
+.subtitle_content_inner::-webkit-scrollbar-thumb:hover {
+	background: rgba(0, 0, 0, 0.5); /* Darker on hover */
+}
+
+.subtitle_viewer .subtitle_content_inner p {
+	margin: 0 0 12px 0;
+	color: var(--color-text);
+	font-size: var(--subtitle-font-size, 16px);
+	line-height: 1.6;
+}
+
+.subtitle_viewer .subtitle_content_inner p:last-child {
+	margin-bottom: 0;
+}
+
+.subtitle_viewer .subtitle_content_inner b {
+	color: var(--color-primary);
+}
+
+.subtitle_viewer .subtitle_toggle {
+	display: flex;
+	border-radius: 4px;
+	padding: 6px 10px;
+	cursor: pointer;
+	font-size: 0.85rem;
+	font-weight: 600;
+	transition: all 0.3s ease-out;
+	background: var(--color-background-alt);
+	color: var(--color-text-muted);
+	border: 1px solid var(--color-border);
+}
+
+.subtitle_viewer .subtitle_toggle:hover {
+	background: rgba(0, 0, 0, 0.1);
+}
+
+.font_controls {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	background: var(--color-background-alt);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	padding: 4px 6px;
+	opacity: 0;
+	transform: translateX(10px);
+	transition: opacity 0.3s ease-out 0.1s, transform 0.3s ease-out 0.1s;
+}
+
+/* Font controls appear when open */
+.subtitles_container.open .font_controls {
+	opacity: 1;
+	transform: translateX(0);
+}
+
+.font_button {
+	background: var(--color-background);
+	border: 1px solid var(--color-border);
+	color: var(--color-text);
+	border-radius: var(--radius-sm);
+	padding: 2px 4px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease;
+	width: 22px;
+	height: 22px;
+}
+
+.font_button:hover:not(:disabled) {
+	background: var(--color-background-disabled);
+	border-color: var(--color-text-secondary);
+}
+
+.font_button:disabled {
+	background: var(--color-background-alt);
+	color: var(--color-text-disabled);
+	border-color: var(--color-border);
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+.font_size_display {
+	color: var(--color-text-secondary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 24px;
+	margin: 0 2px;
+}

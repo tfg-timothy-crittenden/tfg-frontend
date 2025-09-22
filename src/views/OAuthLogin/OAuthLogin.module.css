@@ -1,12 +1,5 @@
 .login_outer {
-	background-image: radial-gradient(
-		circle,
-		#5d92c0,
-		#588cb8,
-		#5386b0,
-		#4f81a8,
-		#4a7ba0
-	);
+	background: var(--background-gradient);
 	min-height: 100dvh;
 	display: flex;
 	align-items: center;
@@ -108,6 +101,9 @@
 	cursor: pointer;
 }
 
+.teacher_message {
+}
+
 .login_button {
 	width: 100%;
 	padding: 16px 0;
@@ -158,7 +154,7 @@
 	display: flex;
 	gap: 1rem;
 	margin: 10px auto 40px auto;
-	width: 50%;
+	width: 100%;
 }
 
 .type_button {

@@ -36,7 +36,6 @@
 		gap: var(--gap);
 		position: fixed;
 		width: 100%;
-		background: var(--color-background-neutral);
 	}
 	.main_content {
 		max-height: calc(100dvh - 141px);

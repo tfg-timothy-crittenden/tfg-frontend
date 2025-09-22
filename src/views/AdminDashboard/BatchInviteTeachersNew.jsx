@@ -35,7 +35,6 @@ const BatchInviteTeachers = ({ onInviteComplete }) => {
 			}
 
 			try {
-				// Combine firstName and surname into name for server
 				const teacherData = {
 					name: `${teacher.firstName.trim()} ${teacher.surname.trim()}`,
 					email: teacher.email,
@@ -48,10 +47,18 @@ const BatchInviteTeachers = ({ onInviteComplete }) => {
 				});
 			} catch (err) {
 				console.error("Failed to invite teacher:", err);
+
+				// Extract the actual error message from the API response
+				const errorMessage =
+					err.response?.data?.error ||
+					err.response?.data?.message ||
+					err.message ||
+					"Failed to send invitation.";
+
 				results.push({
 					email: teacher.email,
 					status: "error",
-					message: err.message || "Failed to send invitation.",
+					message: errorMessage,
 				});
 				failedIndexes.push(i);
 			}

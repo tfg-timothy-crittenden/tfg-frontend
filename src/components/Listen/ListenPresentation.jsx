@@ -8,7 +8,6 @@ const Listen = ({ audio, image, listeningScript }) => {
 		<>
 			<TestWrapper>
 				<img src={image} className={styles.image} />
-				<SubtitleViewer script={listeningScript} />
 			</TestWrapper>
 
 			<TimerWrapper>
@@ -16,6 +15,7 @@ const Listen = ({ audio, image, listeningScript }) => {
 					<source src={audio} type="audio/wav" />
 				</audio>
 			</TimerWrapper>
+			<SubtitleViewer script={listeningScript} />
 		</>
 	);
 };
