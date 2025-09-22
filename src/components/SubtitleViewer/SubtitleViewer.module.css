@@ -2,7 +2,7 @@
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	height: 100%;
+	/* height: 100%; */
 	min-height: 0; /* Critical for flex shrinking */
 }
 
@@ -73,8 +73,38 @@
 	border-radius: var(--radius-md);
 	background: var(--color-background);
 	/* margin: 8px 12px 12px 12px; */
-	min-height: 200px; /* Minimum usable height */
+	/* min-height: 200px; Minimum usable height */
 	max-height: calc(50vh - 60px); /* Account for header + margins */
+}
+
+/* Tablet+ enhancements: Use vertical distribution like mobile */
+@media (--tablet-up) {
+	.subtitles_container.open {
+		max-height: none; /* Remove viewport constraint */
+		flex: 0 0 auto; /* Don't grow, but take needed space */
+	}
+
+	.subtitles_container.open .subtitle_content {
+		max-height: none; /* Remove viewport constraint */
+		min-height: 250px; /* Larger minimum on tablet+ */
+		max-height: 400px; /* Reasonable upper limit to prevent overwhelming */
+	}
+
+	.subtitle_content_inner {
+		/* min-height: 200px; Ensure good usable space */
+	}
+}
+
+/* Desktop refinements */
+@media (--desktop-up) {
+	.subtitles_container.open .subtitle_content {
+		min-height: 300px;
+		max-height: 450px; /* Slightly larger on desktop */
+	}
+
+	.subtitle_content_inner {
+		min-height: 250px;
+	}
 }
 
 .subtitle_content_inner {

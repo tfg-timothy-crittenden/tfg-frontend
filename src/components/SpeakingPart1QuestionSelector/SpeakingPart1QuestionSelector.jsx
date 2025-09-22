@@ -11,7 +11,6 @@ const SpeakingPart1QuestionSelector = ({
 }) => {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const currentRef = useRef(null);
-	const { isMobile } = useResponsiveLayout(); // <-- use your hook
 
 	const handleSelectTopic = async (topic) => {
 		await handleTopicChange(topic);
@@ -24,33 +23,14 @@ const SpeakingPart1QuestionSelector = ({
 				setMenuOpen(false);
 			}
 		}
-		if (menuOpen && isMobile) {
+		if (menuOpen) {
 			document.addEventListener("mousedown", handleClickOutside);
 		}
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, [menuOpen, isMobile]);
+	}, [menuOpen]);
 
-	if (!isMobile) {
-		// Always show aside on tablet and up
-		return (
-			<aside className={styles.tags_container}>
-				<div className={styles.tags}>
-					{topics.map((topic) => (
-						<Tag
-							key={topic}
-							tagName={topic}
-							handleSetTag={handleSelectTopic}
-							selected={currentTopic === topic}
-						/>
-					))}
-				</div>
-			</aside>
-		);
-	}
-
-	// Mobile: show menu logic
 	return (
 		<>
 			{menuOpen && (

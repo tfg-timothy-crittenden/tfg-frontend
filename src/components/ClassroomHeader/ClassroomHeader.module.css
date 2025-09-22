@@ -5,21 +5,23 @@
 	justify-content: space-between;
 	align-items: flex-start;
 	width: 100%;
-	background: #fffffff0;
-	z-index: 1;
+	background: #ffffff;
+	z-index: 100; /* Increased from 1 to allow dropdown to show above other content */
 	border-bottom: 1px solid var(--color-border);
+	flex-shrink: 0;
+	position: relative; /* Ensure stacking context works properly */
 }
 
 .header_toggle_btn {
 	position: absolute;
 	top: 10px;
 	right: 10px;
-	/* z-index: 2; */
 	background: none;
 	border: none;
 	cursor: pointer;
 	padding: 4px;
 	display: flex;
+	z-index: 2; /* Ensure button stays on top */
 }
 
 .header_content {
@@ -27,37 +29,39 @@
 	align-items: center;
 	transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s,
 		padding 0.3s;
-	overflow: hidden;
-	max-height: 200px;
-	opacity: 1;
+	overflow: visible; /* Changed from hidden to visible to allow dropdown overflow */
 	width: 100%;
-	padding: 10px; /* Always present, but animated */
-	overflow: visible;
+	/* Key: Let content determine height naturally */
 }
 
 .header_content.collapsed {
 	max-height: 0;
 	opacity: 0;
 	pointer-events: none;
-	padding: 0; /* Collapse padding smoothly */
+	padding: 0;
+	overflow: hidden; /* Keep hidden when collapsed */
 }
 
 .header_content.expanded {
-	max-height: 200px;
+	max-height: 200px; /* Or use max-height: none for truly dynamic */
 	opacity: 1;
-	padding: 10px; /* Expanded padding */
+	padding: 10px;
+	overflow: visible; /* Allow dropdown to show when expanded */
 }
 
 @media (--tablet-up) {
 	.header {
 		position: relative;
+		z-index: 100; /* Maintain higher z-index on tablet+ */
 	}
 	.header_toggle_btn {
 		display: none;
 	}
 	.header_content {
-		max-height: none;
+		max-height: none; /* Remove height constraints on desktop */
 		opacity: 1;
 		pointer-events: auto;
+		padding: 10px;
+		overflow: visible; /* Always visible on tablet+ */
 	}
 }

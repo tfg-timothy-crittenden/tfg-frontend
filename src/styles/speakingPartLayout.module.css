@@ -1,51 +1,62 @@
 /* src/styles/speakingPartLayout.module.css */
 .container {
-	display: grid;
-	grid-template-rows: [mode_selector] 60px [test_content] 1fr [test_tools] auto [subtitles] auto;
+	display: flex;
+	flex-direction: column;
 	flex: 1;
-	overflow: hidden; /* Prevent overflow */
+	min-height: 0;
+	overflow: visible; /* Allow subtitle overflow on tablet+ */
 	padding: 15px;
-	max-height: calc(100dvh - 141.5px); /* Account for top header + bottom nav */
 }
+
 .mode_selector_row {
-	grid-row: mode_selector;
+	flex-shrink: 0; /* Don't shrink mode selector */
 	display: flex;
 	justify-content: center;
 	align-items: flex-start;
+	height: 60px;
 }
 
 .test_content_row {
-	grid-row: test_content;
-	overflow-y: auto;
+	flex: 1; /* Take remaining space */
 	min-height: 0; /* Allow shrinking */
+	overflow-y: auto;
+	/* On tablet+, allow this to shrink when subtitles expand */
 }
 
 .test_tools_row {
-	grid-row: test_tools;
-	flex-shrink: 0; /* Tools don't shrink */
+	flex-shrink: 0; /* Don't shrink tools */
 }
 
 .subtitle_area {
-	grid-row: subtitles;
+	flex-shrink: 0; /* Don't shrink subtitles */
 	display: flex;
 	flex-direction: column;
 	min-height: 0;
-	overflow: hidden;
+	overflow: visible; /* Allow expansion on tablet+ */
 }
-
+/* 
 @media (--tablet-up) {
 	.container {
 		padding: 0 25px 22px 25px;
 		height: auto;
-		max-height: calc(100dvh - 80px); /* Account for header only on tablet+ */
-		margin-top: 40px;
+		overflow: visible;
+	}
+
+	
+	.test_content_row {
+		max-height: 60vh; 
+		overflow-y: auto;
 	}
 }
 
 @media (--desktop-up) {
 	.container {
 		padding: 0 100px 22px 100px;
-		max-height: calc(100dvh - 80px);
+		overflow: visible;
+	}
+
+	.test_content_row {
+		max-height: 65vh; 
 	}
 }
 
@@ -53,6 +64,6 @@
 	.container {
 		padding: 0 150px 22px 150px;
 
-		/* background: red; */
+		
 	}
-}
+} */

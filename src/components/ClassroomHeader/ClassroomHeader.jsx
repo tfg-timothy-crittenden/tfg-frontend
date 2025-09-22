@@ -6,7 +6,11 @@ import useResponsiveLayout from "@/hooks/useResponsiveLayout";
 import JoinCodeButtonContainer from "@/components/JoinCodeButtonContainer/JoinCodeButtonContainer";
 import MaterialButtonContainer from "@/components/MaterialButtonContainer/MaterialButtonContainer";
 
-const ClassroomHeader = ({ classrooms, onClassroomChange }) => {
+const ClassroomHeader = ({
+	classrooms,
+	onClassroomChange,
+	onExpandedChange,
+}) => {
 	const { isMobile } = useResponsiveLayout();
 	const [collapsed, setCollapsed] = useState(isMobile);
 	const headerRef = useRef();
@@ -29,6 +33,13 @@ const ClassroomHeader = ({ classrooms, onClassroomChange }) => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [isMobile]);
+
+	// Notify parent when expansion state changes
+	useEffect(() => {
+		if (onExpandedChange) {
+			onExpandedChange(!collapsed && isMobile);
+		}
+	}, [collapsed, isMobile, onExpandedChange]);
 
 	return (
 		<nav className={styles.header} ref={headerRef}>
