@@ -1,10 +1,11 @@
 /* src/styles/speakingPartLayout.module.css */
 .container {
 	display: grid;
-	grid-template-rows: [mode_selector] 60px [test_content] 1fr [test_tools] auto;
-	height: calc(100dvh - 141.5px);
-	overflow-y: auto;
+	grid-template-rows: [mode_selector] 60px [test_content] 1fr [test_tools] auto [subtitles] auto;
+	flex: 1;
+	overflow: hidden; /* Prevent overflow */
 	padding: 15px;
+	max-height: calc(100dvh - 141.5px); /* Account for top header + bottom nav */
 }
 .mode_selector_row {
 	grid-row: mode_selector;
@@ -15,17 +16,28 @@
 
 .test_content_row {
 	grid-row: test_content;
+	overflow-y: auto;
+	min-height: 0; /* Allow shrinking */
 }
 
 .test_tools_row {
 	grid-row: test_tools;
+	flex-shrink: 0; /* Tools don't shrink */
+}
+
+.subtitle_area {
+	grid-row: subtitles;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	overflow: hidden;
 }
 
 @media (--tablet-up) {
 	.container {
 		padding: 0 25px 22px 25px;
 		height: auto;
-		min-height: 720px;
+		max-height: calc(100dvh - 80px); /* Account for header only on tablet+ */
 		margin-top: 40px;
 	}
 }
@@ -33,8 +45,7 @@
 @media (--desktop-up) {
 	.container {
 		padding: 0 100px 22px 100px;
-
-		/* background: red; */
+		max-height: calc(100dvh - 80px);
 	}
 }
 

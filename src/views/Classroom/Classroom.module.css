@@ -1,6 +1,7 @@
 .classroom_layout {
 	display: flex;
 	flex-direction: column;
+	flex: 1;
 }
 
 .sidebar {
@@ -11,7 +12,7 @@
 
 .main_content {
 	order: 1;
-
+	flex: 1;
 	background: var(--color-background);
 	min-height: 0;
 	overflow-y: auto;

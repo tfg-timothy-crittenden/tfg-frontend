@@ -11,7 +11,7 @@ const Listen = ({ audio, image, listeningScript }) => {
 			</TestWrapper>
 
 			<TimerWrapper>
-				<audio controls>
+				<audio controls controlsList="nodownload">
 					<source src={audio} type="audio/wav" />
 				</audio>
 			</TimerWrapper>

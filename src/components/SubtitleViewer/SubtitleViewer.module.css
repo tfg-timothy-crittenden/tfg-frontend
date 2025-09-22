@@ -1,29 +1,32 @@
 .subtitle_viewer {
 	position: relative;
-	grid-row: 4;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-height: 0; /* Critical for flex shrinking */
 }
 
 .subtitles_container {
 	position: relative;
 	border-radius: 8px;
-	display: grid;
-	grid-template-rows: auto 0fr; /* Header takes auto space, content starts at 0fr */
+	display: flex;
+	flex-direction: column;
 	opacity: 0;
-	transition: grid-template-rows 0.3s ease-out, opacity 0.3s ease-out;
+	transition: opacity 0.3s ease-out, max-height 0.3s ease-out;
 	overflow: hidden;
-	scrollbar-color: rgba(0, 0, 0, 0.3) transparent; /* Updated scrollbar color */
+	scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
 
 .subtitles_container.open {
-	grid-template-rows: auto 1fr; /* Header auto, content takes available space */
 	opacity: 1;
-	background: rgba(255, 255, 255, 0.95); /* Changed to white background */
+	background: rgba(255, 255, 255, 0.95);
+	max-height: 50vh; /* Limit to 50% of viewport height */
 }
 
 .subtitles_container.closed {
-	grid-template-rows: auto 0fr; /* Header auto, content collapsed */
 	opacity: 1;
 	background: transparent;
+	max-height: 48px; /* Just enough for the toggle button */
 }
 
 .subtitle_header {
@@ -32,6 +35,8 @@
 	padding: 8px 0px;
 	z-index: 10;
 	transition: all 0.3s ease-out;
+	flex-shrink: 0;
+	min-height: 40px; /* Consistent button area */
 }
 
 /* Header styling when closed - center the button */
@@ -48,32 +53,38 @@
 }
 
 .subtitle_content {
-	min-height: 0; /* Required for grid collapse */
-	overflow: hidden; /* Required for grid collapse */
+	overflow: hidden;
 	transition: opacity 0.3s ease-out;
-	border: 1px solid var(--color-border);
-	border-radius: var(--radius-md);
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	flex: 1; /* Take remaining space in container */
 }
 
 .subtitles_container.closed .subtitle_content {
 	opacity: 0;
+	height: 0; /* Completely hidden when closed */
+	border: none; /* Hide border when closed */
 }
 
 .subtitles_container.open .subtitle_content {
 	opacity: 1;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	background: var(--color-background);
+	/* margin: 8px 12px 12px 12px; */
+	min-height: 200px; /* Minimum usable height */
+	max-height: calc(50vh - 60px); /* Account for header + margins */
 }
 
 .subtitle_content_inner {
 	padding: 12px;
-	height: 400px; /* Fixed height for scrollable area */
+	flex: 1; /* Fill the content area */
 	overflow-y: auto;
 	scrollbar-width: thin;
 	scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
-	/* Ensure this container can be scrolled */
 	position: relative;
-	/* ADD: Rounded grey border using global styles */
-
-	background: var(--color-background);
+	min-height: 0; /* Allow flex shrinking */
 }
 
 /* Custom scrollbar for webkit browsers */
@@ -124,7 +135,7 @@
 }
 
 .subtitle_viewer .subtitle_toggle:hover {
-	background: rgba(0, 0, 0, 0.1);
+	background: var(--color-background-disabled);
 }
 
 .font_controls {
