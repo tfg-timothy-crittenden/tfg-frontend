@@ -2,10 +2,10 @@
 node_modules
 
 # Build output
-dist
+# dist
 
 # Static assets
-public
+# public
 
 # Optional: test coverage, logs, and lock files
 coverage

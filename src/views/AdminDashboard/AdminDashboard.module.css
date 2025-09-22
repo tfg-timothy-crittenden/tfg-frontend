@@ -3,6 +3,7 @@
 	margin: 0 auto;
 	background-color: var(--color-background);
 	padding: 20px;
+	width: 100%;
 }
 
 .admin_dashboard_heading {

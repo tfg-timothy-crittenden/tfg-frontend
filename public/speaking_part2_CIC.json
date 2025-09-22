@@ -1,26 +1,175 @@
 [
 	{
-		"id": "CIC_02_task2",
+		"id": "CIC_1_task2",
+		"title": "CIC 1 Task 2",
+		"reading_title": "New Bicycle Rental Program",
+		"listening_audio": "/audio/CIC/part_2/cic_01_task2_listening.mp3",
+		"listening_script": [
+			{
+				"speaker": "Man",
+				"line": "Hey, did you hear about the bike rental thing starting next semester?"
+			},
+			{
+				"speaker": "Woman",
+				"line": "Yeah, I did. I actually think it’s a really smart idea, like, it’s about time they did something like this."
+			},
+			{
+				"speaker": "Man",
+				"line": "Really? I’m not so sure. I mean, is anyone actually gonna use it?"
+			},
+			{
+				"speaker": "Woman",
+				"line": "Oh, totally! I mean, think about how crowded the parking lots are. People spend forever trying to find a spot. With these bikes, it’ll be way faster to just grab one and go."
+			},
+			{
+				"speaker": "Man",
+				"line": "Huh, yeah, that could save a lot of time. Especially in the mornings."
+			},
+			{
+				"speaker": "Woman",
+				"line": "Exactly! And some of my classes are super far from my dorm—I’m talking, like, 20-minute walks. If I had a bike, it would cut that time in half."
+			},
+			{
+				"speaker": "Man",
+				"line": "I guess that would be useful. But are the stations going to be easy to get to?"
+			},
+			{
+				"speaker": "Woman",
+				"line": "That’s the thing—they're placing them near all the main buildings and dorms. So, like, wherever you are, you’ll probably be close to one."
+			},
+			{
+				"speaker": "Man",
+				"line": "Hmm. That actually sounds convenient."
+			},
+			{
+				"speaker": "Woman",
+				"line": "And think about the health benefits! Like, instead of sitting on a shuttle or in a car, you’re getting a bit of exercise between classes."
+			},
+			{
+				"speaker": "Man",
+				"line": "True. And I guess it’s also better for the environment, right?"
+			},
+			{
+				"speaker": "Woman",
+				"line": "Totally. Fewer cars, less pollution. It's a win-win."
+			},
+			{
+				"speaker": "Man",
+				"line": "Yeah, you know, I wasn’t convinced at first, but now I think I might give it a try."
+			},
+			{
+				"speaker": "Woman",
+				"line": "You should! It’s cheap, convenient, and honestly just a smart move by the university."
+			}
+		],
+		"question_text": "The woman expresses her opinion about the college’s plan. State her opinion and explain the reasons she gives for holding that opinion.",
+		"question_audio": "/audio/CIC/part_2/cic_01_task2_question.mp3",
+		"reading_body": "To encourage environmentally friendly transportation, the university will introduce a bicycle rental program next semester. Under the new plan, students will be able to rent bicycles at various locations around campus for a small daily fee. According to the administration, this initiative aims to reduce traffic congestion and promote a healthier lifestyle among students. Bicycle stations will be placed near all major classroom buildings and dormitories, making it convenient for students to pick up and drop off bikes throughout the day."
+	},
+	{
+		"id": "CIC_2_task2",
 		"title": "CIC 2 Task 2",
 		"reading_title": "Campus Café to Launch 24-Hour Study Lounge",
 		"listening_audio": "/audio/CIC/part_2/cic_02_task2_listening.mp3",
-		"listening_script": "",
+		"listening_script": [
+			{
+				"speaker": "Man",
+				"line": "Did you hear about the café turning into a late-night study spot?"
+			},
+			{
+				"speaker": "Woman",
+				"line": "Yeah, I saw that. I mean, it sounds helpful, but I’m honestly not a fan of the idea."
+			},
+			{
+				"speaker": "Man",
+				"line": "Really? Why not?"
+			},
+			{
+				"speaker": "Woman",
+				"line": "Well, first of all, the café’s one of the only cozy spots to relax on campus. Turning it into a silent study zone completely changes the vibe."
+			},
+			{
+				"speaker": "Man",
+				"line": "Huh, I didn’t think of that. It’s usually a pretty social place."
+			},
+			{
+				"speaker": "Woman",
+				"line": "Exactly! And during finals, people need breaks too—not just more pressure to study all night."
+			},
+			{
+				"speaker": "Man",
+				"line": "Yeah, that’s true. I always liked going there to just chill a bit."
+			},
+			{
+				"speaker": "Woman",
+				"line": "And the whole “monitored” thing? That feels uncomfortable. Like, who's watching us? Is it staff? Security?"
+			},
+			{
+				"speaker": "Man",
+				"line": "Good point. That could get weird."
+			},
+			{
+				"speaker": "Woman",
+				"line": "And I bet people won’t even follow the rules. It’ll either get too loud, or someone will fall asleep at a table. It sounds better on paper than in reality."
+			},
+			{
+				"speaker": "Man",
+				"line": "Hmm, yeah. Now I’m not so sure anymore."
+			},
+			{
+				"speaker": "Woman",
+				"line": "Honestly, I think they should’ve just extended library hours instead."
+			}
+		],
 		"question_text": "The woman expresses her opinion about the student union's plan to convert the café into a 24-hour study lounge. State her opinion and explain the reasons she gives for holding that opinion.",
 		"question_audio": "/audio/CIC/part_2/cic_02_task2_question.mp3",
 		"reading_body": "The student union has announced that the campus café will soon be converted into a 24-hour study lounge during exam weeks. The café will close food service at 9 p.m., but remain open overnight as a quiet, monitored space for students who prefer to study late. The university believes this change will benefit students who struggle to find quiet study areas in the evenings, especially during finals. Extra seating and charging stations will also be added."
 	},
 	{
-		"id": "CIC_03_task2",
+		"id": "CIC_3_task2",
 		"title": "CIC 3 Task 2",
 		"reading_title": "Digital Textbooks for Introductory Courses",
 		"listening_audio": "/audio/CIC/part_2/cic_03_task2_listening.mp3",
-		"listening_script": "",
+		"listening_script": [
+			{
+				"speaker": "Man",
+				"line": "Did you see the notice about making e-textbooks mandatory for intro classes?"
+			},
+			{
+				"speaker": "Woman",
+				"line": "Yeah, and I don’t like it. They say it’s cheaper, but those licenses usually expire. With print, you can resell the book or keep it for later courses."
+			},
+			{
+				"speaker": "Man",
+				"line": "The announcement said bulk pricing cuts costs and avoids supply issues."
+			},
+			{
+				"speaker": "Woman",
+				"line": "Sure, but the savings aren’t so clear if you lose access at the end of the term. And you’re tied to an online portal—if it’s down, you can’t read. Plus, not everyone has a reliable device. If your battery dies in a long lecture, you’re stuck."
+			},
+			{
+				"speaker": "Man",
+				"line": "They also mentioned the academic features—search, updates, accessibility."
+			},
+			{
+				"speaker": "Woman",
+				"line": "Those are helpful, but they don’t replace how some of us study. I annotate on paper, flip between sections quickly, and it’s easier on my eyes than staring at a screen all day. If the goal is accessibility, keep digital available—but don’t force it. Offer both formats so students and instructors can pick what works."
+			},
+			{
+				"speaker": "Man",
+				"line": "So you’d keep print as an option?"
+			},
+			{
+				"speaker": "Woman",
+				"line": "Exactly. Keep print available for intro classes and let professors choose, instead of mandating digital for everyone."
+			}
+		],
 		"question_text": "The woman expresses her opinion about the university’s digital textbook policy. State her opinion and explain the reasons she gives for holding that opinion.",
 		"question_audio": "/audio/CIC/part_2/cic_03_task2_question.mp3",
 		"reading_body": "Beginning next semester, all 100- and 200-level courses will require digital textbooks purchased through the university’s online portal. This change is being made for two reasons. First, bulk licenses negotiated with publishers will lower average costs for students and prevent out-of-stock delays that often occur at the start of the term. Second, digital texts provide academic features—search, built-in practice activities, instant updates, and accessibility tools such as screen readers and adjustable text—that support diverse learning needs. Print copies for these courses will not be stocked at the campus bookstore."
 	},
 	{
-		"id": "CIC_04_task2",
+		"id": "CIC_4_task2",
 		"title": "CIC 4 Task 2",
 		"reading_title": "Peak-Hour Reservations at Campus Gym",
 		"listening_audio": "/audio/CIC/part_2/cic_04_task2_listening.mp3",
@@ -71,7 +220,7 @@
 		"reading_body": "Beginning next semester, the fitness center will require reservations for treadmills, bikes, and ellipticals during peak hours (5–9 p.m.). This change is being made for two reasons. First, recent observations show long lines at peak times, with some students waiting more than 20 minutes; timed reservations will reduce queuing and make access more predictable. Second, staff noted idle machines between informal rotations; 30-minute slots with a five-minute no-show release will increase equipment usage and reduce gaps. Walk-ins will remain available outside peak hours. Strength equipment and the track are not affected by this policy. Questions may be directed to the front desk."
 	},
 	{
-		"id": "CIC_05_task2",
+		"id": "CIC_5_task2",
 		"title": "CIC 5 Task 2",
 		"reading_title": "Course Waitlists",
 		"listening_audio": "/audio/CIC/part_2/cic_05_task2_listening.mp3",
@@ -114,7 +263,7 @@
 		"reading_body": "Starting next term, full courses will use an automated waitlist in the registration system. This change will have several benfits.Time-stamped queues provide fair placement and reduce informal requests, ensuring students are added in a clear, consistent order when seats open. In addition, an automated process will reduce email back-and-forth with instructors and staff, who currently handle hundreds of add requests manually. Students may join multiple waitlists and will receive a notification if a seat becomes available; they must confirm within a limited window or the seat will pass to the next student in line."
 	},
 	{
-		"id": "CIC_06_task2",
+		"id": "CIC_6_task2",
 		"title": "CIC 6 Task 2",
 		"reading_title": "Default Double-Sided Printing",
 		"listening_audio": "/audio/CIC/part_2/cic_06_task2_listening.mp3",
@@ -157,7 +306,7 @@
 		"reading_body": "Beginning next semester, all college printers will default to double-sided output. Switching the default will reduce paper use, lowering costs and the number of restocks during peak times. Furthermore, double-sided jobs lead to fewer paper jams in high-volume queues, which shortens wait times and keeps printers available. Single-sided printing will remain possible: users may change the setting at the print dialog for specific jobs. The per-semester page allowance is unchanged, but students are encouraged to save pages by previewing documents and avoiding unnecessary reprints."
 	},
 	{
-		"id": "CIC_07_task2",
+		"id": "CIC_7_task2",
 		"title": "CIC 7 Task 2",
 		"reading_title": "Draft-Check Requirement for Writing Assignments",
 		"listening_audio": "/audio/CIC/part_2/cic_07_task2_listening.mp3",
@@ -200,7 +349,7 @@
 		"reading_body": "Beginning next semester, students will be required to upload a draft of any major paper to the university’s draft-check system at least one day before the final due date. The system provides free automated feedback on clarity, grammar, and citation format so students can improve their work before grading. Secondly, early similarity checks will reduce last-minute academic integrity problems by flagging missing citations in time to fix them. Instructors will receive a brief confirmation that a draft was checked; grades will not be based on the report. Students who miss the draft deadline may still submit the assignment, but a late-draft note will appear."
 	},
 	{
-		"id": "CIC_08_task2",
+		"id": "CIC_8_task2",
 		"title": "CIC 8 Task 2",
 		"reading_title": "Lecture Attendance Digital Sign-in",
 		"listening_audio": "/audio/CIC/part_2/cic_08_task2_listening.mp3",

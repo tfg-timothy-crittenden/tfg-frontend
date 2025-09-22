@@ -60,7 +60,7 @@
 		width: 100%;
 		max-width: 1080px;
 		margin: 0 auto;
-		max-height: calc(100dvh - 141px);
+		max-height: calc(100dvh - 116px);
 	}
 	.sidebar {
 		grid-area: sidebar;
