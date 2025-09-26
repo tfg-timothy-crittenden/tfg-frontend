@@ -15,6 +15,7 @@ export default function OAuthLogin() {
 
 	const [searchParams] = useSearchParams();
 	const dispatch = useDispatch();
+	// const navigate = useNavigate();
 	const navigate = useNavigate();
 	const hasProcessedOAuthError = useRef(false); // Add this
 
@@ -106,11 +107,14 @@ export default function OAuthLogin() {
 
 	return (
 		<div className={styles.login_outer}>
-			<div className={styles.login_card + " " + styles.animated_height}>
+			<div className={styles.login_card}>
 				<div className={styles.login_left}>
-					<div className={styles.school_logo}>
-						<img src="/assets/cic_idiomes.svg" alt="CIC Speak" />
-					</div>
+					{/* <div className={styles.logo}>
+						<img src="/assets/landing_image.png" alt="TOEFL Speaking" />
+					</div> */}
+
+					<h1 className={styles.login_title}>Welcome Back</h1>
+					<p className={styles.login_subtitle}>Sign in to your account</p>
 
 					<div className={styles.login_type_selector}>
 						<button
@@ -144,7 +148,18 @@ export default function OAuthLogin() {
 								onClick={handleMicrosoftLogin}
 								className={styles.microsoft_button}
 							>
-								Log in @fundaciocic.org
+								<svg
+									className={styles.microsoft_icon}
+									viewBox="0 0 21 21"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<rect x="1" y="1" width="9" height="9" fill="#F25022" />
+									<rect x="12" y="1" width="9" height="9" fill="#7FBA00" />
+									<rect x="1" y="12" width="9" height="9" fill="#00A4EF" />
+									<rect x="12" y="12" width="9" height="9" fill="#FFB900" />
+								</svg>
+								Log in with @fundaciocic.org
 							</button>
 						</div>
 					)}
