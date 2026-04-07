@@ -7,14 +7,12 @@
 	justify-content: center;
 	background-color: white;
 	font-size: var(--font-size-base);
-
 	width: 100%;
 	margin: 0 auto;
 }
 
 .toggle_group {
 	width: 100%;
-
 	display: flex;
 	justify-content: space-between;
 	overflow: hidden;
@@ -37,20 +35,20 @@
 }
 
 .activeLink {
-	border-bottom: solid 2px var(--color-primary);
-	color: var(--color-primary);
+	border-bottom: solid 4px var(--actionable_text_active);
+	color: var(--actionable_text_active);
 	font-weight: 600;
 }
 
 .inactiveLink {
-	background-color: var(--color-background);
-	color: var(--color-text-muted);
-	border-bottom: 2px solid var(--color-border);
+	background-color: var(--button_background_cancel);
+	color: var(--text_light);
+	border-bottom: 4px solid var(--card_border_mid);
 }
 
 .inactiveLink:hover {
-	color: var(--color-text);
-	background-color: var(--color-background-alt);
+	color: var(--text_dark);
+	background-color: var(--card_background_mid);
 }
 
 /* Tablet enhancements - NOW USING POSTCSS! */
@@ -61,10 +59,6 @@
 
 	.toggle_group {
 		font-size: var(--font-size-base);
-	}
-
-	.toggle_group a {
-		padding: var(--spacing-md) var(--spacing-lg);
 	}
 }
 

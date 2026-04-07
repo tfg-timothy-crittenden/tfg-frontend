@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronUp, ChevronDown, File } from "lucide-react";
 import styles from "./AccordionList.module.css";
 
 // Displays a collapsable list of items
@@ -22,8 +22,8 @@ const AccordionList = ({
 	<div className={styles.accordion_container}>
 		<div
 			className={`${styles.accordion_header} ${
-				headerIsHighlighted ? styles.active_header : ""
-			}`}
+				listIsOpen ? styles.header_open : styles.header_closed
+			} ${headerIsHighlighted ? styles.active_header : ""}`}
 			onClick={onHeaderClick}
 		>
 			<span className={styles.icon_label}>
@@ -58,12 +58,17 @@ const AccordionList = ({
 							}`}
 							onClick={() => onItemClick(item)}
 						>
-							<span className={styles.test_title}>{item.title}</span>
-							{item.readingTitle && (
-								<span className={styles.reading_title}>
-									{item.readingTitle}
+							<span className={styles.item_main}>
+								<File size={18} className={styles.item_icon} />
+								<span className={styles.item_text}>
+									<span className={styles.test_title}>{item.title}</span>
+									{/* {item.readingTitle && (
+										<span className={styles.reading_title}>
+											{item.readingTitle}
+										</span>
+									)} */}
 								</span>
-							)}
+							</span>
 						</li>
 					);
 				})}

@@ -1,5 +1,5 @@
 .wrap {
-	background: var(--color-background);
+	background: var(--button_background_cancel);
 	border-radius: 16px;
 	width: min(980px, 94vw);
 	padding: 24px;
@@ -16,23 +16,23 @@
 	font-size: 24px;
 	line-height: 1;
 	cursor: pointer;
-	color: var(--color-text-secondary);
+	color: var(--text_light);
 }
 
 .close:hover {
-	color: var(--color-text);
+	color: var(--text_dark);
 }
 
 .title {
 	font-size: 28px;
 	margin: 0;
 	text-align: center;
-	color: var(--color-text);
+	color: var(--text_dark);
 }
 
 .subtitle {
 	text-align: center;
-	color: var(--color-text-light);
+	color: var(--text_light);
 	margin-top: 4px;
 	margin-bottom: 16px;
 }
@@ -44,7 +44,7 @@
 }
 
 .card {
-	border: 2px solid var(--color-border);
+	border: 2px solid var(--card_border_mid);
 	border-radius: 14px;
 	padding: 18px;
 }
@@ -52,7 +52,7 @@
 .cardTitle {
 	margin: 0;
 	font-size: 22px;
-	color: var(--color-text);
+	color: var(--text_dark);
 }
 
 .steps {
@@ -60,7 +60,7 @@
 	font-size: 18px;
 	line-height: 1.5;
 	padding-left: 20px;
-	color: var(--color-text);
+	color: var(--text_dark);
 }
 
 .code {
@@ -69,10 +69,10 @@
 	font-size: 40px;
 	text-align: center;
 	letter-spacing: 1px;
-	background: var(--color-background-code);
+	background: var(--card_background_mid);
 	border-radius: 10px;
 	padding: 8px 12px;
-	color: var(--color-text);
+	color: var(--text_dark);
 }
 
 .cta {
@@ -91,27 +91,27 @@
 }
 
 .btnDark {
-	background: var(--color-text);
-	color: var(--color-background);
+	background: var(--text_dark);
+	color: var(--button_background_cancel);
 }
 
 .btnDark:hover {
-	background: var(--color-text-secondary);
+	background: var(--card_border);
 }
 
 .btnPrimary {
-	background: var(--color-primary);
-	color: var(--color-background);
+	background: var(--actionable_text_active);
+	color: var(--button_background_cancel);
 }
 
 .btnPrimary:hover {
-	background: var(--color-primary-hover);
+	filter: brightness(0.92);
 }
 
 .lead {
 	margin-top: 12px;
 	font-size: 18px;
-	color: var(--color-text);
+	color: var(--text_dark);
 }
 
 .qrBlock {
@@ -125,11 +125,11 @@
 	font-weight: 800;
 	font-size: 40px;
 	margin-bottom: 6px;
-	color: var(--color-text);
+	color: var(--text_dark);
 }
 
 .note {
-	color: var(--color-text-light);
+	color: var(--text_light);
 	font-size: 14px;
 	text-align: center;
 	margin-top: 10px;

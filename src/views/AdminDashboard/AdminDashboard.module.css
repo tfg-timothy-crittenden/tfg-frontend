@@ -1,51 +1,94 @@
 .container {
-	max-width: 1080px;
+	max-width: var(--content-max-width);
+	width: min(100%, var(--content-max-width));
 	margin: 0 auto;
-	background-color: var(--color-background);
-	padding: 20px;
-	width: 100%;
+	background-color: var(--button_background_cancel);
+	padding: 20px 24px 28px;
+	box-sizing: border-box;
 }
 
 .admin_dashboard_heading {
-	color: var(--color-text);
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	color: var(--text_dark);
 	text-align: left;
-	margin-bottom: 30px;
+	font-size: 2.2rem;
+	font-weight: 700;
+	line-height: 1;
+	margin-bottom: 26px;
 }
 
 .navList {
 	list-style: none;
-	padding-bottom: 10px;
+	padding-bottom: 0;
 	display: flex;
+	align-items: center;
+	gap: 2rem;
 	justify-content: start;
 	margin-bottom: 30px;
-	border-bottom: solid 1px var(--color-border);
+	border-bottom: solid 1px var(--card_border_mid);
 }
 
 .navList li {
-	margin-right: 20px;
+	margin-right: 0;
 }
 
 .navList a {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
 	text-decoration: none;
-	color: var(--color-text);
-	padding-bottom: 10px;
-	border-bottom: solid 2px transparent; /* Prevents undesired animation effect on hover */
-	transition: border-color 0.3s ease, border-width 0.1s ease;
+	color: var(--text_dark);
+	font-size: 1.2rem;
+	font-weight: 600;
+	padding-bottom: 9px;
+	margin-bottom: -1px;
+	border-bottom: solid 4px transparent; /* Fixed thickness prevents layout shift */
+	transition:
+		color 0.3s ease,
+		border-color 0.3s ease,
+		border-width 0.1s ease;
+}
+
+.inactiveLink {
+	color: var(--text_light);
 }
 
 .navList a:hover:not(.activeLink) {
-	border-bottom: solid 2px var(--color-primary-light);
+	color: var(--text_dark);
+	border-bottom: solid 4px var(--card_border_mid);
 }
 
 .navList .activeLink {
-	border-bottom: solid 2px var(--color-primary);
+	color: var(--actionable_text_active);
+	border-bottom: solid 4px var(--actionable_text_active);
 }
 
 @media (--tablet-up) {
+	.container {
+		padding: 24px 32px 36px;
+	}
+
 	.admin_dashboard_heading {
+		font-size: 2.35rem;
 		margin-bottom: 60px;
 	}
 	.navList {
 		margin-bottom: 60px;
+	}
+}
+
+@media (--desktop-up) {
+	.container {
+		padding: 28px 40px 40px;
+	}
+
+	.admin_dashboard_heading {
+		font-size: 2.5rem;
+	}
+
+	.navList a {
+		font-size: 1.25rem;
 	}
 }

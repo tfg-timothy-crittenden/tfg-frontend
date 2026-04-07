@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { loginRequest, meRequest } from "@/api/auth/authAPI";
 import { setAuthHeaders } from "@/api/httpClient";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = import.meta.env.VITE_API_URL || "/users/api";
 
 const initialToken = localStorage.getItem("token");
 if (initialToken) setAuthHeaders(initialToken);
@@ -27,10 +27,10 @@ export const login = createAsyncThunk(
 			return { user, token };
 		} catch (err) {
 			return thunkAPI.rejectWithValue(
-				err.response?.data?.message || "Login failed"
+				err.response?.data?.message || "Login failed",
 			);
 		}
-	}
+	},
 );
 
 export const fetchMe = createAsyncThunk("auth/me", async (_, thunkAPI) => {
@@ -48,7 +48,7 @@ export const checkUserStatus = createAsyncThunk(
 	"auth/checkUserStatus",
 	async (email, { rejectWithValue }) => {
 		try {
-			const response = await fetch(`${API_BASE}/api/auth/status/${email}`);
+			const response = await fetch(`${API_BASE}/auth/status/${email}`);
 			const data = await response.json();
 
 			if (!response.ok) {
@@ -59,7 +59,7 @@ export const checkUserStatus = createAsyncThunk(
 		} catch (error) {
 			return rejectWithValue(error.message);
 		}
-	}
+	},
 );
 
 // Handle OAuth callback (for when teachers return from Microsoft)
@@ -81,14 +81,14 @@ export const handleOAuthCallback = createAsyncThunk(
 		} catch (error) {
 			return rejectWithValue("Failed to process OAuth callback");
 		}
-	}
+	},
 );
 
 const authSlice = createSlice({
 	name: "auth",
 	initialState,
 	reducers: {
-		// ✅ existing: lets us set token+user directly (used after email verification)
+		// existing: lets us set token+user directly (used after email verification)
 		setCredentials: (state, action) => {
 			const { token, user } = action.payload || {};
 			state.token = token || null;
@@ -204,8 +204,14 @@ export const selectUsername = (state) => state.auth.user?.username || "Guest";
 export const selectUserRoles = (state) => state.auth.user?.roles || [];
 export const selectUserRole = (state) => selectUserRoles(state)[0] || null;
 export const selectHasRole = (roles) => (state) => {
-	const userRoles = selectUserRoles(state);
-	return roles.some((r) => userRoles.includes(r));
+	const normalizedUserRoles = selectUserRoles(state).map((role) =>
+		String(role).toLowerCase(),
+	);
+	const normalizedRoles = (roles || []).map((role) =>
+		String(role).toLowerCase(),
+	);
+
+	return normalizedRoles.some((role) => normalizedUserRoles.includes(role));
 };
 
 // New OAuth-related selectors

@@ -5,7 +5,7 @@
 }
 
 .title {
-	color: var(--color-primary);
+	color: var(--actionable_text_active);
 	text-align: center;
 	margin-bottom: 2rem;
 	font-size: 2rem;
@@ -14,13 +14,13 @@
 
 .content {
 	line-height: 1.6;
-	color: var(--color-text);
+	color: var(--text_dark);
 }
 
 .section {
 	margin-bottom: 2rem;
 	padding-bottom: 1.5rem;
-	border-bottom: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--card_border_mid);
 }
 
 .section:last-child {
@@ -28,7 +28,7 @@
 }
 
 .section h2 {
-	color: var(--color-primary);
+	color: var(--actionable_text_active);
 	font-size: 1.4rem;
 	margin-bottom: 1rem;
 	font-weight: 600;
@@ -46,14 +46,14 @@
 }
 
 .task {
-	background-color: var(--color-background-secondary, #f8f9fa);
+	background-color: var(--card_background_mid);
 	padding: 1.5rem;
 	border-radius: 8px;
-	border-left: 4px solid var(--color-primary);
+	border-left: 4px solid var(--actionable_text_active);
 }
 
 .task h3 {
-	color: var(--color-primary);
+	color: var(--actionable_text_active);
 	font-size: 1.2rem;
 	margin-bottom: 0.5rem;
 	font-weight: 600;
@@ -67,7 +67,7 @@
 .task p:last-child {
 	margin-bottom: 0;
 	font-weight: 500;
-	color: var(--color-accent, #666);
+	color: var(--text_dark);
 }
 
 .tips {
@@ -77,18 +77,18 @@
 }
 
 .tips li {
-	background-color: var(--color-background-secondary, #f8f9fa);
+	background-color: var(--card_background_mid);
 	padding: 0.8rem 1rem;
 	margin-bottom: 0.5rem;
 	border-radius: 6px;
-	border-left: 3px solid var(--color-accent, #28a745);
+	border-left: 3px solid var(--button_background_confirm);
 	font-size: 1rem;
 	position: relative;
 }
 
 .tips li::before {
 	content: "✓";
-	color: var(--color-accent, #28a745);
+	color: var(--button_background_confirm);
 	font-weight: bold;
 	margin-right: 0.5rem;
 }

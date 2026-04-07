@@ -14,6 +14,6 @@
 }
 
 .dice_icon:hover {
-	color: var(--color-primary);
+	color: var(--actionable_text_active);
 	transform: scale(1.05);
 }

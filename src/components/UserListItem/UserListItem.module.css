@@ -11,7 +11,7 @@
 .userIcon {
 	margin-right: 1rem;
 	flex-shrink: 0;
-	color: var(--color-primary);
+	color: var(--text_dark);
 }
 
 /* User information section */
@@ -23,36 +23,37 @@
 }
 
 .userName {
-	font-weight: 500;
-	color: var(--color-text);
+	font-weight: 600;
+	color: var(--text_dark);
 }
 
 .userEmail {
 	font-size: 0.85rem;
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
+	opacity: 0.9;
 	font-weight: normal;
 }
 
 /* Invited user status styles */
 
 .invitedIcon {
-	color: var(--color-text-muted);
+	color: var(--text_light);
 }
 
 .invitedName {
-	color: var(--color-text-muted);
+	color: var(--text_light);
 }
 
 .invitedEmail {
-	color: var(--color-text-muted);
+	color: var(--text_light);
 }
 
 .invitedStatus {
 	margin-left: 0.5rem;
 	font-size: 0.8rem;
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 	font-style: italic;
-	background-color: var(--color-background-alt);
+	background-color: var(--card_background_mid);
 	padding: 0.2rem 0.5rem;
 	border-radius: 12px;
 	text-transform: lowercase;

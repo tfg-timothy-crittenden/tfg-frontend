@@ -1,6 +1,9 @@
 .accordion_container {
-	/* Optional: add spacing between sections */
-	margin-bottom: 10px;
+	margin-bottom: 14px;
+	border-radius: 6px;
+	border: 1px solid var(--card_border_mid);
+	background: var(--card_background_mid);
+	overflow: hidden;
 }
 
 .accordion_header {
@@ -8,37 +11,48 @@
 	align-items: center;
 	justify-content: space-between;
 	cursor: pointer;
-	padding: 10px 16px;
-	border-radius: 8px;
-	background: var(--color-background, #fff);
-	border: 1px solid var(--color-border, #eee);
+	padding: 18px 20px;
+	background: white;
+	border: none;
+	color: var(--text_dark);
 	min-width: 50px; /*maintain size when label and chevron hidden*/
+}
+
+.header_open {
+	border-bottom: 1px solid var(--card_border_mid);
 }
 
 .icon_label {
 	display: flex;
 	align-items: center;
-	gap: 8px;
+	gap: 12px;
 }
 
 .icon {
 	width: 20px;
 	height: 20px;
 	display: inline-block;
+	color: var(--text_dark);
 }
 
 .label {
 	opacity: 0;
-	transition: opacity 0.2s, width 0.2s;
+	transition:
+		opacity 0.2s,
+		width 0.2s;
 	white-space: nowrap;
 	pointer-events: none;
-	width: 100px;
+	width: 140px;
+	color: var(--text_dark);
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 1.2;
 }
 
 .labelVisible {
 	opacity: 1;
 	pointer-events: auto;
-	width: 100px;
+	width: 140px;
 }
 
 .labelHidden {
@@ -49,18 +63,21 @@
 
 .chevron {
 	opacity: 0;
-	transition: opacity 0.2s, width 0.2s;
-	width: 24px;
+	transition:
+		opacity 0.2s,
+		width 0.2s;
+	width: 26px;
 	pointer-events: none;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	color: var(--text_dark);
 }
 
 .chevronVisible {
 	opacity: 1;
 	pointer-events: auto;
-	width: 24px;
+	width: 26px;
 }
 
 .chevronHidden {
@@ -83,42 +100,95 @@
 .test_list {
 	list-style: none;
 	margin: 0;
-	padding: 0;
+	/* padding: 12px 14px 6px; */
 	overflow: hidden;
 }
 
 .list_item {
-	padding: 12px 16px;
-	border-bottom: 1px solid var(--color-border);
-	background: var(--color-background);
+	position: relative;
+	padding: 10px;
+	border: 1px solid var(--card_border_dark);
+	border-radius: 6px;
+	background: var(--button_background_cancel);
 	cursor: pointer;
-	transition: background-color 0.2s ease;
-	border-left: 4px solid transparent;
+	transition:
+		background-color 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease;
 	display: flex;
-	flex-direction: column;
+	align-items: center;
+	color: var(--text_dark);
+	margin: 10px 10px 10px 25px;
 }
 
 .list_item:hover:not(.active) {
-	background-color: var(--color-background-alt);
+	background-color: var(--card_background_mid);
 }
 
 .active {
-	background-color: var(--color-primary-light);
-	border-left-color: var(--color-primary);
+	background-color: var(--actionable_background);
+	border-color: var(--actionable_text_active);
 }
 
+/* .active::after {
+	content: "";
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 14px;
+	height: 100%;
+	background: var(--actionable_text_active);
+	border-radius: 0 10px 10px 0;
+} */
+
 .active_header {
-	background-color: var(--color-primary-light);
+	background-color: var(--actionable_background);
 }
 
 .test_title {
-	font-weight: 600;
-	font-size: 15px;
-	color: var(--color-text);
+	font-weight: 500;
+	font-size: 18px;
+	color: var(--text_dark);
 }
 
 .reading_title {
-	font-size: 0.9rem;
-	color: var(--color-text-light);
-	margin-left: 8px;
+	font-size: 12px;
+	color: var(--text_light);
+	margin-top: 2px;
+}
+
+.item_main {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+}
+
+.item_icon {
+	color: var(--text_dark);
+	flex-shrink: 0;
+}
+
+.item_text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.active .item_icon,
+.active .test_title {
+	color: var(--actionable_text_active);
+	font-weight: bold;
+}
+
+@media (max-width: 768px) {
+	.label,
+	.labelVisible {
+		font-size: 18px;
+		width: 130px;
+	}
+
+	.test_title {
+		font-size: 17px;
+	}
 }

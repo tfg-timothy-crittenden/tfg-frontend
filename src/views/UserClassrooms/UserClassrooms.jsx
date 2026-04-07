@@ -2,7 +2,7 @@ import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { getUserClassrooms } from "@/api/user/user";
 import { joinClassByCode } from "@/api/classes/classesAPI";
-import { Plus, GraduationCap } from "lucide-react";
+import { Plus, GraduationCap, House, CircleAlert } from "lucide-react";
 
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
@@ -52,7 +52,7 @@ const UserClassrooms = () => {
 			const res = await joinClassByCode(code);
 			await refresh();
 			const alreadyInClass = classrooms.some(
-				(c) => String(c.code) === String(code)
+				(c) => String(c.code) === String(code),
 			);
 			if (alreadyInClass) {
 				setJoinErr("You are already enrolled in this class.");
@@ -84,7 +84,23 @@ const UserClassrooms = () => {
 			<>
 				{loading && <LoadingSpinner />}
 				<div className={styles.classrooms_container}>
-					<h2 className={styles.classrooms_title}>Your Classrooms</h2>
+					<div className={styles.title_row}>
+						<div className={styles.title_container}>
+							<House className={styles.title_icon} aria-hidden="true" />
+							<h2 className={styles.classrooms_title}>My Classrooms</h2>
+						</div>
+						<div className={styles.join_panel}>
+							<button
+								type="button"
+								className={styles.join_toggle}
+								onClick={() => setJoinOpen((v) => !v)}
+								aria-expanded={joinOpen}
+								aria-controls="join-class-panel"
+							>
+								<Plus size={24} />
+							</button>
+						</div>
+					</div>
 
 					{classrooms.length === 0 && !loading && (
 						<div className={styles.emptyWrap}>
@@ -93,139 +109,131 @@ const UserClassrooms = () => {
 							</p>
 						</div>
 					)}
+					{joinOpen && (
+						<div
+							className={styles.join_overlay}
+							onClick={() => {
+								if (joining) return;
+								setJoinOpen(false);
+								setJoinCode("");
+								setJoinErr("");
+							}}
+						>
+							<div
+								id="join-class-panel"
+								className={styles.join_popover}
+								role="dialog"
+								aria-modal="true"
+								onClick={(e) => e.stopPropagation()}
+							>
+								<div className={styles.join_header}>
+									<label htmlFor="join-code" className={styles.join_label}>
+										Class Code
+									</label>
+									<CircleAlert
+										size={22}
+										className={styles.join_info_icon}
+										aria-hidden="true"
+									/>
+								</div>
 
-					<ul className={styles.classrooms_grid}>
-						{classrooms.map((c) => {
-							const teacherLabel =
-								c.teachers && c.teachers.length
-									? c.teachers.join(", ")
-									: "Unassigned";
-
-							return (
-								<li
-									key={c.id}
-									className={styles.classroom_card}
-									onClick={() => navigate(`/my/classrooms/${c.id}`)}
-									role="button"
-									tabIndex={0}
+								<input
+									id="join-code"
+									type="text"
+									value={joinCode}
+									onChange={(e) => {
+										setJoinCode(e.target.value);
+										if (joinErr) setJoinErr("");
+									}}
 									onKeyDown={(e) => {
-										if (e.key === "Enter" || e.key === " ") {
-											navigate(`/my/classrooms/${c.id}`);
+										if (e.key === "Enter") {
+											e.preventDefault();
+											handleJoin();
 										}
 									}}
-								>
-									<div className={styles.card_header}>
-										<div className={styles.card_title}>{c.name}</div>
-										{c.subject && (
-											<div className={styles.card_subject}>{c.subject}</div>
-										)}
-									</div>
+									className={styles.classroom_input}
+									disabled={joining}
+								/>
 
-									<div className={styles.card_meta}>
-										<div className={styles.meta_row}>
-											<span className={styles.meta_label}>
-												<GraduationCap
-													size={18}
-													style={{ verticalAlign: "middle" }}
-												/>
-											</span>
-											<span className={styles.meta_value}>{teacherLabel}</span>
+								<div className={styles.card_meta}>
+									{joinErr && (
+										<div className={styles.error} style={{ marginTop: 6 }}>
+											{joinErr}
 										</div>
-									</div>
+									)}
+								</div>
 
-									<div className={styles.card_cta}>View class</div>
-								</li>
-							);
-						})}
+								<div className={styles.buttons_row}>
+									<button
+										className="action_button"
+										onClick={() => {
+											setJoinOpen(false);
+											setJoinCode("");
+											setJoinErr("");
+										}}
+										disabled={joining}
+									>
+										Cancel
+									</button>
+									<button
+										className={`${styles.join_btn} action_button`}
+										onClick={handleJoin}
+										disabled={joining}
+									>
+										{joining ? "Joining…" : "Join Class"}
+									</button>
+								</div>
+							</div>
+						</div>
+					)}
+					<div className={styles.classrooms_layout}>
+						<ul className={styles.classrooms_grid}>
+							{classrooms.map((c) => {
+								const teacherLabel =
+									c.teachers && c.teachers.length
+										? c.teachers.join(", ")
+										: "Unassigned";
 
-						{/* Join-a-class card */}
-						<li
-							key="join-card"
-							className={styles.join_class_card}
-							role="button"
-							tabIndex={0}
-							onClick={() => setJoinOpen((v) => !v)}
-							onKeyDown={(e) =>
-								(e.key === "Enter" || e.key === " ") && setJoinOpen((v) => !v)
-							}
-						>
-							{!joinOpen ? (
-								<>
-									<div className={styles.card_meta}>
-										<div className={styles.meta_row}>
-											<Plus size={34} />
+								return (
+									<li
+										key={c.id}
+										className={styles.classroom_card}
+										onClick={() => navigate(`/my/classrooms/${c.id}`)}
+										role="button"
+										tabIndex={0}
+										onKeyDown={(e) => {
+											if (e.key === "Enter" || e.key === " ") {
+												navigate(`/my/classrooms/${c.id}`);
+											}
+										}}
+									>
+										<div className={styles.card_header}>
+											<div className={styles.card_title}>{c.name}</div>
+											{c.subject && (
+												<div className={styles.card_subject}>{c.subject}</div>
+											)}
 										</div>
-									</div>
-									<div className={styles.card_cta}>Join a class</div>
-								</>
-							) : (
-								<>
-									<div className={styles.card_meta}>
-										<div className={styles.meta_row}>
-											<label
-												htmlFor="join-code"
-												className={styles.meta_label}
-												style={{ marginRight: 8 }}
-											>
-												Class code
-											</label>
-											<input
-												id="join-code"
-												type="text"
-												value={joinCode}
-												onChange={(e) => {
-													setJoinCode(e.target.value);
-													if (joinErr) setJoinErr(""); // Clear error when editing
-												}}
-												onClick={(e) => e.stopPropagation()}
-												onKeyDown={(e) => {
-													if (e.key === "Enter") {
-														e.preventDefault();
-														e.stopPropagation();
-														handleJoin();
-													}
-												}}
-												placeholder="e.g. ef011db2"
-												className={styles.classroom_input}
-												style={{ flex: 1 }}
-												disabled={joining}
-											/>
-										</div>
-										{joinErr && (
-											<div className={styles.error} style={{ marginTop: 6 }}>
-												{joinErr}
+
+										<div className={styles.card_meta}>
+											<div className={styles.meta_row}>
+												<span className={styles.meta_label}>
+													<GraduationCap
+														size={18}
+														style={{ verticalAlign: "middle" }}
+													/>
+												</span>
+												<span className={styles.meta_value}>
+													{teacherLabel}
+												</span>
 											</div>
-										)}
-									</div>
+										</div>
 
-									<div className={styles.buttons_row}>
-										<button
-											className="action_button"
-											onClick={(e) => {
-												e.stopPropagation();
-												setJoinOpen(false);
-												setJoinCode("");
-												setJoinErr("");
-											}}
-											disabled={joining}
-										>
-											Cancel
-										</button>
-										<button
-											className={`${styles.join_btn} action_button`}
-											onClick={(e) => {
-												e.stopPropagation();
-												handleJoin();
-											}}
-											disabled={joining}
-										>
-											{joining ? "Joining…" : "Join class"}
-										</button>
-									</div>
-								</>
-							)}
-						</li>
-					</ul>
+										<div className={styles.card_cta}>View class</div>
+									</li>
+								);
+							})}
+						</ul>
+					</div>
 				</div>
 			</>
 		);

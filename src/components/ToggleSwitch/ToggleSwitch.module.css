@@ -10,7 +10,7 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background-color: var(--color-background);
+	background-color: var(--button_background_cancel);
 	overflow: hidden;
 	max-width: max-content;
 	margin: 10px auto;
@@ -34,15 +34,15 @@
 .toggle_group input[type="radio"] + label {
 	cursor: pointer;
 	padding: 10px 20px;
-	border-bottom: 2px solid var(--color-primary);
-	color: var(--color-primary);
+	border-bottom: 2px solid var(--actionable_text_active);
+	color: var(--actionable_text_active);
 	transition: all 0.3s ease;
 }
 
 /* Change the color of the label when the icon is not selected */
 .toggle_group input[type="radio"]:not(:is(:checked)) + label {
-	border-bottom: var(--color-border) 2px solid;
-	color: var(--color-text-muted);
+	border-bottom: var(--card_border_mid) 2px solid;
+	color: var(--text_light);
 }
 
 .next_button,
@@ -52,9 +52,9 @@
 	justify-content: center;
 	width: 36px;
 	height: 36px;
-	background-color: var(--color-background-alt);
-	color: var(--color-text);
-	border: 1px solid var(--color-border);
+	background-color: var(--card_background_mid);
+	color: var(--text_dark);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 50%;
 	cursor: pointer;
 	transition: all 0.2s ease;
@@ -62,8 +62,8 @@
 
 .next_button:hover,
 .prev_button:hover {
-	background-color: var(--color-background-disabled);
-	border-color: var(--color-text-secondary);
+	background-color: var(--card_border_mid);
+	border-color: var(--text_dark);
 }
 
 .next_button:hover {

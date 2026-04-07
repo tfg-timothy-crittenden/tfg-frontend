@@ -4,7 +4,7 @@
 	flex-wrap: wrap;
 	margin: 0 0 14px;
 	padding: 0;
-	border-bottom: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--card_border_mid);
 	list-style: none;
 	gap: 18px;
 }
@@ -14,9 +14,11 @@
 	padding: 6px 0 8px;
 	border-bottom: 2px solid transparent;
 	font-weight: 500;
-	color: var(--color-text-disabled);
+	color: var(--text_light);
 	font-size: 0.85rem;
-	transition: color 0.2s ease, border-color 0.2s ease;
+	transition:
+		color 0.2s ease,
+		border-color 0.2s ease;
 }
 
 .tab_text {
@@ -24,7 +26,7 @@
 }
 
 .active_tab {
-	color: var(--color-text);
-	border-bottom: 2px solid var(--color-primary);
+	color: var(--actionable_text_active);
+	border-bottom: 2px solid var(--actionable_text_active);
 	padding-bottom: 8px;
 }

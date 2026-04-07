@@ -4,15 +4,16 @@
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	border-radius: 21px;
-	border: solid 2px #bbb;
+	border: solid 2px var(--card_border_mid);
 	font-family: arial;
 	font-size: 0.8rem;
 	font-weight: 500;
 	text-align: center;
-	color: #bbbbbb;
-	background-color: #f9fafa;
+	color: var(--text_light);
+	background-color: var(--card_background_mid);
 	cursor: pointer;
-	transition: 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+	transition:
+		250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
 		border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
 		color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 	width: fit-content;
@@ -22,14 +23,14 @@
 	outline: none;
 }
 .tag_item:hover {
-	color: #4444c0;
-	border-color: #9494ef;
+	color: var(--actionable_text_active);
+	border-color: var(--actionable_text_active);
 	transform: translateX(1px) translateY(1px) scale(1.05);
 }
 
 .tag_item_selected {
-	color: #4444c0;
-	border-color: #9494ef;
-	background-color: white;
+	color: var(--actionable_text_active);
+	border-color: var(--actionable_text_active);
+	background-color: var(--button_background_cancel);
 	border-width: 2px;
 }

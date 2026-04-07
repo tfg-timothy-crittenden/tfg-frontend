@@ -1,15 +1,15 @@
 /* AdminList component styles */
 /* Mobile-first (compact) */
 .adminList {
-	background-color: var(--color-background);
+	background-color: transparent;
 	border-radius: 8px;
 	overflow: visible;
-	box-shadow: var(--shadow-sm);
+	box-shadow: none;
 }
 
 /* Header */
 .header {
-	border-bottom: 1px solid var(--color-border);
+	border-bottom: none;
 }
 
 .selectAllContainer {
@@ -39,25 +39,28 @@
 	display: flex;
 	align-items: center;
 	gap: 0.45rem;
-	padding: 0.4rem 0.85rem;
-	background-color: var(--color-background-alt);
-	color: var(--color-text);
-	border: 1px solid var(--color-border);
+	padding: 0.45rem 0.95rem;
+	background-color: var(--card_background_mid);
+	color: var(--text_dark);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 50px;
 	cursor: pointer;
 	font-size: 0.75rem;
 	line-height: 1.1;
-	transition: background-color 0.2s ease, border-color 0.2s ease;
+	transition:
+		background-color 0.2s ease,
+		border-color 0.2s ease;
 }
 
 .actionsButton:hover {
-	background-color: var(--color-background-disabled);
-	border-color: var(--color-text-secondary);
+	background-color: var(--actionable_background);
+	border-color: var(--card_border);
 }
 
 .actionsButtonDisabled {
-	background-color: var(--color-background-alt);
-	border-color: var(--color-border);
+	background-color: var(--card_background_mid);
+	border-color: var(--card_border_mid);
+	color: var(--text_light);
 	cursor: not-allowed;
 }
 
@@ -65,8 +68,8 @@
 	position: absolute;
 	top: 100%;
 	right: 0;
-	background: var(--color-background);
-	border: 1px solid var(--color-border);
+	background: var(--button_background_cancel);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 6px;
 	box-shadow: var(--shadow-md);
 	min-width: 140px;
@@ -85,10 +88,11 @@
 	transition: background-color 0.2s ease;
 	font-size: 0.75rem;
 	line-height: 1.15;
+	color: var(--text_dark);
 }
 
 .dropdownItem:hover {
-	background-color: var(--color-background-alt);
+	background-color: var(--card_background_mid);
 }
 
 .dropdownItem:first-child {
@@ -113,7 +117,7 @@
 .empty {
 	padding: 1.25rem;
 	text-align: center;
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 	font-style: italic;
 	font-size: 0.8rem;
 }
@@ -130,25 +134,25 @@
 	justify-content: center;
 	width: 32px;
 	height: 32px;
-	background-color: var(--color-background-alt);
-	color: var(--color-text);
-	border: 1px solid var(--color-border);
+	background-color: var(--card_background_mid);
+	color: var(--text_dark);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 50%;
 	cursor: pointer;
 	transition: all 0.2s ease;
 }
 
 .sortButton:hover {
-	background-color: var(--color-background-disabled);
-	border-color: var(--color-text-secondary);
+	background-color: var(--actionable_background);
+	border-color: var(--card_border);
 }
 
 .sortDropdown {
 	position: absolute;
 	top: 100%;
 	right: 0;
-	background: var(--color-background);
-	border: 1px solid var(--color-border);
+	background: var(--button_background_cancel);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 6px;
 	box-shadow: var(--shadow-md);
 	min-width: 150px;
@@ -167,10 +171,11 @@
 	transition: background-color 0.2s ease;
 	font-size: 0.75rem;
 	line-height: 1.15;
+	color: var(--text_dark);
 }
 
 .sortDropdownItem:hover {
-	background-color: var(--color-background-alt);
+	background-color: var(--card_background_mid);
 }
 
 .sortDropdownItem:first-child {
@@ -182,8 +187,8 @@
 }
 
 .activeSortItem {
-	background-color: var(--color-primary-light);
-	color: var(--color-primary);
+	background-color: var(--actionable_background);
+	color: var(--actionable_text_active);
 	font-weight: 500;
 }
 

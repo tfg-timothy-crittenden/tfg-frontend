@@ -71,7 +71,7 @@ const EmailVerification = () => {
 			style={{
 				maxWidth: 480,
 				margin: "64px auto",
-				background: "var(--color-background)",
+				background: "var(--button_background_cancel)",
 				borderRadius: "var(--radius-lg)",
 				boxShadow: "var(--shadow-md)",
 				padding: "2rem",
@@ -82,7 +82,7 @@ const EmailVerification = () => {
 			<h1
 				style={{
 					marginBottom: "0.5rem",
-					color: "var(--color-primary)",
+					color: "var(--actionable_text_active)",
 					fontSize: "2rem",
 					fontWeight: 700,
 					textAlign: "center",
@@ -92,7 +92,7 @@ const EmailVerification = () => {
 			</h1>
 			<p
 				style={{
-					color: "var(--color-text-secondary)",
+					color: "var(--text_dark)",
 					marginBottom: "1.5rem",
 					fontSize: "1.05rem",
 				}}
@@ -103,13 +103,13 @@ const EmailVerification = () => {
 			{serverError && (
 				<div
 					style={{
-						background: "var(--color-error-light)",
-						color: "var(--color-error-dark)",
+						background: "var(--card_background_mid)",
+						color: "var(--text_dark)",
 						padding: "10px 12px",
 						borderRadius: "var(--radius-md)",
 						marginBottom: "1rem",
 						fontWeight: 600,
-						border: "1px solid var(--color-error-light)",
+						border: "1px solid var(--card_background_mid)",
 					}}
 				>
 					{serverError}
@@ -119,13 +119,13 @@ const EmailVerification = () => {
 			{info && (
 				<div
 					style={{
-						background: "var(--color-success-light)",
-						color: "var(--color-success)",
+						background: "var(--actionable_background)",
+						color: "var(--button_background_confirm)",
 						padding: "10px 12px",
 						borderRadius: "var(--radius-md)",
 						marginBottom: "1rem",
 						fontWeight: 600,
-						border: "1px solid var(--color-success-light)",
+						border: "1px solid var(--actionable_background)",
 					}}
 				>
 					{info}
@@ -140,8 +140,8 @@ const EmailVerification = () => {
 					borderRadius: "var(--radius-lg)",
 					border: "none",
 					background: submitting
-						? "var(--color-primary-light)"
-						: "var(--color-primary)",
+						? "var(--actionable_background)"
+						: "var(--actionable_text_active)",
 					color: "#fff",
 					fontWeight: 700,
 					cursor: submitting ? "default" : "pointer",
@@ -156,12 +156,12 @@ const EmailVerification = () => {
 			</button>
 
 			{!token && (
-				<p style={{ marginTop: 16, color: "var(--color-text-secondary)" }}>
+				<p style={{ marginTop: 16, color: "var(--text_dark)" }}>
 					Don’t have a token?{" "}
 					<a
 						href="/resend-verification"
 						style={{
-							color: "var(--color-primary)",
+							color: "var(--actionable_text_active)",
 							textDecoration: "underline",
 							fontWeight: 500,
 						}}

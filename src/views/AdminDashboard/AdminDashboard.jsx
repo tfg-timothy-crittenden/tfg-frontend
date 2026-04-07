@@ -1,4 +1,5 @@
 import { Outlet, NavLink } from "react-router-dom";
+import { Settings, GraduationCap, Users, NotebookTabs } from "lucide-react";
 import styles from "./AdminDashboard.module.css";
 
 // ⬇️ prefetch helpers from your lazyRoutes file
@@ -12,7 +13,10 @@ import {
 const AdminDashboard = () => {
 	return (
 		<article className={styles.container + " full-height-mobile-no-bottom-nav"}>
-			<h2 className={styles.admin_dashboard_heading}>Admin Panel</h2>
+			<h2 className={styles.admin_dashboard_heading}>
+				<Settings size={46} strokeWidth={2} />
+				<span>Admin Panel</span>
+			</h2>
 
 			{/* Hovering the sidebar warms all admin chunks */}
 			<nav
@@ -31,7 +35,8 @@ const AdminDashboard = () => {
 							onFocus={_importAdminTeachers}
 							onTouchStart={_importAdminTeachers}
 						>
-							Teachers
+							<GraduationCap size={24} strokeWidth={2} />
+							<span>Teachers</span>
 						</NavLink>
 					</li>
 
@@ -45,7 +50,8 @@ const AdminDashboard = () => {
 							onFocus={_importAdminClasses}
 							onTouchStart={_importAdminClasses}
 						>
-							Classes
+							<Users size={24} strokeWidth={2} />
+							<span>Classes</span>
 						</NavLink>
 					</li>
 
@@ -59,7 +65,8 @@ const AdminDashboard = () => {
 							onFocus={_importAdminMaterial}
 							onTouchStart={_importAdminMaterial}
 						>
-							Materials
+							<NotebookTabs size={24} strokeWidth={2} />
+							<span>Materials</span>
 						</NavLink>
 					</li>
 				</ul>

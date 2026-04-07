@@ -12,7 +12,9 @@
 	display: flex;
 	flex-direction: column;
 	opacity: 0;
-	transition: opacity 0.3s ease-out, max-height 0.3s ease-out;
+	transition:
+		opacity 0.3s ease-out,
+		max-height 0.3s ease-out;
 	overflow: hidden;
 	scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
@@ -44,7 +46,7 @@
 	background: transparent;
 	border-bottom: none;
 
-	justify-content: center;
+	justify-content: end;
 }
 
 /* Header styling when open - left align with space between */
@@ -69,9 +71,9 @@
 
 .subtitles_container.open .subtitle_content {
 	opacity: 1;
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--card_border_mid);
 	border-radius: var(--radius-md);
-	background: var(--color-background);
+	background: var(--button_background_cancel);
 	/* margin: 8px 12px 12px 12px; */
 	/* min-height: 200px; Minimum usable height */
 	max-height: calc(50vh - 60px); /* Account for header + margins */
@@ -138,7 +140,7 @@
 
 .subtitle_viewer .subtitle_content_inner p {
 	margin: 0 0 12px 0;
-	color: var(--color-text);
+	color: var(--text_dark);
 	font-size: var(--subtitle-font-size, 16px);
 	line-height: 1.6;
 }
@@ -148,7 +150,7 @@
 }
 
 .subtitle_viewer .subtitle_content_inner b {
-	color: var(--color-primary);
+	color: var(--actionable_text_active);
 }
 
 .subtitle_viewer .subtitle_toggle {
@@ -159,26 +161,28 @@
 	font-size: 0.85rem;
 	font-weight: 600;
 	transition: all 0.3s ease-out;
-	background: var(--color-background-alt);
-	color: var(--color-text-muted);
-	border: 1px solid var(--color-border);
+	background: var(--card_background_mid);
+	color: var(--text_light);
+	border: 1px solid var(--card_border_mid);
 }
 
 .subtitle_viewer .subtitle_toggle:hover {
-	background: var(--color-background-disabled);
+	background: var(--card_border_mid);
 }
 
 .font_controls {
 	display: flex;
 	align-items: center;
 	gap: 4px;
-	background: var(--color-background-alt);
-	border: 1px solid var(--color-border);
+	background: var(--card_background_mid);
+	border: 1px solid var(--card_border_mid);
 	border-radius: var(--radius-md);
 	padding: 4px 6px;
 	opacity: 0;
 	transform: translateX(10px);
-	transition: opacity 0.3s ease-out 0.1s, transform 0.3s ease-out 0.1s;
+	transition:
+		opacity 0.3s ease-out 0.1s,
+		transform 0.3s ease-out 0.1s;
 }
 
 /* Font controls appear when open */
@@ -188,9 +192,9 @@
 }
 
 .font_button {
-	background: var(--color-background);
-	border: 1px solid var(--color-border);
-	color: var(--color-text);
+	background: var(--button_background_cancel);
+	border: 1px solid var(--card_border_mid);
+	color: var(--text_dark);
 	border-radius: var(--radius-sm);
 	padding: 2px 4px;
 	cursor: pointer;
@@ -203,20 +207,20 @@
 }
 
 .font_button:hover:not(:disabled) {
-	background: var(--color-background-disabled);
-	border-color: var(--color-text-secondary);
+	background: var(--card_border_mid);
+	border-color: var(--text_dark);
 }
 
 .font_button:disabled {
-	background: var(--color-background-alt);
-	color: var(--color-text-disabled);
-	border-color: var(--color-border);
+	background: var(--card_background_mid);
+	color: var(--text_light);
+	border-color: var(--card_border_mid);
 	cursor: not-allowed;
 	opacity: 0.6;
 }
 
 .font_size_display {
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 	display: flex;
 	align-items: center;
 	justify-content: center;

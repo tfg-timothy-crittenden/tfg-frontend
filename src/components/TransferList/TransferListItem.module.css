@@ -2,13 +2,15 @@
 	margin: 10px;
 	cursor: pointer;
 	padding: 10px;
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 5px;
-	transition: background-color 0.2s ease, transform 0.1s ease;
+	transition:
+		background-color 0.2s ease,
+		transform 0.1s ease;
 }
 
 .container:hover {
-	background-color: var(--color-success-light);
+	background-color: var(--actionable_background);
 	transform: translate(1px, 1px);
 }
 
@@ -23,11 +25,15 @@
 }
 
 .selected {
+	background-color: var(--actionable_background);
+	border-color: var(--actionable_text_active);
+	color: var(--actionable_text_active);
+	font-weight: 600;
 	border-radius: 5px;
 }
 
 .selected:hover {
-	background-color: var(--color-error-light);
+	background-color: var(--card_background_mid);
 	transform: translate(1px, 1px);
 }
 
@@ -35,21 +41,21 @@
 	opacity: 0.5;
 	pointer-events: none;
 	cursor: not-allowed;
-	color: var(--color-disabled);
+	color: var(--text_light);
 }
 
 /* Arrow for unselected items */
 
 .arrow::after {
 	content: "+";
-	color: green;
+	color: var(--actionable_text_active);
 }
 
 /* X for selected items */
 
 .removeIcon::after {
 	content: "×";
-	color: var(--color-error);
+	color: var(--actionable_text_active);
 	font-weight: bold;
 }
 
@@ -58,5 +64,5 @@
 }
 
 /* .removeIcon.disabled::after {
-	color: var(--color-disabled);
+	color: var(--text_light);
 } */

@@ -39,7 +39,7 @@ export default function AuthCallback() {
 				.unwrap()
 				.then(() => navigate("/my/classrooms", { replace: true }))
 				.catch(() =>
-					navigate("/login?error=oauth_store_failed", { replace: true })
+					navigate("/login?error=oauth_store_failed", { replace: true }),
 				);
 		} else {
 			// No params – just send back to login

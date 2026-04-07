@@ -20,10 +20,13 @@ const TestSelectionModalBody = ({
 				Array.isArray(teacherTaskSummaries.testNames) &&
 				teacherTaskSummaries.testNames[0]?.testId
 			) {
-				return teacherTaskSummaries.testNames;
+				return teacherTaskSummaries.testNames.map((test, index) => ({
+					testId: Number(test.testId) || index + 1,
+					title: test.title,
+				}));
 			}
 			return teacherTaskSummaries.testNames.map((testName, index) => ({
-				testId: `test${index + 1}`,
+				testId: index + 1,
 				title: testName,
 			}));
 		}
@@ -57,10 +60,13 @@ const TestSelectionModalBody = ({
 				Array.isArray(studentTaskSummaries.testNames) &&
 				studentTaskSummaries.testNames[0]?.testId
 			) {
-				return studentTaskSummaries.testNames;
+				return studentTaskSummaries.testNames.map((test, index) => ({
+					testId: Number(test.testId) || index + 1,
+					title: test.title,
+				}));
 			}
 			return studentTaskSummaries.testNames.map((testName, index) => ({
-				testId: `test${index + 1}`,
+				testId: index + 1,
 				title: testName,
 			}));
 		}

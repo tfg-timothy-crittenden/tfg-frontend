@@ -115,7 +115,7 @@ const StudentSignup = () => {
 							<Link
 								to="/login"
 								style={{
-									color: "var(--color-primary)",
+									color: "var(--actionable_text_active)",
 									textDecoration: "underline",
 									fontWeight: 500,
 								}}

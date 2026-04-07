@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import styles from "./ClassroomTeacherMenu.module.css";
-import { ChevronUp, ChevronDown, NotebookTabs, UsersRound } from "lucide-react";
+import { ChevronUp, ChevronDown, Library, UsersRound } from "lucide-react";
 import Modal from "../Modal/Modal";
 import useModal from "../Modal/useModal";
 import ClassInvite from "../ClassInvite/ClassInvite";
@@ -24,7 +24,7 @@ const ClassroomTeacherMenu = ({
 
 	const selectedClassroom = useMemo(
 		() => classrooms.find((c) => String(c.id) === String(classroomId)),
-		[classrooms, classroomId]
+		[classrooms, classroomId],
 	);
 
 	const classCode = selectedClassroom?.code || "";
@@ -79,7 +79,7 @@ const ClassroomTeacherMenu = ({
 						!isMembersRoute ? styles.active : ""
 					}`}
 				>
-					<NotebookTabs size={20} />
+					<Library size={20} />
 					<span
 						className={`${styles.label} ${
 							showButtonText ? styles.labelVisible : styles.labelHidden

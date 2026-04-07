@@ -4,30 +4,32 @@
 	padding: 10px;
 	border: none;
 	border-radius: 5px;
-	color: var(--color-background);
+	color: var(--button_text_confirm);
 	cursor: pointer;
 }
 
 .addClassBtn {
-	background-color: var(--color-primary);
+	background-color: var(--actionable_text_active);
 }
 
 .saveClassesBtn {
-	background-color: var(--color-success);
+	background-color: var(--button_background_confirm);
 }
 
 .textInput {
 	padding: 8px;
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 4px;
 	font-size: 1rem;
 	height: 38px; /* set explicit height for alignment */
 	box-sizing: border-box;
+	color: var(--text_dark);
+	background: var(--button_background_cancel);
 }
 .textInput:focus {
 	outline: none;
-	border-color: var(--color-primary);
-	box-shadow: var(--shadow-focus);
+	border-color: var(--actionable_text_active);
+	box-shadow: 0 0 0 2px rgba(93, 146, 192, 0.15);
 }
 
 .addClassFormRow {
@@ -57,13 +59,13 @@
 }
 
 .removeRowButton:hover {
-	background-color: var(--color-error-light);
-	color: var(--color-error);
+	background-color: var(--actionable_background);
+	color: var(--actionable_text_active);
 }
 
 .removeRowButton:hover .deleteRowIcon {
-	fill: var(--color-error);
-	stroke: var(--color-error);
+	fill: var(--actionable_text_active);
+	stroke: var(--actionable_text_active);
 }
 
 .addPersonButtonContainer {

@@ -3,26 +3,16 @@ import { NavLink, useParams } from "react-router-dom";
 import { buildRoute } from "@/routes/routeConfig";
 import styles from "./QuestionToggleSwitch.module.css";
 
-const TASK_PARTS = [1, 2, 3, 4];
-const DEFAULT_TOPIC = "Education";
+const TASK_PARTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
 const QuestionToggleSwitch = () => {
-	const { id, testId, partNumber, topicName } = useParams();
+	const { id, testId, partNumber } = useParams();
 
 	return (
 		<nav className={styles.container}>
 			<div className={styles.toggle_group}>
 				{TASK_PARTS.map((part) => {
-					let to;
-					if (part === 1) {
-						const topic = topicName || DEFAULT_TOPIC;
-						// Always link to instructions mode for Q1
-						to = `/my/classrooms/${id}/test/${testId}/part/1/instructions?topic=${encodeURIComponent(
-							topic
-						)}`;
-					} else {
-						to = buildRoute.testPart(id, testId, part);
-					}
+					const to = buildRoute.testPart(id, testId, part);
 					return (
 						<NavLink
 							key={part}

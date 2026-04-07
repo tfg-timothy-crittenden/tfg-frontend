@@ -40,7 +40,7 @@ const MobileBottomNav = () => {
 			getClassroomTeacherTaskSummaries(classroomId)
 				.then(setTeacherTaskSummaries)
 				.catch((err) =>
-					console.error("Failed to load teacher summaries:", err)
+					console.error("Failed to load teacher summaries:", err),
 				);
 		}
 	}, [classroomId, hasTeacherRole]);
@@ -66,7 +66,7 @@ const MobileBottomNav = () => {
 		test,
 		part,
 		section = null,
-		topic = DEFAULT_TOPIC
+		topic = DEFAULT_TOPIC,
 	) => {
 		setSelectedSection(section);
 		closeModal();
@@ -74,13 +74,13 @@ const MobileBottomNav = () => {
 			navigate(
 				`/my/classrooms/${classroomId}/test/${
 					test.testId || test.id
-				}/part/1/instructions?topic=${encodeURIComponent(topic)}`
+				}/part/1/instructions?topic=${encodeURIComponent(topic)}`,
 			);
 		} else {
 			navigate(
 				`/my/classrooms/${classroomId}/test/${
 					test.testId || test.id
-				}/part/${part}`
+				}/part/${part}`,
 			);
 		}
 	};
@@ -92,10 +92,13 @@ const MobileBottomNav = () => {
 				Array.isArray(teacherTaskSummaries.testNames) &&
 				teacherTaskSummaries.testNames[0]?.testId
 			) {
-				return teacherTaskSummaries.testNames;
+				return teacherTaskSummaries.testNames.map((test, index) => ({
+					testId: Number(test.testId) || index + 1,
+					title: test.title,
+				}));
 			}
 			return teacherTaskSummaries.testNames.map((testName, index) => ({
-				testId: `test${index + 1}`,
+				testId: index + 1,
 				title: testName,
 			}));
 		}
@@ -129,10 +132,13 @@ const MobileBottomNav = () => {
 				Array.isArray(studentTaskSummaries.testNames) &&
 				studentTaskSummaries.testNames[0]?.testId
 			) {
-				return studentTaskSummaries.testNames;
+				return studentTaskSummaries.testNames.map((test, index) => ({
+					testId: Number(test.testId) || index + 1,
+					title: test.title,
+				}));
 			}
 			return studentTaskSummaries.testNames.map((testName, index) => ({
-				testId: `test${index + 1}`,
+				testId: index + 1,
 				title: testName,
 			}));
 		}

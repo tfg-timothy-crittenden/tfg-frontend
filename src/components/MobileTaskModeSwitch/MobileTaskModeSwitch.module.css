@@ -4,8 +4,8 @@
 	bottom: 84px; /* Above bottom navigation */
 	left: 0;
 	right: 0;
-	background: var(--color-background);
-	border-top: 1px solid var(--color-border);
+	background: var(--button_background_cancel);
+	border-top: 1px solid var(--card_border_mid);
 	/* z-index: 999; */
 	padding: 8px 16px;
 	box-shadow: var(--shadow-lg);
@@ -25,25 +25,25 @@
 	flex-direction: column;
 	align-items: center;
 	padding: 8px 12px;
-	background: var(--color-background-alt);
-	border: 1px solid var(--color-border);
+	background: var(--card_background_mid);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 12px;
 	cursor: pointer;
 	transition: all 0.2s ease;
 	min-width: 60px;
 	min-height: 52px;
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 	flex-shrink: 0;
 }
 
 .mode_button:hover {
-	background: var(--color-background);
-	border-color: var(--color-primary);
+	background: var(--button_background_cancel);
+	border-color: var(--actionable_text_active);
 }
 
 .mode_button.active {
-	background: var(--color-primary);
-	border-color: var(--color-primary);
+	background: var(--actionable_text_active);
+	border-color: var(--actionable_text_active);
 	color: white;
 }
 
@@ -57,29 +57,29 @@
 
 /* Color variants for different modes */
 .mode_button.info.active {
-	background: var(--color-info, #17a2b8);
-	border-color: var(--color-info, #17a2b8);
+	background: var(--actionable_text_active);
+	border-color: var(--actionable_text_active);
 }
 
 .mode_button.read.active {
-	background: var(--color-success, #28a745);
-	border-color: var(--color-success, #28a745);
+	background: var(--button_background_confirm);
+	border-color: var(--button_background_confirm);
 }
 
 .mode_button.listen.active {
-	background: var(--color-warning, #ffc107);
-	border-color: var(--color-warning, #ffc107);
-	color: var(--color-text);
+	background: var(--actionable_background);
+	border-color: var(--actionable_background);
+	color: var(--text_dark);
 }
 
 .mode_button.prepare.active {
-	background: var(--color-secondary, #6c757d);
-	border-color: var(--color-secondary, #6c757d);
+	background: var(--card_border);
+	border-color: var(--card_border);
 }
 
 .mode_button.speak.active {
-	background: var(--color-danger, #dc3545);
-	border-color: var(--color-danger, #dc3545);
+	background: var(--button_background_confirm);
+	border-color: var(--button_background_confirm);
 }
 
 /* Hide on desktop */

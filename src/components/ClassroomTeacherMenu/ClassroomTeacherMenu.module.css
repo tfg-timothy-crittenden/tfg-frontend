@@ -5,61 +5,74 @@
 	cursor: pointer;
 	padding: 10px 16px;
 	border-radius: 8px;
-	background: var(--color-background, #fff);
-	border: 1px solid var(--color-border, #eee);
+	background: var(--button_background_cancel);
+	border: 1px solid var(--card_border_mid);
+	color: var(--text_dark);
 }
 
 .chevron {
 	margin-left: 8px;
 	display: flex;
 	align-items: center;
+	color: var(--text_dark);
 }
 
 .dropdown_list {
 	margin: 0;
 	padding: 4px 0;
 	border-radius: 8px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-	background: var(--color-background, #fff);
-	border: 1px solid var(--color-border, #eee);
+	box-shadow: var(--shadow-md);
+	background: var(--button_background_cancel);
+	border: 1px solid var(--card_border_mid);
 	position: relative;
 	/* z-index: 10; */
 }
 
 .list_item {
-	padding: 10px 16px;
+	padding: 18px 10px;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
 	gap: 8px;
 	background: transparent;
-	transition: background 0.15s;
+	color: var(--text_light);
+	transition:
+		background 0.15s,
+		color 0.15s;
+	border-right: 3px solid transparent;
 }
 
 .list_item.active {
-	background: var(--color-primary-light);
+	background: var(--actionable_background);
+	border-right-color: var(--actionable_text_active);
+	color: var(--actionable_text_active);
+}
+
+.list_item svg {
+	color: currentColor;
 }
 
 .test_title {
 	font-weight: 600;
 	font-size: 1rem;
+	color: var(--text_dark);
 }
 
 .reading_title {
 	font-size: 0.9rem;
-	color: var(--color-text-light);
+	color: var(--text_light);
 	margin-left: 8px;
 }
 
 .test_menu_section {
-	margin-bottom: 24px;
+	margin-bottom: 16px;
 }
 
 .section_title {
 	font-size: 1.1rem;
 	font-weight: 700;
 	margin-bottom: 8px;
-	color: var(--color-text-light);
+	color: var(--text_light);
 }
 
 .label {
@@ -68,6 +81,7 @@
 	will-change: opacity;
 	pointer-events: none;
 	margin-left: 8px;
+	color: var(--text_dark);
 	/* Optionally: display: inline-block; */
 }
 
@@ -87,4 +101,5 @@
 	width: 24px;
 	height: 24px;
 	flex-shrink: 0;
+	color: var(--text_dark);
 }

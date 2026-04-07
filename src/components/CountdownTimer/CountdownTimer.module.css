@@ -1,5 +1,5 @@
 .container {
-	color: var(--color-text-muted);
+	color: var(--text_light);
 	text-align: center;
 	font-size: 1.6em;
 	display: flex;

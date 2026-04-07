@@ -15,8 +15,8 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
-	border: 1px solid var(--color-border);
-	background: var(--color-background);
+	border: 1px solid var(--card_border_mid);
+	background: var(--button_background_cancel);
 	border-radius: 10px;
 	padding: 8px 10px;
 	min-width: 260px;
@@ -29,7 +29,7 @@
 }
 
 .group {
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 12px;
 	overflow-y: visible;
 }
@@ -38,8 +38,8 @@
 	align-items: center;
 	justify-content: space-between;
 	padding: 10px 12px;
-	background: var(--color-background-alt);
-	border-bottom: 1px solid var(--color-border);
+	background: var(--card_background_mid);
+	border-bottom: 1px solid var(--card_border_mid);
 }
 .groupTitle {
 	display: flex;
@@ -48,7 +48,7 @@
 	font-weight: 700;
 }
 .badge {
-	background: var(--color-border);
+	background: var(--card_border_mid);
 	border-radius: 999px;
 	padding: 2px 8px;
 	font-size: 12px;
@@ -58,8 +58,8 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
-	border: 1px solid var(--color-border);
-	background: var(--color-background);
+	border: 1px solid var(--card_border_mid);
+	background: var(--button_background_cancel);
 	border-radius: 8px;
 	padding: 6px 10px;
 	cursor: pointer;
@@ -84,9 +84,9 @@
 	align-items: center;
 	gap: 10px;
 	padding: 8px;
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 10px;
-	background: var(--color-background);
+	background: var(--button_background_cancel);
 }
 .person {
 	display: grid;
@@ -102,8 +102,8 @@
 	flex-wrap: wrap;
 }
 .tag {
-	background: var(--color-primary-light);
-	color: var(--color-primary);
+	background: var(--actionable_background);
+	color: var(--actionable_text_active);
 	padding: 2px 6px;
 	border-radius: 6px;
 	font-size: 12px;
@@ -111,12 +111,12 @@
 .dot {
 	width: 4px;
 	height: 4px;
-	background: var(--color-border);
+	background: var(--card_border_mid);
 	border-radius: 50%;
 	display: inline-block;
 }
 .muted {
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 	font-size: 12px;
 }
 
@@ -124,7 +124,7 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
-	color: var(--color-primary);
+	color: var(--actionable_text_active);
 	text-decoration: none;
 }
 .email:hover {
@@ -135,23 +135,23 @@
 	display: grid;
 	place-items: center;
 	border-radius: 50%;
-	background: var(--color-background-disabled);
-	color: var(--color-text);
+	background: var(--card_border_mid);
+	color: var(--text_dark);
 	font-weight: 800;
 	font-size: 14px;
 }
 
 .empty {
 	padding: 10px;
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 	font-style: italic;
 }
 
 .error {
 	padding: 12px;
-	background: var(--color-error-light);
-	color: var(--color-error);
-	border: 1px solid var(--color-error-light);
+	background: var(--card_background_mid);
+	color: var(--text_dark);
+	border: 1px solid var(--card_background_mid);
 	border-radius: 10px;
 }
 
@@ -159,9 +159,9 @@
 	height: 180px;
 	background: linear-gradient(
 		90deg,
-		var(--color-background-alt),
-		var(--color-border),
-		var(--color-background-alt)
+		var(--card_background_mid),
+		var(--card_border_mid),
+		var(--card_background_mid)
 	);
 	background-size: 200% 100%;
 	border-radius: 12px;

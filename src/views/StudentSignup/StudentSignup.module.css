@@ -1,7 +1,7 @@
 .signup_container {
 	max-width: 480px;
 	margin: 64px auto;
-	background: var(--color-background);
+	background: var(--button_background_cancel);
 	border-radius: var(--radius-lg);
 	box-shadow: var(--shadow-md);
 	padding: 2rem;
@@ -11,7 +11,7 @@
 
 .signup_title {
 	margin-bottom: 0.5rem;
-	color: var(--color-primary);
+	color: var(--actionable_text_active);
 	font-size: 2rem;
 	font-weight: 700;
 	text-align: center;
@@ -25,7 +25,7 @@
 .class_name {
 	font-size: 2.2rem;
 	font-weight: 800;
-	color: var(--color-primary);
+	color: var(--actionable_text_active);
 	margin-bottom: 0.3rem;
 	letter-spacing: 0.5px;
 }
@@ -38,34 +38,34 @@
 	margin-top: 6px;
 	font-size: 1.5rem;
 	font-weight: 700;
-	color: var(--color-success);
+	color: var(--button_background_confirm);
 	letter-spacing: 0.5px;
 }
 
 .signup_desc {
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 	margin-bottom: 1.5rem;
 	font-size: 1.05rem;
 }
 
 .signup_success {
-	background: var(--color-success-light);
-	color: var(--color-success);
+	background: var(--actionable_background);
+	color: var(--button_background_confirm);
 	padding: 10px 12px;
 	border-radius: var(--radius-md);
 	margin-bottom: 1rem;
 	font-weight: 600;
-	border: 1px solid var(--color-success-light);
+	border: 1px solid var(--actionable_background);
 }
 
 .signup_error {
-	background: var(--color-error-light);
-	color: var(--color-error-dark);
+	background: var(--card_background_mid);
+	color: var(--text_dark);
 	padding: 10px 12px;
 	border-radius: var(--radius-md);
 	margin-bottom: 1rem;
 	font-weight: 600;
-	border: 1px solid var(--color-error-light);
+	border: 1px solid var(--card_background_mid);
 }
 
 .signup_form {
@@ -77,9 +77,9 @@
 .signup_input {
 	padding: 12px;
 	border-radius: var(--radius-md);
-	border: 1px solid var(--color-border);
-	background: var(--color-background);
-	color: var(--color-text);
+	border: 1px solid var(--card_border_mid);
+	background: var(--button_background_cancel);
+	color: var(--text_dark);
 	font-size: 1rem;
 }
 
@@ -87,7 +87,7 @@
 	padding: 12px 16px;
 	border-radius: var(--radius-lg);
 	border: none;
-	background: var(--color-primary);
+	background: var(--actionable_text_active);
 	color: #fff;
 	font-weight: 700;
 	cursor: pointer;
@@ -100,6 +100,6 @@
 }
 
 .signup_button:disabled {
-	background: var(--color-primary-light);
+	background: var(--actionable_background);
 	cursor: default;
 }

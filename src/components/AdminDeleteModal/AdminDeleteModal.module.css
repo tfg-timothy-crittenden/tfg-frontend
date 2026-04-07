@@ -6,28 +6,28 @@
 
 .deleteTitle {
 	margin: 0 0 1rem 0;
-	color: #dc2626;
+	color: var(--actionable_text_active);
 	font-size: 1.5rem;
 	font-weight: 600;
 }
 
 .deleteMessage {
 	margin: 0 0 1.5rem 0;
-	color: #374151;
+	color: var(--text_dark);
 	line-height: 1.5;
 }
 
 .confirmSection {
 	margin: 1.5rem 0;
 	padding: 1rem;
-	background-color: #fef2f2;
-	border: 1px solid #fecaca;
+	background-color: var(--card_background_mid);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 8px;
 }
 
 .confirmInstruction {
 	margin: 0 0 0.75rem 0;
-	color: #7f1d1d;
+	color: var(--text_dark);
 	font-size: 0.875rem;
 	font-weight: 500;
 }
@@ -35,16 +35,17 @@
 .confirmInput {
 	width: 100%;
 	padding: 0.75rem;
-	border: 2px solid #fca5a5;
+	border: 2px solid var(--card_border);
 	border-radius: 6px;
 	font-size: 1rem;
-	background-color: white;
+	background-color: var(--button_background_cancel);
+	color: var(--text_dark);
 	transition: border-color 0.2s;
 }
 
 .confirmInput:focus {
 	outline: none;
-	border-color: #dc2626;
+	border-color: var(--actionable_text_active);
 }
 
 .deleteActions {
@@ -56,37 +57,38 @@
 
 .cancelButton {
 	padding: 0.75rem 1.5rem;
-	border: 1px solid #d1d5db;
+	border: 1px solid var(--card_border_mid);
 	border-radius: 6px;
-	background-color: white;
-	color: #374151;
+	background-color: var(--button_background_cancel);
+	color: var(--text_dark);
 	font-weight: 500;
 	cursor: pointer;
 	transition: all 0.2s;
 }
 
 .cancelButton:hover {
-	background-color: #f9fafb;
-	border-color: #9ca3af;
+	background-color: var(--card_background_mid);
+	border-color: var(--card_border);
 }
 
 .deleteButton {
 	padding: 0.75rem 1.5rem;
 	border: none;
 	border-radius: 6px;
-	background-color: #dc2626;
-	color: white;
+	background-color: var(--button_background_confirm);
+	color: var(--button_text_confirm);
 	font-weight: 500;
 	cursor: pointer;
 	transition: all 0.2s;
 }
 
 .deleteButton:hover:not(.disabled) {
-	background-color: #b91c1c;
+	filter: brightness(0.92);
 }
 
 .deleteButton.disabled {
-	background-color: #9ca3af;
+	background-color: var(--card_border_mid);
+	color: var(--text_light);
 	cursor: not-allowed;
-	opacity: 0.6;
+	opacity: 1;
 }

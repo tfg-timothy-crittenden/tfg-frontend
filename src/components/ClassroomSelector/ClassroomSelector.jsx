@@ -20,7 +20,7 @@ const ClassroomSelector = ({ classrooms = [], onClassroomChange }) => {
 
 	const selectedClassroom = useMemo(
 		() => classrooms.find((c) => String(c.id) === String(classroomId)),
-		[classrooms, classroomId]
+		[classrooms, classroomId],
 	);
 
 	const swapId = (newId) => {
@@ -71,9 +71,6 @@ const ClassroomSelector = ({ classrooms = [], onClassroomChange }) => {
 								}}
 							>
 								<span className={styles.test_title}>{c.name}</span>
-								{c.subject && (
-									<span className={styles.reading_title}>{c.subject}</span>
-								)}
 							</li>
 						);
 					})}

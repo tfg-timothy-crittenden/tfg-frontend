@@ -21,10 +21,10 @@ const AdminMaterial = () => {
 
 	// Assignment state
 	const [selectedTeacherItemIds, setSelectedTeacherItemIds] = useState(
-		new Set()
+		new Set(),
 	);
 	const [selectedStudentItemIds, setSelectedStudentItemIds] = useState(
-		new Set()
+		new Set(),
 	);
 
 	// Current class
@@ -48,11 +48,11 @@ const AdminMaterial = () => {
 	useEffect(() => {
 		const teacherChanged = !setsAreEqual(
 			selectedTeacherItemIds,
-			lastFetchedTeacherIds.current
+			lastFetchedTeacherIds.current,
 		);
 		const studentChanged = !setsAreEqual(
 			selectedStudentItemIds,
-			lastFetchedStudentIds.current
+			lastFetchedStudentIds.current,
 		);
 		setHasChanges(teacherChanged || studentChanged);
 	}, [selectedTeacherItemIds, selectedStudentItemIds]);
@@ -106,7 +106,7 @@ const AdminMaterial = () => {
 				console.error("Error fetching class materials:", err);
 			}
 		},
-		[allMaterials]
+		[allMaterials],
 	);
 
 	const selectClass = useCallback(
@@ -114,7 +114,7 @@ const AdminMaterial = () => {
 			if (!classObj) return;
 			if (hasChanges) {
 				const confirmed = window.confirm(
-					"You have unsaved changes. Switch classes and lose changes?"
+					"You have unsaved changes. Switch classes and lose changes?",
 				);
 				if (!confirmed) return;
 			}
@@ -128,7 +128,7 @@ const AdminMaterial = () => {
 
 			setIsLibraryOpen(false);
 		},
-		[hasChanges, materialsLoaded, allMaterials.length, fetchClassMaterials]
+		[hasChanges, materialsLoaded, allMaterials.length, fetchClassMaterials],
 	);
 
 	// When allMaterials finish loading, (re)fetch materials for the already selected class (no prompt)
@@ -143,10 +143,10 @@ const AdminMaterial = () => {
 		try {
 			const assignments = [];
 			selectedTeacherItemIds.forEach((testId) =>
-				assignments.push({ testId, role: "teacher" })
+				assignments.push({ testId, role: "teacher" }),
 			);
 			selectedStudentItemIds.forEach((testId) =>
-				assignments.push({ testId, role: "student" })
+				assignments.push({ testId, role: "student" }),
 			);
 
 			await assignTestsToClassroom(selectedClassId, assignments);
@@ -225,14 +225,14 @@ const AdminMaterial = () => {
 						}`}
 					>
 						<button
-							className="action_button save_button"
+							className={`action_button ${styles.button_confirm}`}
 							onClick={handleSave}
 							disabled={!isLibraryOpen || !hasChanges || !selectedClassId}
 						>
 							Save
 						</button>
 						<button
-							className="action_button"
+							className={`action_button ${styles.button_cancel}`}
 							onClick={handleCancel}
 							disabled={!isLibraryOpen || !hasChanges}
 						>

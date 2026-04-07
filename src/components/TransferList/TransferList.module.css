@@ -19,7 +19,7 @@
 }
 
 .material_list_container {
-	border: solid 1px var(--color-border);
+	border: solid 1px var(--card_border_mid);
 }
 
 .transfer_buttons {
@@ -33,7 +33,7 @@
 .list {
 	min-width: 200px;
 	padding: 10px;
-	background-color: var(--color-background);
-	border: 1px solid var(--color-border);
+	background-color: var(--button_background_cancel);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 5px;
 }

@@ -1,14 +1,14 @@
 .body {
 	font-size: 1.3rem;
 	line-height: 1.5;
-	color: var(--color-text);
+	color: var(--text_dark);
 	margin: 10px 0;
 	/* max-width: 700px; */
 	margin: 0 auto;
 }
 
 .timer_container {
-	max-width: 1080px;
+	max-width: var(--content-max-width);
 	display: flex;
 	justify-content: center;
 	align-items: center;

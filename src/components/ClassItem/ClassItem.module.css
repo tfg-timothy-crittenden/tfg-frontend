@@ -7,9 +7,9 @@
 	width: 100%;
 	gap: 0.75rem;
 	padding: 0.75rem 0.85rem;
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 10px;
-	background: var(--color-background);
+	background: var(--button_background_cancel);
 }
 
 .classIcon {
@@ -20,7 +20,7 @@
 }
 
 .classroomIcon {
-	color: var(--color-primary);
+	color: var(--text_dark);
 	fill: currentColor;
 	width: 40px;
 	height: 40px;
@@ -40,7 +40,7 @@
 
 .className {
 	font-weight: 600;
-	color: var(--color-text);
+	color: var(--text_dark);
 	font-size: 1rem;
 	line-height: 1.2;
 	word-break: break-word;
@@ -48,20 +48,20 @@
 
 .classCode {
 	font-size: 0.75rem;
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 }
 
 .classCode code {
-	background: var(--color-background-code);
+	background: var(--card_background_mid);
 	padding: 0.2rem 0.4rem;
 	border-radius: 4px;
 	font-family: "Courier New", monospace;
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--card_border_mid);
 	font-size: 0.7rem;
 }
 
 .classSubject {
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 	font-size: 0.75rem;
 	font-style: italic;
 }
@@ -69,7 +69,7 @@
 .teachersLabel {
 	display: block;
 	font-size: 0.75rem;
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 	margin-bottom: 0.4rem;
 	font-weight: 500;
 }

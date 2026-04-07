@@ -4,8 +4,8 @@
 .itemRow {
 	display: flex;
 	align-items: center;
-	padding: 0.5rem 0.75rem; /* tighter on mobile */
-	border-bottom: 1px solid var(--color-border);
+	padding: 0.5rem 0.75rem;
+	border-bottom: 1px solid var(--card_border_mid);
 	transition: background-color 0.2s ease;
 	font-size: var(--font-size-sm); /* smaller text base */
 	line-height: 1.25;
@@ -16,16 +16,16 @@
 }
 
 .itemRow:nth-child(even) {
-	background-color: var(--color-background-alt);
+	background-color: var(--card_background_mid);
 }
 
 .itemRow:hover {
-	background-color: var(--color-background-disabled);
+	background-color: var(--actionable_background);
 }
 
 /* (Optional) selected state */
 .itemRow.selected {
-	background: var(--color-primary-light);
+	background: var(--actionable_background);
 }
 
 .checkbox_container {
@@ -56,19 +56,20 @@
 	cursor: pointer;
 	padding: 0.25rem;
 	border-radius: 4px;
+	color: var(--text_dark);
 	transition: background-color 0.2s ease;
 }
 
 .kebab_button:hover {
-	background-color: var(--color-background-disabled);
+	background-color: var(--card_background_mid);
 }
 
 .kebabDropdown {
 	position: absolute;
 	top: 100%;
 	right: 0;
-	background: var(--color-background);
-	border: 1px solid var(--color-border);
+	background: var(--button_background_cancel);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 6px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 	min-width: 140px;
@@ -86,10 +87,11 @@
 	transition: background-color 0.2s ease;
 	font-size: 0.8rem;
 	line-height: 1.2;
+	color: var(--text_dark);
 }
 
 .dropdownItem:hover {
-	background-color: var(--color-background-alt);
+	background-color: var(--card_background_mid);
 }
 
 .dropdownItem:first-child {

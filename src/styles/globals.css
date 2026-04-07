@@ -2,61 +2,79 @@
 /* Global CSS Variables - TOEFL Speaking App Color System */
 :root {
 	/* Primary Brand Colors */
-	--color-primary: #5d92c0;
+	/* --color-primary: #5d92c0;
 	--color-primary-hover: #4a7ba0;
 	--color-primary-light: #e3f2fd;
-	--color-primary-dark: #3d6180;
+	--color-primary-dark: #3d6180; */
 
 	/* Secondary Colors */
-	--color-secondary: #6080ac;
-	--color-secondary-hover: #4d6b95;
+	/* --color-secondary: #6080ac;
+	--color-secondary-hover: #4d6b95; */
 
 	/* Status Colors */
-	--color-success: #4caf50;
+	/* --color-success: #4caf50;
 	--color-success-hover: #45a049;
-	--color-success-light: #e8f5e8;
+	--color-success-light: #e8f5e8; */
 
-	--color-error: #dc3545;
+	/* --color-error: #dc3545;
 	--color-error-hover: #c82333;
 	--color-error-light: #f8d7da;
-	--color-error-dark: #721c24;
+	--color-error-dark: #721c24; */
 
-	--color-warning: #ff9800;
+	/* --color-warning: #ff9800;
 	--color-warning-hover: #f57c00;
-	--color-warning-light: #fff3e0;
+	--color-warning-light: #fff3e0; */
 
-	--color-info: #2196f3;
+	/* --color-info: #2196f3;
 	--color-info-hover: #1976d2;
-	--color-info-light: #e3f2fd;
+	--color-info-light: #e3f2fd; */
 
 	/* Text Colors */
-	--color-text: #333;
+	/* --color-text: #333;
 	--color-text-secondary: #666;
 	--color-text-muted: #999;
 	--color-text-light: #6b7280;
-	--color-text-disabled: #adadad;
+	--color-text-disabled: #adadad; */
+
+	/* Shared design tokens (centralized) */
+	--text_dark: #666666;
+	--text_light: #adadad;
+	--button_background_confirm: #7bbb4f;
+	--button_background_cancel: #ffffff;
+	--button_text_confirm: #ffffff;
+	--button_text_cancel: #5d92c0;
+	--card_border: #6b7280;
+	--actionable_background: #e3f2fd;
+	--actionable_text_active: #5d92c0;
+	--background_light: white;
+	--card_background_mid: #f8f9fa;
+	--card_border_mid: #e9ecef;
+	--card_border_dark: #666666;
+
+	/* Compatibility aliases for alternative token naming */
+	--button__background_cancel: var(--button_background_cancel);
 
 	/* Background Colors */
-	--color-background-neutral: #e1e1e1;
+	/* --color-background-neutral: #e1e1e1;
 	--color-background: #ffffff;
 	--color-background-alt: #f8f9fa;
 	--color-background-light: #f9fafb;
 	--color-background-code: #f3f4f6;
-	--color-background-disabled: #e9ecef;
+	--color-background-disabled: #e9ecef; */
 
 	/* Border Colors */
-	--color-border: #e9ecef;
+	/* --color-border: #e9ecef;
 	--color-border-focus: #5d92c0;
-	--color-border-dark: #6b7280;
+	--color-border-dark: #6b7280; */
 
 	/* Special Colors */
-	--color-microsoft: #0078d4;
-	--color-microsoft-hover: #106ebe;
+	/* --color-microsoft: #0078d4;
+	--color-microsoft-hover: #106ebe; */
 
 	/* Additional semantic colors */
-	--color-accent: #2563eb;
+	/* --color-accent: #2563eb;
 	--color-accent-hover: #1d4ed8;
-	--color-accent-light: #eff6ff;
+	--color-accent-light: #eff6ff; */
 
 	/* Background gradients */
 	--background-gradient: linear-gradient(
@@ -69,13 +87,13 @@
 	);
 
 	/* Card/Surface colors */
-	--color-surface: #ffffff;
-	--color-surface-elevated: #f8fafc;
+	/* --color-surface: #ffffff;
+	--color-surface-elevated: #f8fafc; */
 
 	/* Interactive states */
-	--color-hover: rgba(93, 146, 192, 0.1);
+	/* --color-hover: rgba(93, 146, 192, 0.1);
 	--color-focus: rgba(93, 146, 192, 0.2);
-	--color-disabled: #9ca3af;
+	--color-disabled: #9ca3af; */
 
 	/* === BREAKPOINT VARIABLES === */
 	--breakpoint-tablet: 769px;
@@ -83,9 +101,9 @@
 	--breakpoint-large-desktop: 1200px;
 
 	/* Layout Variables */
-	--content-max-width: 1080px;
+	--content-max-width: 1440px;
 	--sidebar-width: 350px;
-	--sidebar-collapsed-width: 50px;
+	--sidebar-collapsed-width: 100px;
 
 	/* Mobile-first Spacing */
 	--spacing-xs: 0.25rem;
@@ -124,6 +142,7 @@
 	--shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
 	--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.15);
 	--shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+	--shadow-right-md: 8px 0 18px -12px rgba(0, 0, 0, 0.2);
 }
 
 /* Responsive font and spacing variables */

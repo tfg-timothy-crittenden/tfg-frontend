@@ -5,7 +5,7 @@ export function normalizeTestNames(testNames, readingTitle) {
 		return testNames.map((t) => ({ ...t, readingTitle }));
 	}
 	return testNames.map((title, i) => ({
-		testId: `test${i + 1}`,
+		testId: i + 1,
 		title,
 		readingTitle,
 	}));

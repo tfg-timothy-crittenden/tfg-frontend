@@ -27,7 +27,10 @@ const AdminTeachers = () => {
 		// Combine active and invited teachers with status
 		return [
 			...activeRes.data.map((teacher) => ({ ...teacher, status: "active" })),
-			...invitedRes.data.map((teacher) => ({ ...teacher, status: "invited" })),
+			...invitedRes.data.map((teacher) => ({
+				...teacher,
+				status: "invited",
+			})),
 		];
 	};
 
@@ -113,16 +116,6 @@ const AdminTeachers = () => {
 	// Sort teachers based on current sort
 	const sortedTeachers = sortTeachers(allTeachers, currentSort);
 
-	const handleCancel = async (id) => {
-		await cancelInvite(id);
-		await loadAllTeachers();
-	};
-
-	const handleResend = async (id) => {
-		await resendInvite(id);
-		await loadAllTeachers();
-	};
-
 	// Individual teacher actions
 	const handleIndividualResend = async (teacherId) => {
 		try {
@@ -147,7 +140,7 @@ const AdminTeachers = () => {
 							label: "Resend Invite",
 							handler: () => handleIndividualResend(teacher.id),
 						},
-				  ]
+					]
 				: []),
 			{
 				label: "Remove",

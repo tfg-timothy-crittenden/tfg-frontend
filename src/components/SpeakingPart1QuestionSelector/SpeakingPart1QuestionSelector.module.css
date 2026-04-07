@@ -1,7 +1,7 @@
 .tags_container {
 	padding: 10px 0;
-	background-color: var(--color-background-alt);
-	border: 1px solid var(--color-border);
+	background-color: var(--card_background_mid);
+	border: 1px solid var(--card_border_mid);
 	width: 100%;
 
 	display: flex;
@@ -13,7 +13,7 @@
 .instruction {
 	font-size: 1rem;
 
-	color: var(--color-text);
+	color: var(--text_dark);
 	text-align: center;
 }
 .tags {

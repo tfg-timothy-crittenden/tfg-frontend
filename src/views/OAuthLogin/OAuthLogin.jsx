@@ -68,7 +68,7 @@ export default function OAuthLogin() {
 		// Clear any existing errors
 		setError("");
 
-		const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
+		const apiBase = import.meta.env.VITE_API_URL || "/users/api";
 		window.location.href = `${apiBase}/oauth/teacher/microsoft`;
 	};
 
@@ -87,7 +87,7 @@ export default function OAuthLogin() {
 					username: credentials.username,
 					password: credentials.password,
 					userType: loginType,
-				})
+				}),
 			).unwrap();
 
 			navigate("/my/classrooms");

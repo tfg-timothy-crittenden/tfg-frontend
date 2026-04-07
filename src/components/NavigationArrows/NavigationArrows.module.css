@@ -9,7 +9,7 @@
 	justify-content: center;
 	width: 48px;
 	height: 48px;
-	background: var(--color-primary);
+	background: var(--actionable_text_active);
 	color: white;
 	border: none;
 	border-radius: 50%;
@@ -19,7 +19,7 @@
 }
 
 .nav_arrow:hover {
-	background: var(--color-primary-dark);
+	background: var(--actionable_text_active);
 	transform: translateY(-50%) scale(1.1);
 	box-shadow: var(--shadow-lg);
 }

@@ -26,10 +26,10 @@ const Header = () => {
 	const displayRole = isAdmin
 		? "Admin"
 		: isTeacher
-		? "Teacher"
-		: isStudent
-		? "Student"
-		: "";
+			? "Teacher"
+			: isStudent
+				? "Student"
+				: "";
 
 	const [showUserMenu, setShowUserMenu] = useState(false);
 	const dropdownRef = useRef(null);
@@ -73,74 +73,76 @@ const Header = () => {
 
 	return (
 		<header className={styles.header}>
-			{/* Responsive Logo */}
-			<h1 className={styles.title}>
-				<span className={styles.logo_full}>TOEFL Speaking</span>
-				<span className={styles.logo_short}>TS</span>
-			</h1>
+			<div className={styles.header_inner}>
+				{/* Responsive Logo */}
+				<h1 className={styles.title}>
+					<span className={styles.logo_full}>TOEFL Speaking</span>
+					<span className={styles.logo_short}>TS</span>
+				</h1>
 
-			{isAuthenticated && (
-				<div className={styles.buttonGroup}>
-					{/* My Classrooms Link */}
-					<NavLink
-						to="/my/classrooms"
-						className={`${styles.nav_item_container} ${
-							isClassroomsActive ? styles.activeNavItem : ""
-						}`}
-					>
-						<Home size={20} />
-						<span className={styles.nav_label}>My Classrooms</span>
-					</NavLink>
-
-					{/* Admin Dashboard Link (only for admins) */}
-					{isAdmin && (
+				{isAuthenticated && (
+					<div className={styles.buttonGroup}>
+						{/* My Classrooms Link */}
 						<NavLink
-							to="/admin_dashboard"
+							to="/my/classrooms"
 							className={`${styles.nav_item_container} ${
-								isAdminActive ? styles.activeNavItem : ""
+								isClassroomsActive ? styles.activeNavItem : ""
 							}`}
 						>
-							<Settings size={20} />
-							<span className={styles.nav_label}>Admin</span>
+							<Home size={20} />
+							<span className={styles.nav_label}>My Classrooms</span>
 						</NavLink>
-					)}
 
-					{/* User Menu */}
-					<div className={styles.nav_item_container} ref={dropdownRef}>
-						<button
-							onClick={() => setShowUserMenu(!showUserMenu)}
-							className={styles.user_button}
-						>
-							<CircleUser size={20} />
-
-							<div className={styles.userInfo}>
-								<span>{username}</span>
-								{displayRole && (
-									<span className={styles.role}>{displayRole}</span>
-								)}
-							</div>
-						</button>
-
-						{showUserMenu && (
-							<div className={styles.dropdown}>
-								<div className={styles.dropdownHeader}>
-									{username} ({displayRole})
-								</div>
-								<div onClick={handleProfile}>Profile</div>
-								<div onClick={() => handleNavigateTo("/my/classrooms")}>
-									My Classrooms
-								</div>
-								{isAdmin && (
-									<div onClick={() => handleNavigateTo("/admin_dashboard")}>
-										Admin Dashboard
-									</div>
-								)}
-								<div onClick={handleLogout}>Logout</div>
-							</div>
+						{/* Admin Dashboard Link (only for admins) */}
+						{isAdmin && (
+							<NavLink
+								to="/admin_dashboard"
+								className={`${styles.nav_item_container} ${
+									isAdminActive ? styles.activeNavItem : ""
+								}`}
+							>
+								<Settings size={20} />
+								<span className={styles.nav_label}>Admin</span>
+							</NavLink>
 						)}
+
+						{/* User Menu */}
+						<div className={styles.nav_item_container} ref={dropdownRef}>
+							<button
+								onClick={() => setShowUserMenu(!showUserMenu)}
+								className={styles.user_button}
+							>
+								<CircleUser size={20} />
+
+								<div className={styles.userInfo}>
+									<span className={styles.username}>{username}</span>
+									{displayRole && (
+										<span className={styles.role}>{displayRole}</span>
+									)}
+								</div>
+							</button>
+
+							{showUserMenu && (
+								<div className={styles.dropdown}>
+									<div className={styles.dropdownHeader}>
+										{username} ({displayRole})
+									</div>
+									<div onClick={handleProfile}>Profile</div>
+									<div onClick={() => handleNavigateTo("/my/classrooms")}>
+										My Classrooms
+									</div>
+									{isAdmin && (
+										<div onClick={() => handleNavigateTo("/admin_dashboard")}>
+											Admin Dashboard
+										</div>
+									)}
+									<div onClick={handleLogout}>Logout</div>
+								</div>
+							)}
+						</div>
 					</div>
-				</div>
-			)}
+				)}
+			</div>
 		</header>
 	);
 };

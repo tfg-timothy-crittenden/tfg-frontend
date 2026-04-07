@@ -2,14 +2,14 @@
 .batchForm {
 	margin-top: 2rem;
 	padding: 1.5rem;
-	background: var(--color-background-alt);
-	border-radius: 8px;
-	border: 1px solid var(--color-border);
+	background: var(--card_background_mid);
+	border-radius: 10px;
+	border: 1px solid var(--card_border_mid);
 }
 
 .title {
 	margin: 0 0 1.5rem 0;
-	color: var(--color-text);
+	color: var(--text_dark);
 	font-size: 1.1rem;
 }
 
@@ -26,8 +26,8 @@
 	width: 48px;
 	height: 48px;
 	border-radius: 50%;
-	background: var(--color-background);
-	border: 1px solid var(--color-border);
+	background: var(--button_background_cancel);
+	border: 1px solid var(--card_border_mid);
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -36,20 +36,20 @@
 }
 
 .addButton:hover:not(:disabled) {
-	border-color: var(--color-primary);
+	border-color: var(--actionable_text_active);
 	box-shadow: 0 2px 4px rgba(93, 146, 192, 0.1);
 }
 
 .addButton:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
-	background: var(--color-background-alt);
+	background: var(--card_background_mid);
 }
 
 .limitMessage {
 	margin: 0;
 	font-size: 0.9rem;
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 	text-align: center;
 }
 
@@ -58,20 +58,20 @@
 	align-items: center;
 	gap: 0.5rem;
 	padding: 0.75rem;
-	background: var(--color-background);
-	border: 1px solid var(--color-border);
+	background: rgba(255, 255, 255, 0.35);
+	border: 1px solid var(--card_border_mid);
 	border-radius: 6px;
 	margin-bottom: 0.5rem;
 	transition: border-color 0.2s ease;
 }
 
 .formRow:hover {
-	border-color: var(--color-border);
+	border-color: var(--card_border);
 }
 
 .errorRow {
-	border-color: var(--color-error);
-	background-color: var(--color-error-light);
+	border-color: var(--actionable_text_active);
+	background-color: var(--actionable_background);
 }
 
 .fieldContainer {
@@ -81,53 +81,60 @@
 .input {
 	width: 100%;
 	padding: 0.5rem;
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--card_border);
 	border-radius: 4px;
 	font-size: 0.9rem;
+	color: var(--text_dark);
+	background: var(--button_background_cancel);
 	transition: border-color 0.2s ease;
 }
 
 .input:focus {
 	outline: none;
-	border-color: var(--color-primary);
+	border-color: var(--actionable_text_active);
 	box-shadow: 0 0 0 2px rgba(93, 146, 192, 0.1);
 }
 
 .removeButton {
 	width: 32px;
 	height: 32px;
-	border: none;
-	background: var(--color-background-alt);
+	border: 1px solid var(--card_border_mid);
+	background: var(--card_background_mid);
 	border-radius: 4px;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: var(--color-text-secondary);
+	color: var(--text_dark);
 	transition: all 0.2s ease;
 	flex-shrink: 0;
 }
 
 .removeButton:hover {
-	background: var(--color-border);
-	color: var(--color-error);
+	background: var(--card_border_mid);
+	color: var(--actionable_text_active);
 }
 
 .submitButton {
-	width: 100%;
+	width: fit-content;
+	min-width: 190px;
 	padding: 0.75rem 1.5rem;
-	background: var(--color-primary);
-	color: white;
+	background: var(--button_background_confirm);
+	color: var(--button_text_confirm);
 	border: none;
-	border-radius: 6px;
+	border-radius: 999px;
 	font-size: 1rem;
+	font-weight: 600;
 	cursor: pointer;
 	transition: background-color 0.2s ease;
 	margin-top: 1rem;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
 }
 
 .submitButton:hover:not(:disabled) {
-	background: var(--color-primary-hover);
+	filter: brightness(0.92);
 }
 
 .submitButton:disabled {
@@ -149,19 +156,19 @@
 }
 
 .message.success {
-	background: var(--color-success-light);
-	color: var(--color-success);
-	border: 1px solid var(--color-success);
+	background: var(--button_background_confirm);
+	color: var(--button_text_confirm);
+	border: 1px solid var(--button_background_confirm);
 }
 
 .message.error {
-	background: var(--color-error-light);
-	color: var(--color-error-dark);
-	border: 1px solid var(--color-error);
+	background: var(--card_background_mid);
+	color: var(--text_dark);
+	border: 1px solid var(--card_border);
 }
 
 .message.info {
-	background: var(--color-info-light);
-	color: var(--color-info);
-	border: 1px solid var(--color-info);
+	background: var(--actionable_background);
+	color: var(--actionable_text_active);
+	border: 1px solid var(--actionable_text_active);
 }

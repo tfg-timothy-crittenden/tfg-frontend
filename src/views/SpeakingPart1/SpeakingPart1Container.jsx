@@ -25,20 +25,20 @@ const SpeakingPart1Container = () => {
 
 	const modeEnum = Object.freeze({
 		INSTRUCTIONS: "INSTRUCTIONS",
-		PREPARE: "PREPARE",
+		LISTEN: "LISTEN",
 		SPEAK: "SPEAK",
 	});
 
 	const modeTimeEnum = {
-		[modeEnum.PREPARE]: 15,
+		[modeEnum.LISTEN]: 15,
 		[modeEnum.SPEAK]: 45,
 	};
 
 	const getModeFromUrl = () => {
 		const currentMode = routeMatchers.getPartModeFromPath(location.pathname);
 		switch (currentMode) {
-			case "prepare":
-				return modeEnum.PREPARE;
+			case "listen":
+				return modeEnum.LISTEN;
 			case "speak":
 				return modeEnum.SPEAK;
 			default:
@@ -58,8 +58,8 @@ const SpeakingPart1Container = () => {
 		setMode(newMode);
 
 		// Set appropriate time for the mode
-		if (newMode === modeEnum.PREPARE) {
-			setTime(modeTimeEnum.PREPARE * 1000);
+		if (newMode === modeEnum.LISTEN) {
+			setTime(modeTimeEnum.LISTEN * 1000);
 		} else if (newMode === modeEnum.SPEAK) {
 			setTime(modeTimeEnum.SPEAK * 1000);
 		}
@@ -81,9 +81,8 @@ const SpeakingPart1Container = () => {
 		const asyncGetRandomQuestion = async () => {
 			setLoading(true);
 			try {
-				const newRandomQuestion = await getRandomSpeakingTaskOneByTopic(
-					currentTopic
-				);
+				const newRandomQuestion =
+					await getRandomSpeakingTaskOneByTopic(currentTopic);
 				setQuestion(newRandomQuestion);
 			} catch (error) {
 				console.error("Error fetching random question:", error);
@@ -97,15 +96,14 @@ const SpeakingPart1Container = () => {
 
 	const handleTopicChange = (topicName) => {
 		navigate(
-			buildRoute.partTopic(classroomId, testId, mode.toLowerCase(), topicName)
+			buildRoute.partTopic(classroomId, testId, mode.toLowerCase(), topicName),
 		);
 	};
 
 	const handleShuffleClick = async () => {
 		try {
-			const newRandomQuestion = await getRandomSpeakingTaskOneByTopic(
-				currentTopic
-			);
+			const newRandomQuestion =
+				await getRandomSpeakingTaskOneByTopic(currentTopic);
 			setQuestion(newRandomQuestion);
 		} catch (error) {
 			console.error("Error fetching random question:", error);

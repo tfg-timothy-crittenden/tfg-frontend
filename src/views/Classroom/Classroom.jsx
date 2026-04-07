@@ -5,10 +5,8 @@ import {
 	useLocation,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
-import SpeakingPart1Container from "@/views/SpeakingPart1/SpeakingPart1Container";
-import SpeakingPart2Container from "@/views/SpeakingPart2/SpeakingPart2Container";
-import SpeakingPart3Container from "@/views/SpeakingPart3/SpeakingPart3Container";
-import SpeakingPart4Container from "@/views/SpeakingPart4/SpeakingPart4Container";
+import ListenRepeatContainer from "@/views/ListenRepeat/ListenRepeatContainer";
+import Interview from "@/views/Interview/Interview";
 import TestInstructions from "@/components/TestInstructions/TestInstructions";
 import TestSelectionWelcome from "@/components/TestSelectionWelcome/TestSelectionWelcome";
 
@@ -37,7 +35,7 @@ const Classroom = () => {
 	// Find current classroom for welcome message
 	const { id: classroomId } = useParams();
 	const currentClassroom = classrooms?.find(
-		(c) => String(c.id) === String(classroomId)
+		(c) => String(c.id) === String(classroomId),
 	);
 
 	// Auto-expand navigation when test is selected
@@ -72,15 +70,20 @@ const Classroom = () => {
 
 		switch (partNumber) {
 			case "1":
-				return <SpeakingPart1Container />;
 			case "2":
-				return <SpeakingPart2Container />;
 			case "3":
-				return <SpeakingPart3Container />;
 			case "4":
-				return <SpeakingPart4Container />;
+			case "5":
+			case "6":
+			case "7":
+				return <ListenRepeatContainer />;
+			case "8":
+			case "9":
+			case "10":
+			case "11":
+				return <Interview />;
 			default:
-				return <span>partNumber was not provided</span>;
+				return <span>Invalid question number</span>;
 		}
 	};
 

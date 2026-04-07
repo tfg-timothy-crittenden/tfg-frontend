@@ -2,7 +2,6 @@ import styles from "./SpeakingPart1QuestionSelector.module.css";
 import Tag from "@/components/Tag/Tag";
 import tagStyles from "@/components/Tag/Tag.module.css";
 import { useState, useRef, useEffect } from "react";
-import useResponsiveLayout from "@/hooks/useResponsiveLayout"; // <-- import your hook
 
 const SpeakingPart1QuestionSelector = ({
 	topics,

@@ -13,7 +13,7 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background: var(--color-background);
+	background: var(--button_background_cancel);
 	padding: 10px;
 	box-shadow: var(--shadow-lg);
 	/* z-index: 1000; */
@@ -42,8 +42,8 @@
 }
 
 .modal_close_button:hover {
-	color: var(--color-error);
-	background-color: var(--color-warning-light);
+	color: var(--actionable_text_active);
+	background-color: var(--actionable_background);
 }
 
 .modal_body {

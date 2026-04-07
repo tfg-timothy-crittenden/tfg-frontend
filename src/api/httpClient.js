@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Create Axios instance
-const baseURL = import.meta.env.VITE_API_URL;
+const baseURL = import.meta.env.VITE_API_URL || "/users/api";
 
 const httpClient = axios.create({
 	baseURL: baseURL,
@@ -34,7 +34,7 @@ httpClient.interceptors.response.use(
 			onLogout(); // Call injected handler
 		}
 		return Promise.reject(error);
-	}
+	},
 );
 
 export default httpClient;

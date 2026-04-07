@@ -54,7 +54,7 @@ function App() {
 							<Route
 								path={ROUTES.TEST_INSTRUCTIONS.replace(
 									`/${ROUTES.CLASSROOMS}/`,
-									""
+									"",
 								)}
 								element={<Classroom />}
 							/>
@@ -69,22 +69,16 @@ function App() {
 							<Route
 								path={ROUTES.PART_INSTRUCTIONS.replace(
 									`/${ROUTES.CLASSROOMS}/`,
-									""
+									"",
 								)}
 								element={<Classroom />}
 							/>
-							<Route
-								path={ROUTES.PART_PREPARE.replace(`/${ROUTES.CLASSROOMS}/`, "")}
-								element={<Classroom />}
-							/>
+
 							<Route
 								path={ROUTES.PART_SPEAK.replace(`/${ROUTES.CLASSROOMS}/`, "")}
 								element={<Classroom />}
 							/>
-							<Route
-								path={ROUTES.PART_READ.replace(`/${ROUTES.CLASSROOMS}/`, "")}
-								element={<Classroom />}
-							/>
+
 							<Route
 								path={ROUTES.PART_LISTEN.replace(`/${ROUTES.CLASSROOMS}/`, "")}
 								element={<Classroom />}

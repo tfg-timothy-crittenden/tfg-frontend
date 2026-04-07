@@ -14,6 +14,18 @@ export default defineConfig({
 	server: {
 		port: 5173, // Dev server port
 		historyApiFallback: true, // esto es crítico para SPA routin	g
+		proxy: {
+			"/users/api": {
+				target: "http://localhost:8080",
+				changeOrigin: true,
+				secure: false,
+			},
+			"/materials/api": {
+				target: "http://localhost:8080",
+				changeOrigin: true,
+				secure: false,
+			},
+		},
 	},
 	preview: {
 		port: 5173, // Preview server port (same as dev)

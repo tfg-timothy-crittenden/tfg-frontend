@@ -7,7 +7,7 @@
 	width: 100%;
 	background: #ffffff;
 	z-index: 100; /* Increased from 1 to allow dropdown to show above other content */
-	border-bottom: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--card_border_mid);
 	flex-shrink: 0;
 	position: relative; /* Ensure stacking context works properly */
 }

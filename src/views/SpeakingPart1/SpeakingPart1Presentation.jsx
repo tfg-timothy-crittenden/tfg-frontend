@@ -49,7 +49,7 @@ const SpeakingPart1Presentation = ({
 					</Instructions>
 				);
 
-			case modeEnum.PREPARE:
+			case modeEnum.LISTEN:
 			case modeEnum.SPEAK:
 				return (
 					<>
