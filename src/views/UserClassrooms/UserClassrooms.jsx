@@ -1,5 +1,6 @@
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
+import { buildRoute } from "@/routes/routeConfig";
 import { getUserClassrooms } from "@/api/user/user";
 import { joinClassByCode } from "@/api/classes/classesAPI";
 import { Plus, GraduationCap, House, CircleAlert } from "lucide-react";
@@ -63,7 +64,7 @@ const UserClassrooms = () => {
 			if (res?.classroomId) {
 				setJoinOpen(false);
 				setJoinCode("");
-				navigate(`/my/classrooms/${res.classroomId}/test/1/part/1`);
+				navigate(buildRoute.sectionPart(res.classroomId, 1, 1));
 			}
 		} catch (e) {
 			const msg =

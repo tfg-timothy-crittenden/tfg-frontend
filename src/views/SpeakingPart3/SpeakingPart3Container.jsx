@@ -4,7 +4,7 @@ import SpeakingPart3Presentation from "./SpeakingPart3Presentation";
 import { getSpeakingTaskThreeById } from "@/api/tasks/tasksAPI";
 
 const SpeakingPart3Container = () => {
-	const { testId } = useParams();
+	const { sectionId } = useParams();
 	const location = useLocation();
 
 	const modeEnum = Object.freeze({
@@ -56,9 +56,9 @@ const SpeakingPart3Container = () => {
 	}, [location.pathname]);
 
 	useEffect(() => {
-		if (!testId) return;
-		getSpeakingTaskThreeById(testId).then(setTestData);
-	}, [testId]);
+		if (!sectionId) return;
+		getSpeakingTaskThreeById(sectionId).then(setTestData);
+	}, [sectionId]);
 
 	return (
 		<SpeakingPart3Presentation

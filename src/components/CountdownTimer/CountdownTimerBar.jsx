@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import styles from "./CountdownTimerBar.module.css";
 
-const CountdownTimerBar = ({ currentTime, totalTime }) => {
+const CountdownTimerBar = ({ currentTime, totalTime, compact = false }) => {
 	const barRef = useRef(null);
 	const prevTotalRef = useRef(totalTime);
 
@@ -9,7 +9,13 @@ const CountdownTimerBar = ({ currentTime, totalTime }) => {
 		const bar = barRef.current;
 		if (!bar) return;
 
-		const percent = Math.max(0, (currentTime / totalTime) * 100);
+		const percent =
+			totalTime > 0
+				? Math.max(
+						0,
+						Math.min(100, ((totalTime - currentTime) / totalTime) * 100),
+					)
+				: 0;
 		const totalChanged = prevTotalRef.current !== totalTime;
 
 		if (totalChanged) {
@@ -35,7 +41,9 @@ const CountdownTimerBar = ({ currentTime, totalTime }) => {
 	}, [currentTime, totalTime]);
 
 	return (
-		<div className={styles.timer_bar_container}>
+		<div
+			className={`${styles.timer_bar_container} ${compact ? styles.compact : ""}`.trim()}
+		>
 			<div className={styles.timer_bar_outer}>
 				<div ref={barRef} className={styles.timer_bar}></div>
 			</div>

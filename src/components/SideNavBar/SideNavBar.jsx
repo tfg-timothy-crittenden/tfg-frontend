@@ -2,6 +2,7 @@ import { useEffect, useCallback, useRef, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, shallowEqual } from "react-redux";
 import { selectHasRole } from "@/store/auth/authSlice";
+import { buildRoute } from "@/routes/routeConfig";
 
 import ClassroomTeacherMenu from "@/components/ClassroomTeacherMenu/ClassroomTeacherMenu";
 import { GraduationCap } from "lucide-react";
@@ -18,105 +19,29 @@ export default function SideNavBar({
 	isOpen,
 	setIsOpen,
 }) {
-	const { id: classroomId, testId, partNumber } = useParams();
+	const {
+		id: classroomId,
+		sectionId,
+		partNumber,
+		questionNumber,
+	} = useParams();
 	const navigate = useNavigate();
-	const selectedTestId = Number.isNaN(Number(testId)) ? testId : Number(testId);
-
-	const [selectedSection, setSelectedSection] = useState(null);
 	const [showStudentList, setShowStudentList] = useState(true);
 	const [showTeacherList, setShowTeacherList] = useState(false);
-
 	const hasTeacherRole = useSelector(selectHasRole(["teacher"]), shallowEqual);
-
 	const { student: studentTaskSummaries, teacher: teacherTaskSummaries } =
 		useTaskSummaries(classroomId, hasTeacherRole);
+	const selectedSectionId = Number.isNaN(Number(sectionId))
+		? sectionId
+		: Number(sectionId);
 
-	const buildTaskTitleList = useCallback((taskSummaries = {}) => {
-		if (
-			Array.isArray(taskSummaries.testNames) &&
-			taskSummaries.testNames.length > 0
-		) {
-			if (taskSummaries.testNames[0]?.testId) {
-				return taskSummaries.testNames.map((task, index) => ({
-					testId: Number(task.testId) || index + 1,
-					title: task.title,
-				}));
-			}
-			return taskSummaries.testNames.map((title, index) => ({
-				testId: index + 1,
-				title,
-			}));
-		}
-
-		const allTasks = [];
-		Object.values(taskSummaries).forEach((partTasks) => {
-			if (Array.isArray(partTasks)) {
-				allTasks.push(...partTasks);
-			}
-		});
-
-		const uniqueTasks = [];
-		const seenTestIds = new Set();
-		allTasks.forEach((task) => {
-			if (!task?.testId || seenTestIds.has(task.testId)) return;
-			const numericTestId = Number(task.testId);
-			const resolvedTestId = Number.isNaN(numericTestId)
-				? task.testId
-				: numericTestId;
-			if (seenTestIds.has(resolvedTestId)) return;
-			seenTestIds.add(resolvedTestId);
-			uniqueTasks.push({
-				testId: resolvedTestId,
-				title: task.title,
-			});
-		});
-
-		return uniqueTasks;
+	const buildTaskTitleList = useCallback((tasks = []) => {
+		if (!Array.isArray(tasks)) return [];
+		return tasks.map((task) => ({
+			testId: task.id,
+			title: task.name,
+		}));
 	}, []);
-
-	// Close lists when sidebar closes
-	useEffect(() => {
-		if (!isOpen) {
-			setShowTeacherList(false);
-			setShowStudentList(false);
-		}
-	}, [isOpen]);
-
-	// Reset selection when classroom changes
-	useEffect(() => {
-		setSelectedSection(null);
-	}, [classroomId]);
-
-	const handleSelectTestPart = useCallback(
-		(newTestId, part = 1, section = null) => {
-			setSelectedSection(section);
-			navigate(`/my/classrooms/${classroomId}/test/${newTestId}/part/${part}`);
-		},
-		[navigate, classroomId],
-	);
-
-	// rAF instead of fixed timeout for accordion open-then-toggle
-	const rafId = useRef(null);
-	useEffect(
-		() => () => {
-			if (rafId.current) cancelAnimationFrame(rafId.current);
-		},
-		[],
-	);
-
-	const handleAccordionClick = (type) => {
-		if (!isOpen && setIsOpen) {
-			setIsOpen(true);
-			// Wait for sidebar to open before toggling accordion
-			setTimeout(() => {
-				if (type === "teacher") setShowTeacherList(true);
-				if (type === "student") setShowStudentList(true);
-			}, 300); // Match your sidebar transition duration
-		} else {
-			if (type === "teacher") setShowTeacherList((prev) => !prev);
-			if (type === "student") setShowStudentList((prev) => !prev);
-		}
-	};
 
 	const teacherItems = useMemo(
 		() => buildTaskTitleList(teacherTaskSummaries),
@@ -125,6 +50,65 @@ export default function SideNavBar({
 	const studentItems = useMemo(
 		() => buildTaskTitleList(studentTaskSummaries),
 		[buildTaskTitleList, studentTaskSummaries],
+	);
+
+	const selectedSection = useMemo(() => {
+		if (!sectionId) return null;
+		if (
+			teacherItems.some((item) => String(item.testId) === String(sectionId))
+		) {
+			return "teacher";
+		}
+		if (
+			studentItems.some((item) => String(item.testId) === String(sectionId))
+		) {
+			return "student";
+		}
+		return null;
+	}, [sectionId, teacherItems, studentItems]);
+
+	const rafId = useRef(null);
+	useEffect(
+		() => () => {
+			if (rafId.current) cancelAnimationFrame(rafId.current);
+		},
+		[],
+	);
+
+	useEffect(() => {
+		if (!isOpen) {
+			setShowTeacherList(false);
+			setShowStudentList(false);
+		}
+	}, [isOpen]);
+
+	const handleAccordionClick = (type) => {
+		if (!isOpen && setIsOpen) {
+			setIsOpen(true);
+			rafId.current = requestAnimationFrame(() => {
+				if (type === "teacher") setShowTeacherList(true);
+				if (type === "student") setShowStudentList(true);
+			});
+		} else {
+			if (type === "teacher") setShowTeacherList((prev) => !prev);
+			if (type === "student") setShowStudentList((prev) => !prev);
+		}
+	};
+
+	const handleSelectSection = useCallback(
+		(sectionId, part = 1) => {
+			const resolvedPartNumber = part || "1";
+			const resolvedQuestionNumber = questionNumber || "1";
+			navigate(
+				buildRoute.sectionQuestion(
+					classroomId,
+					sectionId,
+					resolvedPartNumber,
+					resolvedQuestionNumber,
+				),
+			);
+		},
+		[navigate, classroomId, questionNumber],
 	);
 
 	return (
@@ -141,7 +125,6 @@ export default function SideNavBar({
 
 			{showMaterial && (
 				<section className={styles.accordion_section}>
-					{/* Teacher material */}
 					<AccordionList
 						icon={<GraduationCap size={24} />}
 						label="Teacher Material"
@@ -150,16 +133,15 @@ export default function SideNavBar({
 						listIsOpen={showTeacherList}
 						onHeaderClick={() => handleAccordionClick("teacher")}
 						items={teacherItems}
-						activeItemId={selectedSection === "teacher" ? selectedTestId : null}
-						onItemClick={(t) =>
-							handleSelectTestPart(t.testId, partNumber, "teacher")
+						activeItemId={
+							selectedSection === "teacher" ? selectedSectionId : null
 						}
+						onItemClick={(t) => handleSelectSection(t.testId, partNumber)}
 						headerIsHighlighted={
 							selectedSection === "teacher" && !showTeacherList
 						}
 					/>
 
-					{/* Student material */}
 					<AccordionList
 						icon={
 							<img
@@ -174,10 +156,10 @@ export default function SideNavBar({
 						listIsOpen={showStudentList}
 						onHeaderClick={() => handleAccordionClick("student")}
 						items={studentItems}
-						activeItemId={selectedSection === "student" ? selectedTestId : null}
-						onItemClick={(t) =>
-							handleSelectTestPart(t.testId, partNumber, "student")
+						activeItemId={
+							selectedSection === "student" ? selectedSectionId : null
 						}
+						onItemClick={(t) => handleSelectSection(t.testId, partNumber)}
 						headerIsHighlighted={
 							selectedSection === "student" && !showStudentList
 						}

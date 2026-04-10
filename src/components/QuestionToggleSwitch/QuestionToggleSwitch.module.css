@@ -34,6 +34,10 @@
 	margin-right: var(--spacing-xs);
 }
 
+.qPrefix {
+	display: none;
+}
+
 .activeLink {
 	border-bottom: solid 4px var(--actionable_text_active);
 	color: var(--actionable_text_active);
@@ -70,5 +74,8 @@
 
 	.toggle_group {
 		font-size: var(--font-size-lg);
+	}
+	.qPrefix {
+		display: inline;
 	}
 }

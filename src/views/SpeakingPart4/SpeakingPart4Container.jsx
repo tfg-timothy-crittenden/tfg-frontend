@@ -4,7 +4,7 @@ import SpeakingPart4Presentation from "./SpeakingPart4Presentation";
 import { getSpeakingTaskFourById } from "@/api/tasks/tasksAPI";
 
 const SpeakingPart4Container = () => {
-	const { testId } = useParams();
+	const { sectionId } = useParams();
 	const location = useLocation();
 
 	const modeEnum = Object.freeze({
@@ -53,9 +53,9 @@ const SpeakingPart4Container = () => {
 	}, [location.pathname]);
 
 	useEffect(() => {
-		if (!testId) return;
-		getSpeakingTaskFourById(testId).then(setTestData);
-	}, [testId]);
+		if (!sectionId) return;
+		getSpeakingTaskFourById(sectionId).then(setTestData);
+	}, [sectionId]);
 
 	return (
 		<SpeakingPart4Presentation

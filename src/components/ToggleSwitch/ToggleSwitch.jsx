@@ -1,16 +1,18 @@
 import React from "react";
 import { BookOpen, Headphones, Mic, Info, Brain } from "lucide-react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { buildRoute, MODE_SEGMENTS } from "@/routes/routeConfig";
 
 import styles from "./ToggleSwitch.module.css";
 
 const ToggleSwitch = ({ mode, modeEnum }) => {
 	const navigate = useNavigate();
-	const { id: classroomId, testId, partNumber } = useParams();
-	// Get topic from query string for part 1
-	const [searchParams] = useSearchParams();
-	const topicName = searchParams.get("topic") || "Education";
+	const {
+		id: classroomId,
+		sectionId,
+		partNumber,
+		questionNumber,
+	} = useParams();
 
 	const modeIcons = {
 		INSTRUCTIONS: <Info size={24} />,
@@ -21,7 +23,7 @@ const ToggleSwitch = ({ mode, modeEnum }) => {
 	};
 
 	const handleModeChange = (targetMode) => {
-		if (!testId || !partNumber || !classroomId) return;
+		if (!sectionId || !partNumber || !classroomId) return;
 
 		let routePath;
 		const modeMap = {
@@ -32,25 +34,16 @@ const ToggleSwitch = ({ mode, modeEnum }) => {
 			INSTRUCTIONS: MODE_SEGMENTS.INSTRUCTIONS,
 		};
 		const routeMode = modeMap[targetMode];
-		console.log("part number seen in toggle switch", partNumber);
-		if (partNumber === "1") {
-			console.log("using partTopic", topicName);
-			// For part 1, always include topic in route
-			routePath = buildRoute.partTopic(
-				classroomId,
-				testId,
-				routeMode,
-				topicName
-			);
-		} else if (routeMode) {
+		if (routeMode) {
 			routePath = buildRoute.partMode(
 				classroomId,
-				testId,
+				sectionId,
 				partNumber,
-				routeMode
+				questionNumber,
+				routeMode,
 			);
 		} else {
-			routePath = buildRoute.testPart(classroomId, testId, partNumber);
+			routePath = buildRoute.sectionPart(classroomId, sectionId, partNumber);
 		}
 
 		navigate(routePath);

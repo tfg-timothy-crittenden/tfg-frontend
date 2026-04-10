@@ -2,6 +2,7 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
+import { buildRoute } from "@/routes/routeConfig";
 import styles from "./NavigationArrows.module.css";
 
 const NavigationArrows = ({
@@ -11,7 +12,12 @@ const NavigationArrows = ({
 	setTime,
 	modeTimeEnum,
 }) => {
-	const { id: classroomId, testId, partNumber } = useParams();
+	const {
+		id: classroomId,
+		sectionId,
+		partNumber,
+		questionNumber,
+	} = useParams();
 	const navigate = useNavigate();
 
 	// Get ordered list of modes
@@ -19,8 +25,8 @@ const NavigationArrows = ({
 	const currentModeIndex = modeKeys.findIndex((key) => modeEnum[key] === mode);
 	const isFirstMode = currentModeIndex === 0;
 	const isLastMode = currentModeIndex === modeKeys.length - 1;
-	const isFirstPart = partNumber === "1";
-	const isLastPart = partNumber === "4";
+	const isFirstPart = partNumber === "1" && questionNumber === "1";
+	const isLastPart = partNumber === "2" && questionNumber === "4";
 
 	const handleNextMode = () => {
 		if (!isLastMode) {
@@ -38,8 +44,8 @@ const NavigationArrows = ({
 			setMode(nextMode);
 		} else if (!isLastPart) {
 			// Navigate to next part (first mode of next part)
-			const nextPart = parseInt(partNumber) + 1;
-			navigate(`/my/classrooms/${classroomId}/test/${testId}/part/${nextPart}`);
+			const nextPart = parseInt(partNumber, 10) + 1;
+			navigate(buildRoute.sectionPart(classroomId, sectionId, nextPart));
 		}
 	};
 
@@ -59,8 +65,8 @@ const NavigationArrows = ({
 			setMode(prevMode);
 		} else if (!isFirstPart) {
 			// Navigate to previous part (last mode of previous part)
-			const prevPart = parseInt(partNumber) - 1;
-			navigate(`/my/classrooms/${classroomId}/test/${testId}/part/${prevPart}`);
+			const prevPart = parseInt(partNumber, 10) - 1;
+			navigate(buildRoute.sectionPart(classroomId, sectionId, prevPart));
 		}
 	};
 

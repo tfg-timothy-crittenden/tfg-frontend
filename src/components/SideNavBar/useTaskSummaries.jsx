@@ -4,18 +4,19 @@ import {
 	getClassroomTeacherTaskSummaries,
 } from "@/api/tasks/tasksAPI";
 
-/** Fetch student + (optionally) teacher summaries; handles role changes & unmount. */
 export function useTaskSummaries(classroomId, hasTeacherRole) {
-	const [student, setStudent] = useState({});
-	const [teacher, setTeacher] = useState({});
+	const [student, setStudent] = useState([]);
+	const [teacher, setTeacher] = useState([]);
 
 	useEffect(() => {
 		let cancelled = false;
+		setStudent([]);
+		setTeacher([]);
 
 		(async () => {
 			try {
 				const data = await getClassroomStudentTaskSummaries(classroomId);
-				if (!cancelled) setStudent(data || {});
+				if (!cancelled) setStudent(data || []);
 			} catch (e) {
 				console.error("Failed to load student summaries:", e);
 			}
@@ -23,12 +24,12 @@ export function useTaskSummaries(classroomId, hasTeacherRole) {
 
 		(async () => {
 			if (!hasTeacherRole) {
-				setTeacher({});
+				setTeacher([]);
 				return;
 			}
 			try {
 				const data = await getClassroomTeacherTaskSummaries(classroomId);
-				if (!cancelled) setTeacher(data || {});
+				if (!cancelled) setTeacher(data || []);
 			} catch (e) {
 				console.error("Failed to load teacher summaries:", e);
 			}

@@ -26,7 +26,7 @@ const Classroom = () => {
 	const [navExpanded, setNavExpanded] = useState(false);
 	const { isMobile } = useResponsiveLayout();
 
-	const { partNumber, testId } = useParams();
+	const { partNumber, sectionId, questionNumber } = useParams();
 	console.log("PartNumber: ", partNumber);
 	const { classrooms } = useOutletContext();
 	const navigate = useNavigate();
@@ -40,16 +40,16 @@ const Classroom = () => {
 
 	// Auto-expand navigation when test is selected
 	useEffect(() => {
-		if (testId && partNumber && isMobile) {
+		if (sectionId && partNumber && isMobile) {
 			setNavExpanded(true);
-		} else if (!testId && isMobile) {
+		} else if (!sectionId && isMobile) {
 			setNavExpanded(false);
 		}
-	}, [testId, partNumber, isMobile]);
+	}, [sectionId, partNumber, isMobile]);
 
 	const handleClassroomChange = (newClassroomId) => {
-		if (partNumber && testId) {
-			navigate(buildRoute.testPart(newClassroomId, testId, partNumber));
+		if (partNumber && sectionId) {
+			navigate(buildRoute.sectionPart(newClassroomId, sectionId, partNumber));
 		} else {
 			navigate(buildRoute.classroom(newClassroomId));
 		}
@@ -59,7 +59,7 @@ const Classroom = () => {
 
 	const renderPart = () => {
 		// Show welcome message when no test is selected
-		if (!testId) {
+		if (!sectionId) {
 			return <TestSelectionWelcome classroomName={currentClassroom?.name} />;
 		}
 
@@ -68,23 +68,23 @@ const Classroom = () => {
 			return <TestInstructions />;
 		}
 
-		switch (partNumber) {
-			case "1":
-			case "2":
-			case "3":
-			case "4":
-			case "5":
-			case "6":
-			case "7":
-				return <ListenRepeatContainer />;
-			case "8":
-			case "9":
-			case "10":
-			case "11":
-				return <Interview />;
-			default:
-				return <span>Invalid question number</span>;
+		if (partNumber === "1") {
+			return Number(questionNumber) >= 1 && Number(questionNumber) <= 7 ? (
+				<ListenRepeatContainer />
+			) : (
+				<span>Invalid question number</span>
+			);
 		}
+
+		if (partNumber === "2") {
+			return Number(questionNumber) >= 1 && Number(questionNumber) <= 4 ? (
+				<Interview />
+			) : (
+				<span>Invalid question number</span>
+			);
+		}
+
+		return <span>Invalid part number</span>;
 	};
 
 	return (
@@ -115,7 +115,7 @@ const Classroom = () => {
 				}`}
 			>
 				{/* Question Toggle (Desktop only) - MOVED OUTSIDE content wrapper */}
-				{!isMobile && testId && (
+				{!isMobile && sectionId && (
 					<>
 						<QuestionToggleSwitch />
 					</>

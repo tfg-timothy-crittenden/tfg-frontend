@@ -4,7 +4,7 @@ import SpeakingPart2Presentation from "./SpeakingPart2Presentation";
 import { getSpeakingTaskTwoById } from "@/api/tasks/tasksAPI";
 
 const SpeakingPart2Container = () => {
-	const { testId } = useParams();
+	const { sectionId } = useParams();
 	const location = useLocation();
 
 	const modeEnum = Object.freeze({
@@ -43,13 +43,13 @@ const SpeakingPart2Container = () => {
 	}, [location.pathname]);
 
 	useEffect(() => {
-		if (!testId) return;
+		if (!sectionId) return;
 		setLoading(true);
-		getSpeakingTaskTwoById(testId)
+		getSpeakingTaskTwoById(sectionId)
 			.then((data) => setTestData(data))
 			.catch((err) => console.error("Error loading Part 2:", err))
 			.finally(() => setLoading(false));
-	}, [testId]);
+	}, [sectionId]);
 
 	return (
 		<SpeakingPart2Presentation

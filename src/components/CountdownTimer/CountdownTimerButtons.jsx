@@ -1,7 +1,8 @@
-import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
-
-import { Timer as PlayButton } from "lucide-react";
-import { TimerReset as ResetButton } from "lucide-react";
+import {
+	Pause as PauseButton,
+	Timer as PlayButton,
+	TimerReset as ResetButton,
+} from "lucide-react";
 
 import styles from "./CountdownTimerButtons.module.css";
 
@@ -13,7 +14,7 @@ const CountdownTimerButtons = ({ ticking, onStartStop, onReset }) => {
 				onClick={onStartStop}
 				title={ticking ? "Pause Timer" : "Start Timer"}
 			>
-				{ticking ? <PauseOutlinedIcon /> : <PlayButton />}
+				{ticking ? <PauseButton size={20} /> : <PlayButton size={20} />}
 			</button>
 
 			<button
@@ -21,7 +22,7 @@ const CountdownTimerButtons = ({ ticking, onStartStop, onReset }) => {
 				onClick={onReset}
 				title="Reset Timer"
 			>
-				<ResetButton />
+				<ResetButton size={20} />
 			</button>
 		</div>
 	);

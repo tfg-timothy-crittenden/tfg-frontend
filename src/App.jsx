@@ -52,7 +52,7 @@ function App() {
 							<Route path=":id/members" element={<Classroom />} />
 							{/* Global test instructions route */}
 							<Route
-								path={ROUTES.TEST_INSTRUCTIONS.replace(
+								path={ROUTES.SECTION_INSTRUCTIONS.replace(
 									`/${ROUTES.CLASSROOMS}/`,
 									"",
 								)}
@@ -62,7 +62,7 @@ function App() {
 
 							{/* Generic part + mode route */}
 							<Route
-								path={ROUTES.TEST_PART.replace(`/${ROUTES.CLASSROOMS}/`, "")}
+								path={ROUTES.SECTION_PART.replace(`/${ROUTES.CLASSROOMS}/`, "")}
 								element={<Classroom />}
 							/>
 							{/* Part-specific mode routes */}
@@ -75,7 +75,17 @@ function App() {
 							/>
 
 							<Route
+								path={ROUTES.PART_PREPARE.replace(`/${ROUTES.CLASSROOMS}/`, "")}
+								element={<Classroom />}
+							/>
+
+							<Route
 								path={ROUTES.PART_SPEAK.replace(`/${ROUTES.CLASSROOMS}/`, "")}
+								element={<Classroom />}
+							/>
+
+							<Route
+								path={ROUTES.PART_READ.replace(`/${ROUTES.CLASSROOMS}/`, "")}
 								element={<Classroom />}
 							/>
 

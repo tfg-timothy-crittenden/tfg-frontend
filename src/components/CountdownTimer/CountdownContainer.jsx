@@ -5,7 +5,11 @@ import CountdownTimerBar from "./CountdownTimerBar";
 
 import styles from "./CountdownContainer.module.css";
 
-const CountdownContainer = ({ initialTime }) => {
+const CountdownContainer = ({
+	initialTime,
+	className = "",
+	compact = false,
+}) => {
 	const timerRef = useRef(null);
 
 	const [currentTime, setCurrentTime] = useState(initialTime);
@@ -46,7 +50,9 @@ const CountdownContainer = ({ initialTime }) => {
 	};
 
 	return (
-		<div className={styles.container}>
+		<div
+			className={`${styles.container} ${compact ? styles.compact : ""} ${className}`.trim()}
+		>
 			{/* Exports no visual elements. Handles countdown logic */}
 			{/* Controls are exposed via handleRefImperative */}
 			<CountdownTimer ref={timerRef} time={totalTime} />
@@ -61,9 +67,12 @@ const CountdownContainer = ({ initialTime }) => {
 			/>
 			<span className={styles.time_display}>
 				{currentTime > 0 ? formatTime(currentTime) : formatTime(0)}
-				
 			</span>
-			<CountdownTimerBar currentTime={currentTime} totalTime={totalTime} />
+			<CountdownTimerBar
+				currentTime={currentTime}
+				totalTime={totalTime}
+				compact={compact}
+			/>
 		</div>
 	);
 };

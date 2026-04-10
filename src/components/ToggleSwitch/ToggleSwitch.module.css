@@ -34,14 +34,14 @@
 .toggle_group input[type="radio"] + label {
 	cursor: pointer;
 	padding: 10px 20px;
-	border-bottom: 2px solid var(--actionable_text_active);
+	border-bottom: 4px solid var(--actionable_text_active);
 	color: var(--actionable_text_active);
 	transition: all 0.3s ease;
 }
 
 /* Change the color of the label when the icon is not selected */
 .toggle_group input[type="radio"]:not(:is(:checked)) + label {
-	border-bottom: var(--card_border_mid) 2px solid;
+	border-bottom: var(--card_border_mid) 4px solid;
 	color: var(--text_light);
 }
 

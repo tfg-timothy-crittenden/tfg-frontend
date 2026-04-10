@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+	useState,
+	useRef,
+	useEffect,
+	useImperativeHandle,
+	forwardRef,
+} from "react";
 import { Captions, CaptionsOff, Minus, Plus, ALargeSmall } from "lucide-react";
 
 import styles from "./SubtitleViewer.module.css";
@@ -49,11 +55,26 @@ const toArrayOfObjects = (val) => {
 	return [];
 };
 
-const SubtitleViewer = ({ script = null }) => {
+const SubtitleViewer = forwardRef(({ script = null }, ref) => {
 	const [showSubtitles, setShowSubtitles] = useState(false);
 	const [fontSize, setFontSize] = useState(16);
 	const containerRef = useRef(null); // This should reference the inner scrollable container
 	const scriptArray = React.useMemo(() => toArrayOfObjects(script), [script]);
+
+	const openSubtitles = () => setShowSubtitles(true);
+	const closeSubtitles = () => setShowSubtitles(false);
+	const toggleSubtitles = () => setShowSubtitles((prev) => !prev);
+
+	useImperativeHandle(
+		ref,
+		() => ({
+			open: openSubtitles,
+			close: closeSubtitles,
+			toggle: toggleSubtitles,
+			isOpen: () => showSubtitles,
+		}),
+		[showSubtitles],
+	);
 
 	// Smooth custom scroll handling
 	useEffect(() => {
@@ -125,18 +146,6 @@ const SubtitleViewer = ({ script = null }) => {
 				}`}
 			>
 				<div className={styles.subtitle_header}>
-					<span
-						type="button"
-						className={`${styles.subtitle_toggle} ${
-							showSubtitles ? styles.active : ""
-						}`}
-						onClick={() => setShowSubtitles(!showSubtitles)}
-						aria-label={showSubtitles ? "Hide subtitles" : "Show subtitles"}
-						title={showSubtitles ? "Hide subtitles" : "Show subtitles"}
-					>
-						{showSubtitles ? <CaptionsOff size={16} /> : <Captions size={24} />}
-					</span>
-
 					{showSubtitles && (
 						<div className={styles.font_controls}>
 							<button
@@ -188,6 +197,8 @@ const SubtitleViewer = ({ script = null }) => {
 			</div>
 		</div>
 	);
-};
+});
+
+SubtitleViewer.displayName = "SubtitleViewer";
 
 export default SubtitleViewer;

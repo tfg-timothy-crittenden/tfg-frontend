@@ -8,8 +8,9 @@
 export const ROUTE_SEGMENTS = {
 	MY: "my",
 	CLASSROOMS: "classrooms",
-	TEST: "test",
+	SECTION: "section",
 	PART: "part",
+	QUESTION: "question",
 	ADMIN_DASHBOARD: "admin_dashboard",
 	LOGIN: "login",
 	SIGNUP: "signup",
@@ -57,18 +58,18 @@ export const ROUTES = {
 	CLASSROOM_MEMBERS: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/members`,
 
 	// Test routes
-	TEST_INSTRUCTIONS: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.TEST}/:testId/${MODE_SEGMENTS.INSTRUCTIONS}`,
-	TEST_PART: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.TEST}/:testId/${ROUTE_SEGMENTS.PART}/:partNumber`,
-
-	// Topic route for Part 1
-	PART_TOPIC: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.TEST}/:testId/${ROUTE_SEGMENTS.PART}/:partNumber/topic/:topicName`,
+	// Section routes
+	SECTION_INSTRUCTIONS: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.SECTION}/:sectionId/${MODE_SEGMENTS.INSTRUCTIONS}`,
+	SECTION_PART: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.SECTION}/:sectionId/${ROUTE_SEGMENTS.PART}/:partNumber/${ROUTE_SEGMENTS.QUESTION}/:questionNumber`,
 
 	// Part-specific mode routes
-	PART_INSTRUCTIONS: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.TEST}/:testId/${ROUTE_SEGMENTS.PART}/:partNumber/${MODE_SEGMENTS.INSTRUCTIONS}`,
-	PART_PREPARE: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.TEST}/:testId/${ROUTE_SEGMENTS.PART}/:partNumber/${MODE_SEGMENTS.PREPARE}`,
-	PART_SPEAK: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.TEST}/:testId/${ROUTE_SEGMENTS.PART}/:partNumber/${MODE_SEGMENTS.SPEAK}`,
-	PART_READ: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.TEST}/:testId/${ROUTE_SEGMENTS.PART}/:partNumber/${MODE_SEGMENTS.READ}`,
-	PART_LISTEN: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.TEST}/:testId/${ROUTE_SEGMENTS.PART}/:partNumber/${MODE_SEGMENTS.LISTEN}`,
+	PART_INSTRUCTIONS: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.SECTION}/:sectionId/${ROUTE_SEGMENTS.PART}/:partNumber/${ROUTE_SEGMENTS.QUESTION}/:questionNumber/${MODE_SEGMENTS.INSTRUCTIONS}`,
+	PART_PREPARE: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.SECTION}/:sectionId/${ROUTE_SEGMENTS.PART}/:partNumber/${ROUTE_SEGMENTS.QUESTION}/:questionNumber/${MODE_SEGMENTS.PREPARE}`,
+	PART_SPEAK: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.SECTION}/:sectionId/${ROUTE_SEGMENTS.PART}/:partNumber/${ROUTE_SEGMENTS.QUESTION}/:questionNumber/${MODE_SEGMENTS.SPEAK}`,
+	PART_READ: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.SECTION}/:sectionId/${ROUTE_SEGMENTS.PART}/:partNumber/${ROUTE_SEGMENTS.QUESTION}/:questionNumber/${MODE_SEGMENTS.READ}`,
+	PART_LISTEN: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.SECTION}/:sectionId/${ROUTE_SEGMENTS.PART}/:partNumber/${ROUTE_SEGMENTS.QUESTION}/:questionNumber/${MODE_SEGMENTS.LISTEN}`,
+
+	// Question routes
 
 	// Admin routes
 	ADMIN_DASHBOARD: `/${ROUTE_SEGMENTS.ADMIN_DASHBOARD}`,
@@ -88,28 +89,49 @@ export const buildRoute = {
 		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/members`,
 
 	testInstructions: (classroomId, testId) =>
-		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.TEST}/${testId}/${MODE_SEGMENTS.INSTRUCTIONS}`,
+		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.SECTION}/${testId}/${MODE_SEGMENTS.INSTRUCTIONS}`,
 
-	testPart: (classroomId, testId, partNumber) =>
-		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.TEST}/${testId}/${ROUTE_SEGMENTS.PART}/${partNumber}`,
+	sectionPart: (classroomId, sectionId, partNumber) =>
+		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.SECTION}/${sectionId}/${ROUTE_SEGMENTS.PART}/${partNumber}/${ROUTE_SEGMENTS.QUESTION}/1`,
 
-	partMode: (classroomId, testId, partNumber, mode) => {
+	sectionQuestion: (classroomId, sectionId, partNumber, questionNumber) =>
+		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.SECTION}/${sectionId}/${ROUTE_SEGMENTS.PART}/${partNumber}/${ROUTE_SEGMENTS.QUESTION}/${questionNumber}`,
+
+	partMode: (classroomId, sectionId, partNumber, questionNumber, mode) => {
 		const validModes = Object.values(MODE_SEGMENTS);
 		if (!validModes.includes(mode)) {
 			throw new Error(
-				`Invalid mode: ${mode}. Valid modes are: ${validModes.join(", ")}`
+				`Invalid mode: ${mode}. Valid modes are: ${validModes.join(", ")}`,
 			);
 		}
-		return `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.TEST}/${testId}/${ROUTE_SEGMENTS.PART}/${partNumber}/${mode}`;
+		const resolvedQuestionNumber = questionNumber || "1";
+		return `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.SECTION}/${sectionId}/${ROUTE_SEGMENTS.PART}/${partNumber}/${ROUTE_SEGMENTS.QUESTION}/${resolvedQuestionNumber}/${mode}`;
 	},
-	partTopic: (classroomId, testId, mode, topic) =>
-		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.TEST}/${testId}/${ROUTE_SEGMENTS.PART}/1/${mode}?topic=${topic}`,
+	questionMode: (classroomId, sectionId, partNumber, questionNumber, mode) => {
+		const validModes = Object.values(MODE_SEGMENTS);
+		if (!validModes.includes(mode)) {
+			throw new Error(
+				`Invalid mode: ${mode}. Valid modes are: ${validModes.join(", ")}`,
+			);
+		}
+		return `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.SECTION}/${sectionId}/${ROUTE_SEGMENTS.PART}/${partNumber}/${ROUTE_SEGMENTS.QUESTION}/${questionNumber}/${mode}`;
+	},
 
 	signupWithCode: (classCode) =>
 		`/${ROUTE_SEGMENTS.SIGNUP}/${encodeURIComponent(classCode)}`,
 
 	signupWithQuery: (classCode) =>
 		`/${ROUTE_SEGMENTS.SIGNUP}?classCode=${encodeURIComponent(classCode)}`,
+
+	// Backward compatibility functions - these call the new ones
+	testPart: (classroomId, sectionId, partNumber) =>
+		buildRoute.sectionPart(classroomId, sectionId, partNumber),
+
+	sectionInstructions: (classroomId, sectionId) =>
+		buildRoute.testInstructions(classroomId, sectionId),
+
+	testInstructions: (classroomId, sectionId) =>
+		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.SECTION}/${sectionId}/${MODE_SEGMENTS.INSTRUCTIONS}`,
 };
 
 /**
@@ -122,15 +144,16 @@ export const routeMatchers = {
 	isAdminRoute: (pathname) =>
 		pathname.startsWith(`/${ROUTE_SEGMENTS.ADMIN_DASHBOARD}`),
 
-	isTestRoute: (pathname) => pathname.includes(`/${ROUTE_SEGMENTS.TEST}/`),
+	isSectionRoute: (pathname) =>
+		pathname.includes(`/${ROUTE_SEGMENTS.SECTION}/`),
 
 	isPartRoute: (pathname) => pathname.includes(`/${ROUTE_SEGMENTS.PART}/`),
 
 	getPartModeFromPath: (pathname) => {
 		const segments = pathname.split("/");
-		const partIndex = segments.indexOf(ROUTE_SEGMENTS.PART);
-		if (partIndex !== -1 && segments[partIndex + 2]) {
-			const mode = segments[partIndex + 2];
+		const questionIndex = segments.indexOf(ROUTE_SEGMENTS.QUESTION);
+		if (questionIndex !== -1 && segments[questionIndex + 2]) {
+			const mode = segments[questionIndex + 2];
 			return Object.values(MODE_SEGMENTS).includes(mode) ? mode : null;
 		}
 		return null;
@@ -138,7 +161,8 @@ export const routeMatchers = {
 
 	isGlobalInstructions: (pathname) =>
 		pathname.includes(`/${MODE_SEGMENTS.INSTRUCTIONS}`) &&
-		!pathname.includes(`/${ROUTE_SEGMENTS.PART}/`),
+		!pathname.includes(`/${ROUTE_SEGMENTS.PART}/`) &&
+		pathname.includes(`/${ROUTE_SEGMENTS.SECTION}/`),
 
 	getTopicFromPath: (pathname) => {
 		const segments = pathname.split("/");
@@ -150,4 +174,22 @@ export const routeMatchers = {
 	},
 	isClassroomMembers: (pathname) =>
 		/^\/my\/classrooms\/[^/]+\/members$/.test(pathname),
+
+	getSectionIdFromPath: (pathname) => {
+		const segments = pathname.split("/");
+		const sectionIndex = segments.indexOf(ROUTE_SEGMENTS.SECTION);
+		if (sectionIndex !== -1 && segments[sectionIndex + 1]) {
+			return segments[sectionIndex + 1];
+		}
+		return null;
+	},
+
+	getQuestionNumberFromPath: (pathname) => {
+		const segments = pathname.split("/");
+		const questionIndex = segments.indexOf(ROUTE_SEGMENTS.QUESTION);
+		if (questionIndex !== -1 && segments[questionIndex + 1]) {
+			return segments[questionIndex + 1];
+		}
+		return null;
+	},
 };

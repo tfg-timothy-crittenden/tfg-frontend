@@ -15,7 +15,7 @@ const ClassroomTeacherMenu = ({
 	showMaterial,
 	showButtonText,
 }) => {
-	const { id: classroomId, testId, partNumber } = useParams(); // <-- include testId, partNumber
+	const { id: classroomId, sectionId, partNumber } = useParams();
 	const navigate = useNavigate();
 	const location = useLocation(); // <-- added
 	const { modalRef, isOpen, openModal, closeModal } = useModal();
@@ -40,9 +40,9 @@ const ClassroomTeacherMenu = ({
 
 	const handleMaterialClick = () => {
 		setShowMaterial?.(true);
-		if (testId && partNumber) {
-			// Return to the current test & part
-			navigate(buildRoute.testPart(classroomId, testId, partNumber));
+		if (sectionId && partNumber) {
+			// Return to the current section & part
+			navigate(buildRoute.sectionPart(classroomId, sectionId, partNumber));
 		} else {
 			// Just the classroom root
 			navigate(buildRoute.classroom(classroomId));

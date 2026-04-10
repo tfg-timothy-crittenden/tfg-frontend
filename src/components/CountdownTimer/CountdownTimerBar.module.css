@@ -6,22 +6,39 @@
 	border-radius: 5px;
 }
 
+.compact {
+	height: 7px;
+	border-radius: 2px;
+	overflow: hidden;
+	margin: 10px;
+}
+
 .timer_bar_outer {
-	background-color: var(--actionable_text_active);
+	background-color: var(--actionable_background);
 	border-radius: 5px;
 	border: 1px solid var(--text_dark);
 	border-radius: 5px;
 	width: 100%;
 	display: flex;
-	justify-content: end;
+	justify-content: start;
 	overflow: hidden;
 }
 
 .timer_bar {
 	height: 10px;
-	background-color: white;
+	background-color: var(--actionable_text_active);
 
 	transition: width 0.1s linear;
+}
+
+.compact .timer_bar_outer {
+	height: 100%;
+	border-radius: 2px;
+	border-width: 0;
+}
+
+.compact .timer_bar {
+	height: 100%;
 }
 
 .no_transition {
