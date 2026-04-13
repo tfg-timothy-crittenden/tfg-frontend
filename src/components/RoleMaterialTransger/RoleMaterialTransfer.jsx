@@ -3,9 +3,30 @@ import styles from "./RoleMaterialTransfer.module.css";
 import documents_icon from "@/assets/icons/documents_icon.png";
 import library_icon from "@/assets/icons/library_icon.png";
 
+const getItemId = (item) => {
+	const value = item?.materialId ?? item?.material_id ?? item?.id ?? null;
+	return value === null || value === undefined ? null : String(value);
+};
+
+const getItemIdCandidates = (item) => {
+	const candidates = [
+		item?.materialId,
+		item?.material_id,
+		item?.id,
+		item?.materialNodeId,
+		item?.material_node_id,
+	]
+		.filter((value) => value !== null && value !== undefined)
+		.map((value) => String(value));
+
+	return [...new Set(candidates)];
+};
+
 const RoleMaterialTransfer = ({
-	allMaterials,
-	assignedItemsIds,
+	allMaterials = [],
+	assignedItems = [],
+	assignedItemsIds = new Set(),
+	allAssignedItemIds = new Set(),
 	setAssignedItemsIds,
 	isAssignedListVisible,
 	ListItem,
@@ -23,12 +44,14 @@ const RoleMaterialTransfer = ({
 		});
 	};
 
-	const assignedItems = allMaterials.filter((item) =>
-		assignedItemsIds.has(item.id)
-	);
-	const availableItems = allMaterials.filter(
-		(item) => !assignedItemsIds.has(item.id)
-	);
+	const inferredAssignedItems = allMaterials.filter((item) => {
+		const itemId = getItemId(item);
+		return itemId !== null && assignedItemsIds.has(itemId);
+	});
+	const assignedItemsToRender = Array.isArray(assignedItems)
+		? assignedItems
+		: inferredAssignedItems;
+	const libraryItems = allMaterials;
 
 	return (
 		<div className={styles.role_container}>
@@ -37,11 +60,11 @@ const RoleMaterialTransfer = ({
 				<div className={styles.list_column}>
 					<h3 className={styles.list_heading}>Assigned</h3>
 					{isAssignedListVisible ? (
-						assignedItems.length > 0 ? (
+						assignedItemsToRender.length > 0 ? (
 							<ul className={`scrollable_inner ${styles.scrollable_list}`}>
-								{assignedItems.map((item) => (
+								{assignedItemsToRender.map((item, index) => (
 									<ListItem
-										key={item.id}
+										key={`${getItemId(item) || item.name}-${index}`}
 										item={item}
 										isChecked={true}
 										onToggle={handleToggle}
@@ -85,14 +108,23 @@ const RoleMaterialTransfer = ({
 					</div>
 					{isLibraryOpen ? (
 						<ul className={`scrollable_inner ${styles.scrollable_list}`}>
-							{availableItems.map((item) => (
-								<ListItem
-									key={item.id}
-									item={item}
-									isChecked={false}
-									onToggle={handleToggle}
-								/>
-							))}
+							{libraryItems.map((item, index) => {
+								const itemId = getItemId(item);
+								const idCandidates = getItemIdCandidates(item);
+								const isAssignedAnywhere = idCandidates.some((id) =>
+									allAssignedItemIds?.has(id),
+								);
+
+								return (
+									<ListItem
+										key={`${itemId || item.name}-${index}`}
+										item={item}
+										isChecked={false}
+										onToggle={handleToggle}
+										disabled={isAssignedAnywhere}
+									/>
+								);
+							})}
 						</ul>
 					) : (
 						<div className={styles.empty_state + " " + styles.scrollable_list}>

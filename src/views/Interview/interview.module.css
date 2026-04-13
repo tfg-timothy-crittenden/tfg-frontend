@@ -1,5 +1,33 @@
 .interviewer_image {
 	display: block;
 	margin: 0 auto;
-	max-width: 500px;
+	width: 100%;
+}
+
+.image_container {
+	padding: 20px 0;
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+
+.content_container {
+	--interview-content-max-width: 500px;
+	width: min(100%, var(--interview-content-max-width));
+	max-width: var(--interview-content-max-width);
+	margin: auto;
+}
+
+.interview_page {
+	display: grid;
+	gap: 16px;
+}
+
+.page_title {
+	margin: 0;
+}
+
+.loading_state {
+	margin: 0;
 }

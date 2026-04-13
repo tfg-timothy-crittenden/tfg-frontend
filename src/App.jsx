@@ -58,7 +58,6 @@ function App() {
 								)}
 								element={<Classroom />}
 							/>
-							{/* Part 1: mode as path, topic as query param */}
 
 							{/* Generic part + mode route */}
 							<Route

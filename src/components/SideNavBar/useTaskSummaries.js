@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-	getClassroomStudentTaskSummaries,
-	getClassroomTeacherTaskSummaries,
-} from "@/api/tasks/tasksAPI";
+import { getClassroomMaterialListByRole } from "@/api/classes/classesAPI";
 
 export function useTaskSummaries(classroomId, hasTeacherRole) {
 	const [student, setStudent] = useState([]);
@@ -13,9 +10,18 @@ export function useTaskSummaries(classroomId, hasTeacherRole) {
 		setStudent([]);
 		setTeacher([]);
 
+		if (!classroomId) {
+			return () => {
+				cancelled = true;
+			};
+		}
+
 		(async () => {
 			try {
-				const data = await getClassroomStudentTaskSummaries(classroomId);
+				const data = await getClassroomMaterialListByRole(
+					classroomId,
+					"student",
+				);
 				if (!cancelled) setStudent(data || []);
 			} catch (e) {
 				console.error("Failed to load student summaries:", e);
@@ -28,7 +34,10 @@ export function useTaskSummaries(classroomId, hasTeacherRole) {
 				return;
 			}
 			try {
-				const data = await getClassroomTeacherTaskSummaries(classroomId);
+				const data = await getClassroomMaterialListByRole(
+					classroomId,
+					"teacher",
+				);
 				if (!cancelled) setTeacher(data || []);
 			} catch (e) {
 				console.error("Failed to load teacher summaries:", e);

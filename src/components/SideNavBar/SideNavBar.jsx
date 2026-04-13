@@ -1,8 +1,9 @@
 import { useEffect, useCallback, useRef, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSelector, shallowEqual } from "react-redux";
-import { selectHasRole } from "@/store/auth/authSlice";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/store/auth/authSlice";
 import { buildRoute } from "@/routes/routeConfig";
+import { getClassroomMemberRole } from "@/api/classes/classesAPI";
 
 import ClassroomTeacherMenu from "@/components/ClassroomTeacherMenu/ClassroomTeacherMenu";
 import { GraduationCap } from "lucide-react";
@@ -28,9 +29,79 @@ export default function SideNavBar({
 	const navigate = useNavigate();
 	const [showStudentList, setShowStudentList] = useState(true);
 	const [showTeacherList, setShowTeacherList] = useState(false);
-	const hasTeacherRole = useSelector(selectHasRole(["teacher"]), shallowEqual);
+	const [hasTeacherRoleInClassroom, setHasTeacherRoleInClassroom] =
+		useState(false);
+	const classroomRoleCacheRef = useRef(new Map());
+	const user = useSelector(selectUser);
+	const memberIdCandidates = useMemo(() => {
+		const ids = [user?.memberId, user?.userId, user?.id]
+			.map((id) => String(id || "").trim())
+			.filter(Boolean);
+		return [...new Set(ids)];
+	}, [user]);
+	const currentUserCacheKey = useMemo(
+		() => [...memberIdCandidates].sort().join("|"),
+		[memberIdCandidates],
+	);
+
+	useEffect(() => {
+		let cancelled = false;
+
+		if (!classroomId || memberIdCandidates.length === 0) {
+			setHasTeacherRoleInClassroom(false);
+			return () => {
+				cancelled = true;
+			};
+		}
+
+		const cacheKey = `${classroomId}::${currentUserCacheKey}`;
+		const cachedValue = classroomRoleCacheRef.current.get(cacheKey);
+		if (typeof cachedValue === "boolean") {
+			setHasTeacherRoleInClassroom(cachedValue);
+			return () => {
+				cancelled = true;
+			};
+		}
+
+		(async () => {
+			try {
+				let resolvedRole = null;
+
+				for (const memberId of memberIdCandidates) {
+					try {
+						resolvedRole = await getClassroomMemberRole(classroomId, memberId);
+						if (resolvedRole) break;
+					} catch (error) {
+						const status = error?.response?.status;
+						if (status === 404 || status === 400) {
+							continue;
+						}
+						throw error;
+					}
+				}
+
+				const isTeacher = resolvedRole === "TEACHER";
+				classroomRoleCacheRef.current.set(cacheKey, isTeacher);
+
+				if (!cancelled) {
+					setHasTeacherRoleInClassroom(isTeacher);
+				}
+			} catch (error) {
+				classroomRoleCacheRef.current.set(cacheKey, false);
+				if (!cancelled) {
+					setHasTeacherRoleInClassroom(false);
+				}
+				console.error("Failed to resolve classroom teacher membership:", error);
+			}
+		})();
+
+		return () => {
+			cancelled = true;
+		};
+	}, [classroomId, memberIdCandidates, currentUserCacheKey]);
+
 	const { student: studentTaskSummaries, teacher: teacherTaskSummaries } =
-		useTaskSummaries(classroomId, hasTeacherRole);
+		useTaskSummaries(classroomId, hasTeacherRoleInClassroom);
 	const selectedSectionId = Number.isNaN(Number(sectionId))
 		? sectionId
 		: Number(sectionId);
@@ -38,8 +109,8 @@ export default function SideNavBar({
 	const buildTaskTitleList = useCallback((tasks = []) => {
 		if (!Array.isArray(tasks)) return [];
 		return tasks.map((task) => ({
-			testId: task.id,
-			title: task.name,
+			testId: task.id ?? task.materialId,
+			title: task.name || task.description,
 		}));
 	}, []);
 
@@ -81,6 +152,12 @@ export default function SideNavBar({
 			setShowStudentList(false);
 		}
 	}, [isOpen]);
+
+	useEffect(() => {
+		if (!hasTeacherRoleInClassroom) {
+			setShowTeacherList(false);
+		}
+	}, [hasTeacherRoleInClassroom]);
 
 	const handleAccordionClick = (type) => {
 		if (!isOpen && setIsOpen) {
@@ -125,22 +202,24 @@ export default function SideNavBar({
 
 			{showMaterial && (
 				<section className={styles.accordion_section}>
-					<AccordionList
-						icon={<GraduationCap size={24} />}
-						label="Teacher Material"
-						labelIsVisible={isOpen}
-						chevronIsVisible={isOpen}
-						listIsOpen={showTeacherList}
-						onHeaderClick={() => handleAccordionClick("teacher")}
-						items={teacherItems}
-						activeItemId={
-							selectedSection === "teacher" ? selectedSectionId : null
-						}
-						onItemClick={(t) => handleSelectSection(t.testId, partNumber)}
-						headerIsHighlighted={
-							selectedSection === "teacher" && !showTeacherList
-						}
-					/>
+					{hasTeacherRoleInClassroom && (
+						<AccordionList
+							icon={<GraduationCap size={24} />}
+							label="Teacher Material"
+							labelIsVisible={isOpen}
+							chevronIsVisible={isOpen}
+							listIsOpen={showTeacherList}
+							onHeaderClick={() => handleAccordionClick("teacher")}
+							items={teacherItems}
+							activeItemId={
+								selectedSection === "teacher" ? selectedSectionId : null
+							}
+							onItemClick={(t) => handleSelectSection(t.testId, partNumber)}
+							headerIsHighlighted={
+								selectedSection === "teacher" && !showTeacherList
+							}
+						/>
+					)}
 
 					<AccordionList
 						icon={

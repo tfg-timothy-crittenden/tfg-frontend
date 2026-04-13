@@ -1,6 +1,6 @@
-import { useRef, useState, useEffect, useMemo } from "react";
+import { useRef, useState, useEffect } from "react";
 
-import { fetchAllClassesAndTeachers } from "@/api/admin/admin";
+import { getAllClassroomSummaries } from "@/api/classes/classesAPI";
 
 import SearchableList from "@/components/SearchableList/SearchableList";
 import DropdownSurface from "@/components/DropdownSurface/DropdownSurface";
@@ -21,8 +21,8 @@ const AdminMaterialClassPanel = ({
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const result = await fetchAllClassesAndTeachers();
-				setClasses(result.data);
+				const result = await getAllClassroomSummaries();
+				setClasses(Array.isArray(result) ? result : []);
 			} catch (err) {
 				console.error("Error fetching classes:", err);
 			}

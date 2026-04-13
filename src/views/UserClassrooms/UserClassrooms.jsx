@@ -1,8 +1,10 @@
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
+import { useSelector } from "react-redux";
 import { buildRoute } from "@/routes/routeConfig";
-import { getUserClassrooms } from "@/api/user/user";
+import { getClassroomSummariesByUserId } from "@/api/classes/classesAPI";
 import { joinClassByCode } from "@/api/classes/classesAPI";
+import { selectUser } from "@/store/auth/authSlice";
 import { Plus, GraduationCap, House, CircleAlert } from "lucide-react";
 
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
@@ -22,11 +24,20 @@ const UserClassrooms = () => {
 
 	const navigate = useNavigate();
 	const atRoot = useMatch("/my/classrooms");
+	const inClassroomChildRoute = useMatch("/my/classrooms/:id/*");
+	const user = useSelector(selectUser);
+	const userId = user?.id || user?.userId || user?.memberId;
 
 	const refresh = useCallback(async () => {
+		if (!userId) {
+			setClassrooms([]);
+			setLoading(false);
+			return;
+		}
+
 		try {
 			setLoading(true);
-			const data = await getUserClassrooms();
+			const data = await getClassroomSummariesByUserId(userId);
 			setClassrooms(data);
 			setError(null);
 		} catch (err) {
@@ -35,7 +46,7 @@ const UserClassrooms = () => {
 		} finally {
 			setLoading(false);
 		}
-	}, []);
+	}, [userId]);
 
 	useEffect(() => {
 		refresh();
@@ -80,7 +91,7 @@ const UserClassrooms = () => {
 
 	if (error) return <p className={styles.error}>{error}</p>;
 
-	if (atRoot) {
+	if (!inClassroomChildRoute && atRoot) {
 		return (
 			<>
 				{loading && <LoadingSpinner />}
@@ -192,7 +203,18 @@ const UserClassrooms = () => {
 							{classrooms.map((c) => {
 								const teacherLabel =
 									c.teachers && c.teachers.length
-										? c.teachers.join(", ")
+										? c.teachers
+												.map((t) => {
+													if (typeof t === "string") return t;
+													const firstName = t?.name || "";
+													const lastName = t?.surname || "";
+													const fullName = `${firstName} ${lastName}`.trim();
+													return (
+														fullName || String(t?.userId || t?.memberId || "")
+													);
+												})
+												.filter(Boolean)
+												.join(", ")
 										: "Unassigned";
 
 								return (
@@ -210,8 +232,10 @@ const UserClassrooms = () => {
 									>
 										<div className={styles.card_header}>
 											<div className={styles.card_title}>{c.name}</div>
-											{c.subject && (
-												<div className={styles.card_subject}>{c.subject}</div>
+											{(c.subject || c.description) && (
+												<div className={styles.card_subject}>
+													{c.subject || c.description}
+												</div>
 											)}
 										</div>
 

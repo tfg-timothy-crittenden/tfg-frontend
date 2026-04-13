@@ -4,6 +4,22 @@ const MATERIALS_BASE_URL =
 	import.meta.env.VITE_MATERIALS_API_URL ||
 	"http://localhost:8080/materials/api";
 
+const normalizeMaterialList = (payload) => {
+	if (Array.isArray(payload)) return payload;
+	if (Array.isArray(payload?.materials)) return payload.materials;
+	if (Array.isArray(payload?.items)) return payload.items;
+	if (Array.isArray(payload?.materialNodes)) return payload.materialNodes;
+	if (Array.isArray(payload?.content)) return payload.content;
+	if (Array.isArray(payload?.data)) return payload.data;
+	if (payload && typeof payload === "object") {
+		return Object.values(payload).filter(
+			(value) => value && typeof value === "object",
+		);
+	}
+	return [];
+};
+
+// API method to fetch immediate child material nodes for a given parentId
 export const getImmediateChildrenByParentId = async (parentId) => {
 	const { data } = await httpClient.get(
 		`/material-aggregation/children/${parentId}`,
@@ -14,6 +30,7 @@ export const getImmediateChildrenByParentId = async (parentId) => {
 	return data;
 };
 
+//Use this method when you want a specfic child material node based on the parentId and the display order of the child.
 export const getMaterialByParentIdAndOrder = async (parentId, displayOrder) => {
 	const { data } = await httpClient.get(
 		"/material-nodes/by-parent-id-and-display-order",
@@ -26,6 +43,13 @@ export const getMaterialByParentIdAndOrder = async (parentId, displayOrder) => {
 		},
 	);
 	return data;
+};
+
+export const getAllMaterial = async () => {
+	const { data } = await httpClient.get(`/materials`, {
+		baseURL: MATERIALS_BASE_URL,
+	});
+	return normalizeMaterialList(data);
 };
 
 export const getMaterialNodeAssets = async (materialNodeId) => {
