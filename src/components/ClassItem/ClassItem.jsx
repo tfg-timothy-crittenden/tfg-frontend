@@ -6,6 +6,7 @@ import styles from "./ClassItem.module.css";
  * Individual class item component for displaying class information and teacher assignment
  */
 const ClassItem = ({ classItem, allTeachers, onTeacherAssignment }) => {
+	console.log("classItem receives:", allTeachers);
 	const handleTeacherChange = async (selectedOptions) => {
 		const ids = (selectedOptions || []).map((opt) => Number(opt.value));
 		try {

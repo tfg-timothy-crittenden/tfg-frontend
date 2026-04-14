@@ -83,6 +83,7 @@ const useAdminList = ({
 		try {
 			const data = await latestLoadFnRef.current();
 			setItems(Array.isArray(data) ? data : []);
+			console.log("Loaded items:", data);
 		} catch (e) {
 			console.error("Failed to load items:", e);
 			setError("Failed to load items");
@@ -139,7 +140,7 @@ const useAdminList = ({
 		} catch (err) {
 			console.error(
 				`Failed to delete ${bulkDelete ? itemNamePlural : itemName}:`,
-				err
+				err,
 			);
 		} finally {
 			setItemToDelete(null);

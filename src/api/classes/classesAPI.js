@@ -26,6 +26,7 @@ const normalizeMaterialList = (payload) => {
 	return [];
 };
 
+//Returns a summary of all the classrooms, with the teachers and the student count.
 export async function getAllClassroomSummaries() {
 	const { data } = await httpClient.get(
 		`${CLASSROOMS_API_BASE}`,
@@ -34,6 +35,7 @@ export async function getAllClassroomSummaries() {
 	return data || [];
 }
 
+//Checks the role of a user in a classroom, returns "TEACHER", "STUDENT", or null if no role.
 export async function getClassroomMemberRole(classroomId, memberId) {
 	if (!classroomId || !memberId) {
 		throw new Error("classroomId and memberId are required");
@@ -47,6 +49,7 @@ export async function getClassroomMemberRole(classroomId, memberId) {
 	return normalizeRole(data);
 }
 
+// Updates the materials assigned to a classroom via upsert.
 export async function updateClassroomMaterials(classroomId, materials) {
 	if (!classroomId || !Array.isArray(materials)) {
 		throw new Error("classroomId and materials array are required");
@@ -60,6 +63,7 @@ export async function updateClassroomMaterials(classroomId, materials) {
 	return data || [];
 }
 
+// Gets the list of a classroom's assigned materials for a specific role (TEACHER or STUDENT).
 export async function getClassroomMaterialListByRole(classroomId, role) {
 	const normalizedRole = String(role || "").toUpperCase();
 	const { data } = await httpClient.get(
@@ -69,6 +73,7 @@ export async function getClassroomMaterialListByRole(classroomId, role) {
 	return normalizeMaterialList(data);
 }
 
+// Gets the full list of a classroom's assigned materials across all roles.
 export async function getClassroomMaterialList(classroomId) {
 	const { data } = await httpClient.get(
 		`${CLASSROOMS_API_BASE}/${classroomId}/materials`,
@@ -77,7 +82,7 @@ export async function getClassroomMaterialList(classroomId) {
 	return data || [];
 }
 
-//New API endpoints for class management
+// Gets the list of classrooms for which a specific user is a member.
 export async function getClassroomSummariesByUserId(userId) {
 	if (userId === undefined || userId === null || userId === "") {
 		throw new Error("userId is required to fetch classroom summaries");
@@ -90,6 +95,7 @@ export async function getClassroomSummariesByUserId(userId) {
 	return data ? data : [];
 }
 
+//
 export async function getClassMembers(classroomId) {
 	const { data } = await httpClient.get(
 		`${CLASSROOMS_API_BASE}/${classroomId}/members`,

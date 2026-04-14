@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import {
 	fetchAllTeachers,
 	assignTeachersToClass,
-	fetchAllClassesAndTeachers,
 	deleteClass,
 } from "@/api/admin/admin";
+
+import { getAllClassroomSummaries } from "@/api/classes/classesAPI";
 
 import { AdminList, ListItem } from "@/components/AdminList";
 import { ClassItem } from "@/components/ClassItem";
@@ -27,8 +28,9 @@ const AdminClasses = () => {
 
 	// Load classes function for the hook
 	const loadClasses = async () => {
-		const res = await fetchAllClassesAndTeachers();
-		return res.data;
+		const classes = await getAllClassroomSummaries();
+		console.log("loadClasses:", classes);
+		return Array.isArray(classes) ? classes : [];
 	};
 
 	// Delete function for individual classes

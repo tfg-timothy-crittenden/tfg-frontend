@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import {
-	getMaterialByParentIdAndOrder,
+	getToeflSpeakingMaterialQuestion,
 	getMaterialNodeAssets,
 	getPresignedUrl,
 } from "@/api/material/materialAPI";
@@ -73,6 +73,7 @@ const useListenSpeakTask = () => {
 	const [sharedImageUrl, setSharedImageUrl] = useState(null);
 	const [questionAudioUrl, setQuestionAudioUrl] = useState(null);
 	const cachedPartRef = useRef({ key: null, partId: null });
+	const cachedPartImageRef = useRef({ key: null, url: null });
 
 	useEffect(() => {
 		const nextMode = getModeFromPath(location.pathname);
@@ -93,6 +94,7 @@ const useListenSpeakTask = () => {
 			setSharedImageUrl(null);
 			setQuestionAudioUrl(null);
 			cachedPartRef.current = { key: null, partId: null };
+			cachedPartImageRef.current = { key: null, url: null };
 			setLoading(false);
 			return;
 		}
@@ -101,11 +103,7 @@ const useListenSpeakTask = () => {
 
 		const loadMaterial = async () => {
 			try {
-				const partNumberAsNumber = Number(partNumber);
-				const partDisplayOrder = Number.isNaN(partNumberAsNumber)
-					? 0
-					: Math.max(partNumberAsNumber - 1, 0);
-				const currentPartKey = `${sectionId}:${partDisplayOrder}`;
+				const currentPartKey = `${sectionId}:${partNumber}`;
 				const isPartCacheHit =
 					cachedPartRef.current.key === currentPartKey &&
 					!!cachedPartRef.current.partId;
@@ -118,60 +116,50 @@ const useListenSpeakTask = () => {
 					setSharedImageUrl(null);
 				}
 
-				let resolvedPartId = isPartCacheHit
-					? cachedPartRef.current.partId
-					: null;
-
-				if (!resolvedPartId) {
-					const partNode = await getMaterialByParentIdAndOrder(
-						sectionId,
-						partDisplayOrder,
-					);
-
-					resolvedPartId = partNode?.id || partNode?.materialNodeId || null;
-					if (cancelled) return;
-					cachedPartRef.current = {
-						key: currentPartKey,
-						partId: resolvedPartId,
-					};
-					setPartId(resolvedPartId);
-				} else if (partId !== resolvedPartId) {
-					setPartId(resolvedPartId);
-				}
-
-				if (!resolvedPartId) {
-					return;
-				}
-
-				const questionNumberAsNumber = Number(questionNumber);
-				const questionDisplayOrder = Number.isNaN(questionNumberAsNumber)
-					? 0
-					: Math.max(questionNumberAsNumber - 1, 0);
-
-				const questionNode = await getMaterialByParentIdAndOrder(
-					resolvedPartId,
-					questionDisplayOrder,
+				const questionNode = await getToeflSpeakingMaterialQuestion(
+					sectionId,
+					partNumber,
+					questionNumber,
 				);
 
 				if (cancelled) return;
+
+				const resolvedPartId =
+					questionNode?.parentNodeId ||
+					questionNode?.parentId ||
+					cachedPartRef.current.partId ||
+					null;
+				const currentPartImageKey = resolvedPartId
+					? String(resolvedPartId)
+					: currentPartKey;
+				const isPartImageCacheHit =
+					cachedPartImageRef.current.key === currentPartImageKey &&
+					!!cachedPartImageRef.current.url;
+
+				cachedPartRef.current = {
+					key: currentPartKey,
+					partId: resolvedPartId,
+				};
+
+				if (partId !== resolvedPartId) {
+					setPartId(resolvedPartId);
+				}
+
 				setTestData(questionNode);
 
 				const questionAssets =
-					questionNode?.materialAssets || questionNode?.assets || [];
-				const questionAudioAsset = questionAssets.find(
-					(asset) =>
-						asset?.order === 0 ||
-						asset?.displayOrder === 0 ||
-						asset?.display_order === 0 ||
-						asset?.type === "AUDIO",
-				);
+					questionNode?.assets || questionNode?.materialAssets || [];
+				const questionAudioAsset =
+					questionAssets.find(
+						(asset) => asset?.kind === "AUDIO" || asset?.type === "AUDIO",
+					) || questionAssets[0];
 
 				const resolvedQuestionAudioUrl =
 					await getResolvedAssetUrl(questionAudioAsset);
 				if (cancelled) return;
 				setQuestionAudioUrl(resolvedQuestionAudioUrl);
 
-				if (!isPartCacheHit || !sharedImageUrl) {
+				if (resolvedPartId && (!isPartImageCacheHit || !sharedImageUrl)) {
 					const partAssetsData = await getMaterialNodeAssets(resolvedPartId);
 					if (cancelled) return;
 
@@ -179,12 +167,19 @@ const useListenSpeakTask = () => {
 						? partAssetsData
 						: partAssetsData?.assets || [];
 					const imageAsset =
-						partAssets.find((asset) => asset?.type === "IMAGE") ||
-						partAssets[0];
+						partAssets.find(
+							(asset) => asset?.type === "IMAGE" || asset?.kind === "IMAGE",
+						) || partAssets[0];
 
 					const resolvedSharedImageUrl = await getResolvedAssetUrl(imageAsset);
 					if (cancelled) return;
+					cachedPartImageRef.current = {
+						key: currentPartImageKey,
+						url: resolvedSharedImageUrl,
+					};
 					setSharedImageUrl(resolvedSharedImageUrl);
+				} else if (sharedImageUrl !== cachedPartImageRef.current.url) {
+					setSharedImageUrl(cachedPartImageRef.current.url);
 				}
 			} catch (error) {
 				if (!cancelled) {
@@ -194,6 +189,7 @@ const useListenSpeakTask = () => {
 					setSharedImageUrl(null);
 					setQuestionAudioUrl(null);
 					cachedPartRef.current = { key: null, partId: null };
+					cachedPartImageRef.current = { key: null, url: null };
 				}
 			} finally {
 				if (!cancelled) {

@@ -40,7 +40,7 @@ export const buildAssignedMaterialsLookup = (...itemGroups) => {
 const getAssignmentMaterial = (materialId, libraryMaterialsMap) => {
 	const material = libraryMaterialsMap.get(materialId);
 	const resolvedMaterialId =
-		material?.materialId ?? material?.material_id ?? material?.id ?? materialId;
+		material?.id ?? material?.materialId ?? material?.material_id ?? materialId;
 	const materialName =
 		material?.name || material?.title || `Material ${materialId}`;
 	const materialDescription =
@@ -64,7 +64,10 @@ export const createAssignmentsPayload = (
 ) => {
 	const libraryMaterialsMap = new Map(
 		(libraryMaterials || [])
-			.map((item) => [getMaterialId(item), item])
+			.map((item) => {
+				const key = item?.id ?? getMaterialId(item);
+				return [key === null || key === undefined ? null : String(key), item];
+			})
 			.filter(([materialId]) => materialId !== null),
 	);
 

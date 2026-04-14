@@ -30,6 +30,17 @@ export const getImmediateChildrenByParentId = async (parentId) => {
 	return data;
 };
 
+//Use this method to fetch the first material_node of a material based on the materialId. This is useful when you want to start traversing a material tree from the root node.
+export const getFirstMaterialNodeByMaterialId = async (materialId) => {
+	const { data } = await httpClient.get(
+		`/material-nodes/first-by-material-id/${materialId}`,
+		{
+			baseURL: MATERIALS_BASE_URL,
+		},
+	);
+	return data;
+};
+
 //Use this method when you want a specfic child material node based on the parentId and the display order of the child.
 export const getMaterialByParentIdAndOrder = async (parentId, displayOrder) => {
 	const { data } = await httpClient.get(
@@ -40,6 +51,20 @@ export const getMaterialByParentIdAndOrder = async (parentId, displayOrder) => {
 				parentId,
 				displayOrder,
 			},
+		},
+	);
+	return data;
+};
+
+export const getToeflSpeakingMaterialQuestion = async (
+	materialId,
+	partNumber,
+	questionNumber,
+) => {
+	const { data } = await httpClient.get(
+		`/toefl-speaking/material/${materialId}/part/${partNumber}/question/${questionNumber}`,
+		{
+			baseURL: MATERIALS_BASE_URL,
 		},
 	);
 	return data;

@@ -10,7 +10,7 @@ import Interview from "@/views/Interview/Interview";
 import TestInstructions from "@/components/TestInstructions/TestInstructions";
 import TestSelectionWelcome from "@/components/TestSelectionWelcome/TestSelectionWelcome";
 
-import QuestionToggleSwitch from "../../components/QuestionToggleSwitch/QuestionToggleSwitch";
+import QuestionToggleSwitch from "@/components/QuestionToggleSwitch/QuestionToggleSwitch";
 
 import ResponsiveNavigation from "@/components/ResponsiveNavigation/ResponsiveNavigation";
 import ViewClassMembers from "@/components/ViewClassMembers/ViewClassMembers";

@@ -1,5 +1,5 @@
 export const getMaterialId = (item) => {
-	const value = item?.materialId ?? item?.material_id ?? item?.id ?? null;
+	const value = item?.id ?? item?.materialId ?? item?.material_id ?? null;
 	return value === null || value === undefined ? null : String(value);
 };
 
