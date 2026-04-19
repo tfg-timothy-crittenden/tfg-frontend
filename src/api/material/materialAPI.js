@@ -102,3 +102,18 @@ export const getPresignedUrl = async ({
 	});
 	return data;
 };
+
+export const uploadPart1Speaking = async (formData) => {
+	console.log("FormData entries:");
+	for (let pair of formData.entries()) {
+		console.log(pair[0], pair[1]);
+	}
+	const { data } = await httpClient.post(
+		"/toefl-speaking/material/part1/upload",
+		formData,
+		{
+			baseURL: MATERIALS_BASE_URL,
+		},
+	);
+	return data;
+};

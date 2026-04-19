@@ -14,8 +14,8 @@ const ListenRepeatPresentation = ({
 }) => {
 	const transcript = testData?.transcriptText || testData?.transcript || "";
 	const highlightData = testData?.config?.highlight_data;
-	const viewBoxWidth = highlightData?.viewBox?.[0] || 986;
-	const viewBoxHeight = highlightData?.viewBox?.[1] || 882;
+	const viewBoxWidth = highlightData?.viewBox?.[0] || 400; //Set this to square of 400 x 400, which SHOULD be what it is in the DB any
+	const viewBoxHeight = highlightData?.viewBox?.[1] || 400;
 	const highlightPaths = highlightData?.ds || [];
 	const imageSrc = sharedImageUrl;
 
@@ -51,7 +51,7 @@ const ListenRepeatPresentation = ({
 								d={path}
 								fill="none"
 								stroke="#78C257"
-								strokeWidth="18"
+								strokeWidth="5"
 								strokeLinecap="round"
 								strokeLinejoin="round"
 							/>

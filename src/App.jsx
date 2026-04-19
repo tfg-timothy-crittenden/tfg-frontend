@@ -21,6 +21,7 @@ import {
 	PasswordResetRequest,
 	PasswordResetConfirm,
 } from "@/routes/lazyRoutes";
+import CreateSpeakingMaterial from "./views/CreateSpeakingMaterial/CreateSpeakingMaterial";
 
 const Fallback = () => <div style={{ padding: 24 }}>Loading…</div>;
 
@@ -97,6 +98,10 @@ function App() {
 
 					{/* Admin-only routes */}
 					<Route element={<RoleRoute allowedRoles={["admin"]} />}>
+						<Route
+							path={ROUTES.CREATE_SPEAKING_MATERIAL}
+							element={<CreateSpeakingMaterial />}
+						/>
 						<Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />}>
 							<Route
 								path={ADMIN_SEGMENTS.TEACHERS}

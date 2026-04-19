@@ -1,6 +1,5 @@
-// src/routes/routeConfig.js
 /**
- * Centralized route configuration for the TOEFL Speaking app
+ * Centralized route configuration
  * This ensures DRY principles and makes route management easier
  */
 
@@ -12,6 +11,7 @@ export const ROUTE_SEGMENTS = {
 	PART: "part",
 	QUESTION: "question",
 	ADMIN_DASHBOARD: "admin_dashboard",
+	CREATE_SPEAKING_MATERIAL: "create-speaking-material",
 	LOGIN: "login",
 	SIGNUP: "signup",
 	AUTH: "auth",
@@ -69,7 +69,8 @@ export const ROUTES = {
 	PART_READ: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.SECTION}/:sectionId/${ROUTE_SEGMENTS.PART}/:partNumber/${ROUTE_SEGMENTS.QUESTION}/:questionNumber/${MODE_SEGMENTS.READ}`,
 	PART_LISTEN: `/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/:id/${ROUTE_SEGMENTS.SECTION}/:sectionId/${ROUTE_SEGMENTS.PART}/:partNumber/${ROUTE_SEGMENTS.QUESTION}/:questionNumber/${MODE_SEGMENTS.LISTEN}`,
 
-	// Question routes
+	// Create material route
+	CREATE_SPEAKING_MATERIAL: `/${ROUTE_SEGMENTS.CREATE_SPEAKING_MATERIAL}/:id`,
 
 	// Admin routes
 	ADMIN_DASHBOARD: `/${ROUTE_SEGMENTS.ADMIN_DASHBOARD}`,
