@@ -67,6 +67,9 @@ const Header = () => {
 	// Determine active link
 	const isClassroomsActive = location.pathname.startsWith("/my/classrooms");
 	const isAdminActive = location.pathname.startsWith("/admin_dashboard");
+	const isCreateActive = location.pathname.startsWith(
+		"/create-speaking-material",
+	);
 
 	// Get display name for mobile (first name or username)
 	const mobileDisplayName = username?.split(" ")[0] || username || "User";
@@ -95,15 +98,25 @@ const Header = () => {
 
 						{/* Admin Dashboard Link (only for admins) */}
 						{isAdmin && (
-							<NavLink
-								to="/admin_dashboard"
-								className={`${styles.nav_item_container} ${
-									isAdminActive ? styles.activeNavItem : ""
-								}`}
-							>
-								<Settings size={20} />
-								<span className={styles.nav_label}>Admin</span>
-							</NavLink>
+							<>
+								<NavLink
+									to="/admin_dashboard"
+									className={`${styles.nav_item_container} ${
+										isAdminActive ? styles.activeNavItem : ""
+									}`}
+								>
+									<Settings size={20} />
+									<span className={styles.nav_label}>Admin</span>
+								</NavLink>
+								<NavLink
+									to="/create-speaking-material/null"
+									className={`${styles.nav_item_container} ${
+										isCreateActive ? styles.activeNavItem : ""
+									}`}
+								>
+									<span className={styles.nav_label}>Create</span>
+								</NavLink>
+							</>
 						)}
 
 						{/* User Menu */}

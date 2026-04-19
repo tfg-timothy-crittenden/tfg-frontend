@@ -5,9 +5,18 @@ const baseURL = import.meta.env.VITE_API_URL || "/users/api";
 
 const httpClient = axios.create({
 	baseURL: baseURL,
-	headers: {
-		"Content-Type": "application/json",
-	},
+});
+
+// Set Content-Type to application/json only for JSON requests
+httpClient.interceptors.request.use((config) => {
+	if (
+		config.data &&
+		typeof config.data === "object" &&
+		!(config.data instanceof FormData)
+	) {
+		config.headers["Content-Type"] = "application/json";
+	}
+	return config;
 });
 
 // Function to update headers with the token
