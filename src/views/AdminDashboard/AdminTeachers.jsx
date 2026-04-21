@@ -7,6 +7,8 @@ import {
 	removeTeacherFromSchool,
 } from "@/api/admin/admin";
 
+import { getAllTeachers } from "@/api/user/user";
+
 import BatchInviteTeachers from "./BatchInviteTeachersNew";
 import AdminDeleteModal from "@/components/AdminDeleteModal";
 import { AdminList, ListItem } from "@/components/AdminList";
@@ -17,30 +19,14 @@ import styles from "@/components/AdminList/AdminList.module.css"; // Use shared 
 const AdminTeachers = () => {
 	const [currentSort, setCurrentSort] = useState("name-asc");
 
-	// Load teachers function for the hook
+	// Load all teachers
 	const loadTeachers = async () => {
-		const [invitedRes, activeRes] = await Promise.all([
-			fetchInvitedTeachers(),
-			fetchActiveTeachers(),
-		]);
-
-		// Combine active and invited teachers with status
-		return [
-			...activeRes.data.map((teacher) => ({ ...teacher, status: "active" })),
-			...invitedRes.data.map((teacher) => ({
-				...teacher,
-				status: "invited",
-			})),
-		];
+		return await getAllTeachers();
 	};
 
 	// Delete function for individual teachers
 	const deleteTeacher = async (teacher) => {
-		if (teacher.status === "active") {
-			await removeTeacherFromSchool(teacher.id);
-		} else {
-			await cancelInvite(teacher.id);
-		}
+		await removeTeacherFromSchool(teacher.id);
 	};
 
 	// Use the admin list hook
@@ -116,17 +102,6 @@ const AdminTeachers = () => {
 	// Sort teachers based on current sort
 	const sortedTeachers = sortTeachers(allTeachers, currentSort);
 
-	// Individual teacher actions
-	const handleIndividualResend = async (teacherId) => {
-		try {
-			await resendInvite(teacherId);
-			await loadAllTeachers();
-		} catch (err) {
-			console.error("Failed to resend invite:", err);
-			alert("Failed to resend invite. Please try again.");
-		}
-	};
-
 	const handleIndividualRemove = (teacher) => {
 		confirmSingleDelete(teacher);
 	};
@@ -134,14 +109,6 @@ const AdminTeachers = () => {
 	// Render individual teacher item
 	const renderTeacherItem = (teacher, { isSelected, onSelect }) => {
 		const actions = [
-			...(teacher.status === "invited"
-				? [
-						{
-							label: "Resend Invite",
-							handler: () => handleIndividualResend(teacher.id),
-						},
-					]
-				: []),
 			{
 				label: "Remove",
 				handler: () => handleIndividualRemove(teacher),
@@ -155,37 +122,23 @@ const AdminTeachers = () => {
 				isSelected={isSelected}
 				onSelect={onSelect}
 				actions={actions}
-				renderContent={() => <UserListItem user={teacher} />}
+				renderContent={() => (
+					<UserListItem
+						user={{
+							...teacher,
+							// Combine name and surname if both exist
+							name: teacher.surname
+								? `${teacher.name} ${teacher.surname}`
+								: teacher.name,
+						}}
+					/>
+				)}
 			/>
 		);
 	};
 
-	// Handle bulk resend for custom bulk actions
-	const handleBulkResend = async () => {
-		try {
-			const resendPromises = Array.from(selectedTeachers).map((id) => {
-				const teacher = allTeachers.find((t) => t.id === id);
-				// Only resend for invited teachers
-				if (teacher.status === "invited") {
-					return resendInvite(id);
-				}
-				return Promise.resolve(); // Skip active teachers
-			});
-			await Promise.all(resendPromises);
-			await loadAllTeachers();
-		} catch (err) {
-			console.error("Failed to resend invites:", err);
-			alert("Failed to resend some invites. Please try again.");
-		}
-	};
-
-	// Custom bulk actions including resend
+	// Custom bulk actions (only delete)
 	const customBulkActions = [
-		{
-			key: "resend",
-			label: "Resend Invites",
-			disabled: selectedTeachers.size === 0,
-		},
 		{
 			key: "delete",
 			label: `Delete Selected ${adminList.itemNamePlural}`,
@@ -195,9 +148,7 @@ const AdminTeachers = () => {
 
 	// Handle bulk action selection
 	const handleBulkActionSelect = (actionKey, selectedItems) => {
-		if (actionKey === "resend") {
-			handleBulkResend();
-		} else if (actionKey === "delete") {
+		if (actionKey === "delete") {
 			confirmBulkDelete();
 		}
 	};

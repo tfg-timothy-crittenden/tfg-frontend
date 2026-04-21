@@ -5,12 +5,32 @@ import styles from "./ClassItem.module.css";
 /**
  * Individual class item component for displaying class information and teacher assignment
  */
-const ClassItem = ({ classItem, allTeachers, onTeacherAssignment }) => {
-	console.log("classItem receives:", allTeachers);
+
+const ClassItem = ({
+	classItem,
+	teachers,
+	allTeachers,
+	onTeacherAssignment,
+}) => {
+	// Map teacherList to the actual objects from allTeachers by userId/id for reference equality
+	const teacherList = Array.isArray(teachers) ? teachers : [];
+
+	const selectedTeacherOptions = teacherList
+		.map((t) => allTeachers.find((at) => at.id === (t.userId ?? t.id)))
+		.filter(Boolean)
+		.map((t) => ({
+			value: t.id,
+			label: `${t.name} ${t.surname}`,
+			teacherObj: t,
+		}));
+
+	// selectedOptions will be array of teacher objects
 	const handleTeacherChange = async (selectedOptions) => {
-		const ids = (selectedOptions || []).map((opt) => Number(opt.value));
+		// Always use the selected options as the new list of teachers
+		const teachers = (selectedOptions || []).map((opt) => opt.teacherObj);
+
 		try {
-			await onTeacherAssignment(classItem.id, ids);
+			await onTeacherAssignment(classItem.id, teachers);
 		} catch (err) {
 			console.error("Failed to assign teachers:", err);
 			alert("Failed to assign teachers. Please try again.");
@@ -42,12 +62,10 @@ const ClassItem = ({ classItem, allTeachers, onTeacherAssignment }) => {
 					isMulti
 					options={allTeachers.map((t) => ({
 						value: t.id,
-						label: `${t.name} (${t.status})`,
+						label: `${t.name} ${t.surname}`,
+						teacherObj: t,
 					}))}
-					value={classItem.teachers.map((t) => ({
-						value: t.id,
-						label: `${t.name} (${t.status})`,
-					}))}
+					value={selectedTeacherOptions}
 					onChange={handleTeacherChange}
 					placeholder="No teacher assigned"
 					menuPortalTarget={document.body}

@@ -246,6 +246,13 @@ const CreateSpeakingMaterial = () => {
 					{/* Step 2: Image + Questions */}
 					{step === 1 && (
 						<>
+							<label htmlFor="partTitle">
+								Part Title
+								<input
+									{...register("partTitle", { required: true })}
+									id="partTitle"
+								/>
+							</label>
 							<label htmlFor="image" className={styles.label}>
 								Image
 								<input

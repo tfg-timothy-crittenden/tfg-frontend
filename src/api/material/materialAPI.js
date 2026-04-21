@@ -1,8 +1,12 @@
 import httpClient from "@/api/httpClient";
 
-const MATERIALS_BASE_URL =
-	import.meta.env.VITE_MATERIALS_API_URL ||
-	"http://localhost:8080/materials/api";
+const MATERIALS_BASE_URL = import.meta.env.VITE_MATERIALS_API_URL;
+
+if (!MATERIALS_BASE_URL) {
+	throw new Error(
+		"VITE_MATERIALS_API_URL is not set. Please set it in your .env file to the materials API base URL.",
+	);
+}
 
 const normalizeMaterialList = (payload) => {
 	if (Array.isArray(payload)) return payload;
