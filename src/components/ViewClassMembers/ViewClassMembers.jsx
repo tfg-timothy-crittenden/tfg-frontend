@@ -137,7 +137,6 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 	}));
 
 	const renderTeacher = (teacher, { isSelected, onSelect }) => {
-		// teacher already has a unique id and formatted name
 		return (
 			<div className={styles.dumb_list_item}>
 				<UserListItem user={teacher} />
@@ -226,7 +225,7 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 						itemNamePlural="students"
 						itemToDelete={studentToDelete}
 						bulkDelete={studentBulkDelete}
-						selectedCount={selectedStudents ? selectedStudents.size : 0} // guard
+						selectedCount={selectedStudents ? selectedStudents.size : 0}
 						confirmText={studentDeleteConfirmText}
 						onConfirmTextChange={setStudentDeleteConfirmText}
 						requiresTypeDelete={true}

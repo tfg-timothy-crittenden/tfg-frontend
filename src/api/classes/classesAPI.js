@@ -75,9 +75,9 @@ export async function getClassMembers(classroomId) {
 	};
 }
 
-export async function joinClassByCode(classCode) {
+export async function joinClassByCode(joinCode) {
 	const { data } = await httpClient.post(`${CLASSROOMS_API_BASE}/join`, {
-		classCode,
+		joinCode,
 	});
 	return data;
 }
