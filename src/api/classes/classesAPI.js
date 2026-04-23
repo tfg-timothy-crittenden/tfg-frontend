@@ -121,16 +121,16 @@ export async function getClassroomMaterialListByRole(classroomId, role) {
 // --- Teachers & Students ---
 export async function getClassroomTeachers(classroomId) {
 	const { data } = await httpClient.get(
-		`${CLASSROOMS_API_BASE}/${classroomId}/teachers`,
+		`${CLASSROOMS_API_BASE}/${classroomId}/members/teachers`,
 	);
-	return data?.teachers || [];
+	return data || [];
 }
 
 export async function getClassroomStudents(classroomId) {
 	const { data } = await httpClient.get(
-		`${CLASSROOMS_API_BASE}/${classroomId}/students`,
+		`${CLASSROOMS_API_BASE}/${classroomId}/members/students`,
 	);
-	return data?.students || [];
+	return data || [];
 }
 
 export async function assignTeachersToClass(classroomId, teachers) {

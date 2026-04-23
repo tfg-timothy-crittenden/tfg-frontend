@@ -43,3 +43,14 @@ export const confirmPasswordReset = async (token, password) => {
 	);
 	return data; // { message, token, user }
 };
+
+export const inviteTeacherToPlatform = async (email) => {
+	const { data } = await httpClient.post(
+		`${AUTH_BASE_URL}/send-platform-invitation`,
+		{
+			email,
+			roleType: "TEACHER",
+		},
+	);
+	return data;
+};

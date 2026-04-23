@@ -1,4 +1,4 @@
-import { inviteTeacher } from "@/api/admin/admin";
+import { inviteTeacherToPlatform } from "@/api/auth/authAPI";
 import { BatchForm } from "@/components/AdminList";
 
 const BatchInviteTeachers = ({ onInviteComplete }) => {
@@ -39,7 +39,7 @@ const BatchInviteTeachers = ({ onInviteComplete }) => {
 					name: `${teacher.firstName.trim()} ${teacher.surname.trim()}`,
 					email: teacher.email,
 				};
-				await inviteTeacher(teacherData);
+				await inviteTeacherToPlatform(teacherData.email);
 				results.push({
 					email: teacher.email,
 					status: "success",

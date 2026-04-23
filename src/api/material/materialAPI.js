@@ -121,3 +121,10 @@ export const uploadPart1Speaking = async (formData) => {
 	);
 	return data;
 };
+
+export const getAllSpeakingSectionsSummaries = async () => {
+	const { data } = await httpClient.get(`/toefl-speaking/sections-summaries`, {
+		baseURL: MATERIALS_BASE_URL,
+	});
+	return data;
+};
