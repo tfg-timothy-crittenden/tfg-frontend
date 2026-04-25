@@ -5,4 +5,7 @@ export {
 	AlertCircle,
 	Check,
 	Circle,
+	Mic,
+	AlignLeft,
+	ImageIcon,
 } from "lucide-react";

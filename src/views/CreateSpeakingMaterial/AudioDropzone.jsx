@@ -1,0 +1,319 @@
+import { useEffect, useRef, useState } from "react";
+import { FileAudio, Mic, Square, X } from "lucide-react";
+
+import styles from "./AudioDropzone.module.css";
+
+const AudioDropzone = ({
+	id,
+	registration,
+	selectedFile,
+	accept = "audio/*",
+	helperText = "Files Supported: MP3, WAV, MP4A (max size 50mb)",
+	ariaInvalid = false,
+	showLabel = true,
+}) => {
+	const [isDragging, setIsDragging] = useState(false);
+	const [isRecording, setIsRecording] = useState(false);
+	const [recordingError, setRecordingError] = useState("");
+	const inputRef = useRef(null);
+	const mediaRecorderRef = useRef(null);
+	const mediaStreamRef = useRef(null);
+	const recordedChunksRef = useRef([]);
+
+	const { ref: registerRef, onChange, onBlur, name } = registration;
+	const selectedAudio = selectedFile?.[0] || null;
+	const fileName = selectedAudio?.name || "";
+	const [audioUrl, setAudioUrl] = useState("");
+
+	// Keep the native input ref and react-hook-form ref pointed at the same node.
+	const setRefs = (node) => {
+		inputRef.current = node;
+		if (typeof registerRef === "function") {
+			registerRef(node);
+			return;
+		}
+		if (registerRef) {
+			registerRef.current = node;
+		}
+	};
+
+	// Push dropped or recorded files back through the hidden input so the form
+	// still sees a normal file selection change.
+	const pushFilesToForm = (files) => {
+		onChange({
+			target: {
+				name,
+				value: files,
+			},
+			currentTarget: {
+				name,
+				value: files,
+			},
+			type: "change",
+		});
+	};
+
+	const applyFiles = (fileList) => {
+		if (!inputRef.current || !fileList?.length) return;
+
+		const dataTransfer = new DataTransfer();
+		Array.from(fileList).forEach((file) => dataTransfer.items.add(file));
+		inputRef.current.files = dataTransfer.files;
+		pushFilesToForm(Array.from(dataTransfer.files));
+	};
+
+	const handleInputChange = (event) => {
+		const files = Array.from(event.target.files || []);
+		pushFilesToForm(files);
+	};
+
+	useEffect(() => {
+		return () => {
+			// Stop any recording if the component unmounts mid-session.
+			const recorder = mediaRecorderRef.current;
+			if (recorder && recorder.state !== "inactive") {
+				recorder.stop();
+			}
+			mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+		};
+	}, []);
+
+	// Create a blob URL for in-dropzone playback; revoke it when the file changes.
+	useEffect(() => {
+		if (!selectedAudio) {
+			setAudioUrl("");
+			return;
+		}
+		const url = URL.createObjectURL(selectedAudio);
+		setAudioUrl(url);
+		return () => URL.revokeObjectURL(url);
+	}, [selectedAudio]);
+
+	const openPicker = () => {
+		inputRef.current?.click();
+	};
+
+	const stopRecording = () => {
+		const recorder = mediaRecorderRef.current;
+		if (!recorder || recorder.state === "inactive") return;
+		recorder.stop();
+	};
+
+	const startRecording = async () => {
+		if (
+			typeof navigator === "undefined" ||
+			!navigator.mediaDevices?.getUserMedia ||
+			typeof MediaRecorder === "undefined"
+		) {
+			setRecordingError(
+				"This browser does not support in-browser audio recording.",
+			);
+			return;
+		}
+
+		setRecordingError("");
+
+		try {
+			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+				? "audio/webm;codecs=opus"
+				: "audio/webm";
+			const recorder = new MediaRecorder(
+				stream,
+				mimeType ? { mimeType } : undefined,
+			);
+
+			mediaStreamRef.current = stream;
+			mediaRecorderRef.current = recorder;
+			recordedChunksRef.current = [];
+
+			// MediaRecorder emits the recording in chunks; buffer them until stop.
+			recorder.addEventListener("dataavailable", (event) => {
+				if (event.data?.size) {
+					recordedChunksRef.current.push(event.data);
+				}
+			});
+
+			// Convert the recorded blob into a File so it behaves like an uploaded file.
+			recorder.addEventListener("stop", () => {
+				const blobType = recorder.mimeType || "audio/webm";
+				const extension = blobType.includes("ogg")
+					? "ogg"
+					: blobType.includes("mp4")
+						? "m4a"
+						: "webm";
+				const blob = new Blob(recordedChunksRef.current, { type: blobType });
+				if (blob.size) {
+					const file = new File(
+						[blob],
+						`recording-${Date.now()}.${extension}`,
+						{
+							type: blobType,
+						},
+					);
+					applyFiles([file]);
+				}
+				recordedChunksRef.current = [];
+				mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+				mediaStreamRef.current = null;
+				mediaRecorderRef.current = null;
+				setIsRecording(false);
+			});
+
+			recorder.start();
+			setIsRecording(true);
+		} catch (error) {
+			setRecordingError("Microphone access was denied or unavailable.");
+			mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+			mediaStreamRef.current = null;
+			mediaRecorderRef.current = null;
+			setIsRecording(false);
+		}
+	};
+
+	// Clear the current file and notify react-hook-form of the empty value.
+	const clearFile = (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		if (!inputRef.current) return;
+		inputRef.current.files = new DataTransfer().files;
+		pushFilesToForm([]);
+	};
+
+	// The mic button owns recording; the rest of the dropzone still opens upload.
+	const toggleRecording = async (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		if (isRecording) {
+			stopRecording();
+			return;
+		}
+		await startRecording();
+		inputRef.current?.focus();
+	};
+
+	const handleDragOver = (event) => {
+		event.preventDefault();
+		setIsDragging(true);
+	};
+
+	const handleDragLeave = (event) => {
+		event.preventDefault();
+		setIsDragging(false);
+	};
+
+	const handleDrop = (event) => {
+		event.preventDefault();
+		setIsDragging(false);
+		applyFiles(event.dataTransfer.files);
+	};
+
+	const handleKeyDown = (event) => {
+		if (isRecording) return;
+		if (event.key !== "Enter" && event.key !== " ") return;
+		event.preventDefault();
+		openPicker();
+	};
+
+	return (
+		<div className={styles.container}>
+			{showLabel && (
+				<label className={styles.label} htmlFor={id}>
+					Audio
+				</label>
+			)}
+			<div
+				className={`${styles.dropzone}${isDragging ? ` ${styles.dragging}` : ""}`}
+				onDragOver={handleDragOver}
+				onDragLeave={handleDragLeave}
+				onDrop={handleDrop}
+				onClick={openPicker}
+				onKeyDown={handleKeyDown}
+				role="button"
+				tabIndex={0}
+				aria-label="Upload audio file"
+			>
+				{fileName ? (
+					<div className={styles.fileBadge}>
+						<FileAudio size={16} strokeWidth={2} />
+						<span className={styles.fileName}>{fileName}</span>
+					</div>
+				) : null}
+				{!audioUrl && (
+					<button
+						type="button"
+						className={`${styles.iconHaloButton}${isRecording ? ` ${styles.recording}` : ""}`}
+						onClick={toggleRecording}
+						aria-label={isRecording ? "Stop recording" : "Start recording"}
+						title={isRecording ? "Stop recording" : "Record audio"}
+					>
+						<div className={styles.iconHalo}>
+							{isRecording ? (
+								<Square size={28} strokeWidth={2.4} />
+							) : (
+								<Mic size={32} strokeWidth={2.1} />
+							)}
+						</div>
+					</button>
+				)}
+				{audioUrl && !isRecording ? (
+					// Player + remove button; stopPropagation prevents clicks from
+					// opening the file picker.
+					<div
+						className={styles.playerContainer}
+						onClick={(e) => e.stopPropagation()}
+					>
+						<audio
+							key={audioUrl}
+							controls
+							preload="metadata"
+							className={styles.audioPlayer}
+						>
+							<source src={audioUrl} type={selectedAudio?.type || undefined} />
+							Your browser cannot play this audio file.
+						</audio>
+						<button
+							type="button"
+							className={styles.removeButton}
+							onClick={clearFile}
+							aria-label="Remove audio file"
+						>
+							<X size={13} strokeWidth={2.5} />
+							Remove file
+						</button>
+					</div>
+				) : (
+					<>
+						<p className={styles.prompt}>
+							{isRecording
+								? "Recording in progress. Click the microphone again to stop."
+								: "Drop your audio file here, or"}
+							{isRecording ? null : (
+								<span className={styles.browseText}> Browse</span>
+							)}
+							{isRecording ? null : <span> to upload</span>}
+						</p>
+						<p
+							className={`${styles.helperText}${recordingError ? ` ${styles.errorText}` : ""}`}
+						>
+							{recordingError || helperText}
+						</p>
+					</>
+				)}
+				<input
+					id={id}
+					type="file"
+					name={name}
+					accept={accept}
+					ref={setRefs}
+					onChange={handleInputChange}
+					onBlur={onBlur}
+					className={styles.hiddenInput}
+					aria-invalid={ariaInvalid}
+				/>
+			</div>
+		</div>
+	);
+};
+
+export default AudioDropzone;

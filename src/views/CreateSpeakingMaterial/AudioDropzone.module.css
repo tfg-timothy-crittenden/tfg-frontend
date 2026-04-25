@@ -1,0 +1,234 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.label {
+	font-size: 0.84rem;
+	font-weight: 600;
+	color: var(--actionable_text_active);
+	line-height: 1.2;
+}
+
+.dropzone {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6rem;
+	min-height: 190px;
+	padding: 1.15rem 1rem;
+	border: 2px dashed var(--actionable_text_active);
+	border-radius: 18px;
+	background: linear-gradient(
+		180deg,
+		var(--actionable_background) 0%,
+		var(--background_light) 100%
+	);
+	text-align: center;
+	cursor: pointer;
+	transition:
+		border-color 0.18s ease,
+		background 0.18s ease,
+		box-shadow 0.18s ease,
+		transform 0.18s ease;
+}
+
+.dropzone:hover,
+.dropzone:focus-visible,
+.dragging {
+	border-color: var(--actionable_text_active);
+	background: linear-gradient(
+		180deg,
+		var(--actionable_background) 0%,
+		var(--card_background_mid) 100%
+	);
+	box-shadow: 0 0 0 4px var(--actionable_background);
+	outline: none;
+}
+
+.fileBadge {
+	position: absolute;
+	top: 0.9rem;
+	left: 0.9rem;
+	max-width: calc(100% - 1.8rem);
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	padding: 0.45rem 0.65rem;
+	border-radius: 10px;
+	background: var(--actionable_text_active);
+	color: var(--button_text_confirm);
+	box-shadow: var(--shadow-md);
+	font-size: 0.95rem;
+	font-weight: 600;
+}
+
+.fileName {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.iconHalo {
+	width: 62px;
+	height: 62px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 999px;
+	background: radial-gradient(
+		circle at 30% 30%,
+		var(--background_light) 0%,
+		var(--card_background_mid) 70%,
+		var(--actionable_background) 100%
+	);
+	box-shadow: var(--shadow-lg);
+	color: var(--actionable_text_active);
+	margin-top: 0;
+	flex: 0 0 62px;
+}
+
+.iconHalo :global(svg) {
+	width: 24px;
+	height: 24px;
+	flex: 0 0 24px;
+	display: block;
+}
+
+.iconHaloButton {
+	padding: 0;
+	border: none;
+	background: transparent;
+	border-radius: 999px;
+	cursor: pointer;
+	transition: transform 0.18s ease;
+}
+
+.iconHaloButton:hover,
+.iconHaloButton:focus-visible {
+	transform: scale(1.03);
+	outline: none;
+}
+
+.recording .iconHalo {
+	background: radial-gradient(
+		circle at 30% 30%,
+		var(--background_light) 0%,
+		var(--actionable_background) 70%,
+		var(--card_background_mid) 100%
+	);
+	box-shadow: var(--shadow-lg);
+	color: var(--button_background_confirm);
+}
+
+.prompt {
+	margin: 0;
+	font-size: clamp(0.875rem, 1.2vw, 1rem);
+	font-weight: 500;
+	line-height: 1.25;
+	color: var(--text_dark);
+}
+
+.browseText {
+	color: var(--actionable_text_active);
+	font-weight: 700;
+	padding-left: 0.3rem;
+	padding-right: 0.1rem;
+}
+
+.helperText {
+	margin: 0;
+	font-size: 0.98rem;
+	color: var(--card_border);
+}
+
+.errorText {
+	color: var(--text_dark);
+	font-weight: 600;
+}
+
+.playerContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.6rem;
+	width: 100%;
+}
+
+.audioPlayer {
+	display: block;
+	width: 100%;
+	border-radius: 8px;
+	position: relative;
+	z-index: 1;
+}
+
+.removeButton {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	padding: 0.3rem 0.75rem;
+	border: 1.5px solid var(--card_border_mid);
+	border-radius: 6px;
+	background: transparent;
+	color: var(--text_dark);
+	font-size: 0.82rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease;
+}
+
+.removeButton:hover,
+.removeButton:focus-visible {
+	background: var(--card_background_mid);
+	border-color: var(--actionable_text_active);
+	outline: none;
+}
+
+.hiddenInput {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+
+@media (max-width: 640px) {
+	.dropzone {
+		min-height: 170px;
+		padding: 1rem 0.85rem;
+	}
+
+	.fileBadge {
+		top: 0.8rem;
+		left: 0.8rem;
+		max-width: calc(100% - 1.6rem);
+	}
+
+	.iconHalo {
+		width: 54px;
+		height: 54px;
+		flex-basis: 54px;
+	}
+
+	.iconHalo :global(svg) {
+		width: 20px;
+		height: 20px;
+		flex-basis: 20px;
+	}
+
+	.helperText {
+		font-size: 0.9rem;
+	}
+
+	.prompt {
+		font-size: 1.02rem;
+	}
+}

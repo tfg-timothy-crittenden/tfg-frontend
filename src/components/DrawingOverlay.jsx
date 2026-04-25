@@ -14,13 +14,16 @@ import { useRef, useState } from "react";
  */
 export default function DrawingOverlay({
 	imageUrl,
-	width = 600,
+	width = 400,
 	height = 400,
+	maxWidth = 620,
+	focused = false,
 	highlightData,
 	onChange,
 	shapeType = "line",
 	setShapeType,
 	clearSignal,
+	onInteract,
 }) {
 	const svgRef = useRef(null);
 	const [drawing, setDrawing] = useState(false);
@@ -30,6 +33,9 @@ export default function DrawingOverlay({
 	// Clear drawing when clearSignal changes
 	// (parent should update highlightData.ds to [] on clear)
 	// No internal paths state
+
+	const logicalWidth = highlightData?.viewBox?.[0] || width;
+	const logicalHeight = highlightData?.viewBox?.[1] || height;
 
 	const getPoint = (e) => {
 		const rect = svgRef.current.getBoundingClientRect();
@@ -41,10 +47,15 @@ export default function DrawingOverlay({
 			x = e.clientX - rect.left;
 			y = e.clientY - rect.top;
 		}
-		return [x, y];
+
+		// Convert pointer position from rendered pixels to logical viewBox coords.
+		const scaleX = logicalWidth / rect.width;
+		const scaleY = logicalHeight / rect.height;
+		return [x * scaleX, y * scaleY];
 	};
 
 	const handlePointerDown = (e) => {
+		if (onInteract) onInteract();
 		const [x, y] = getPoint(e);
 		setStartPoint([x, y]);
 		setCurrentShape({ type: shapeType, start: [x, y], end: [x, y] });
@@ -64,7 +75,8 @@ export default function DrawingOverlay({
 		const d = getShapePath(currentShape);
 		const prevDs = highlightData?.ds || [];
 		const newDs = d ? [...prevDs, d] : prevDs;
-		if (onChange) onChange({ viewBox: [width, height], ds: newDs });
+		if (onChange)
+			onChange({ viewBox: [logicalWidth, logicalHeight], ds: newDs });
 		setCurrentShape(null);
 	};
 
@@ -96,24 +108,28 @@ export default function DrawingOverlay({
 		<div>
 			<div
 				style={{
-					width,
+					width: "100%",
+					maxWidth,
 					margin: "0 auto",
 					display: "flex",
 					flexDirection: "column",
 					alignItems: "center",
 				}}
 			>
-				<div style={{ position: "relative" }}>
+				<div style={{ position: "relative", width: "100%" }}>
 					<svg
 						ref={svgRef}
-						width={width}
-						height={height}
-						viewBox={`0 0 ${width} ${height}`}
+						width="100%"
+						viewBox={`0 0 ${logicalWidth} ${logicalHeight}`}
 						style={{
 							display: "block",
+							height: "auto",
 							background: "#fff",
 							borderRadius: 8,
-							boxShadow: "0 2px 8px #0001",
+							cursor: "crosshair",
+							boxShadow: focused
+								? "0 0 0 3px rgba(74, 123, 160, 0.45), 0 2px 8px #0001"
+								: "0 2px 8px #0001",
 							margin: 0,
 							padding: 0,
 						}}
@@ -125,7 +141,13 @@ export default function DrawingOverlay({
 						onTouchMove={handlePointerMove}
 						onTouchEnd={handlePointerUp}
 					>
-						<image href={imageUrl} x="0" y="0" width={width} height={height} />
+						<image
+							href={imageUrl}
+							x="0"
+							y="0"
+							width={logicalWidth}
+							height={logicalHeight}
+						/>
 						{paths.map((d, i) => (
 							<path
 								key={i}

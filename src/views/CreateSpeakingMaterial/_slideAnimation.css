@@ -1,0 +1,27 @@
+/* Slide animation for question transitions */
+.question_fields_slide_wrapper {
+	position: relative;
+}
+.slide_enter {
+	opacity: 0;
+	transform: translateX(40px);
+	z-index: 1;
+}
+.slide_enter_active {
+	opacity: 1;
+	transform: translateX(0);
+	transition:
+		opacity 300ms,
+		transform 300ms;
+}
+.slide_exit {
+	opacity: 1;
+	transform: translateX(0);
+}
+.slide_exit_active {
+	opacity: 0;
+	transform: translateX(-40px);
+	transition:
+		opacity 300ms,
+		transform 300ms;
+}
