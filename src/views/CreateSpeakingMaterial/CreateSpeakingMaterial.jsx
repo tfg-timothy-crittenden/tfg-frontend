@@ -1,12 +1,17 @@
 ﻿import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
-import { uploadPart1Speaking } from "@/api/material/materialAPI";
+import { ImageIcon } from "lucide-react";
+import { uploadSpeakingSection } from "@/api/material/materialAPI";
 
 import SpeakingPart1AudioQuestionFields from "./SpeakingPart1AudioQuestionFields";
+import QuestionTabsNavigator from "./QuestionTabsNavigator";
+import QuestionPanels from "./QuestionPanels";
+import SectionHeader from "./SectionHeader";
+import StepActionsRow from "./StepActionsRow";
 
 import CropEditor from "./ImageEditor/CropEditor";
 import DrawEditor from "./ImageEditor/DrawEditor";
+import ImageDropzone from "./ImageDropzone";
 
 import styles from "./CreateSpeakingMaterial.module.css";
 
@@ -19,6 +24,7 @@ const CreateSpeakingMaterial = () => {
 		handleSubmit,
 		watch,
 		control,
+		setValue,
 		formState: { errors },
 	} = useForm({
 		shouldUnregister: false,
@@ -108,6 +114,11 @@ const CreateSpeakingMaterial = () => {
 		setStep(1);
 	};
 
+	const clearImage = () => {
+		setValue("image", []);
+		setCroppedImageUrl("");
+	};
+
 	// Validation for step 1
 	const materialInfoValid = () => {
 		const title = watch("materialTitle");
@@ -117,13 +128,15 @@ const CreateSpeakingMaterial = () => {
 	const allQuestionsComplete = questionCompletion.every(Boolean);
 	const allPart2QuestionsComplete = part2QuestionCompletion.every(Boolean);
 	const partTitle = watch("partTitle");
+	const part2Title = watch("part2Title");
 	const part1NextDisabled =
 		!materialInfoValid() ||
 		!partTitle?.trim() ||
 		!selectedImage?.[0] ||
 		!croppedImageUrl ||
 		!allQuestionsComplete;
-	const submitDisabled = part1NextDisabled || !allPart2QuestionsComplete;
+	const submitDisabled =
+		part1NextDisabled || !part2Title?.trim() || !allPart2QuestionsComplete;
 
 	useEffect(() => {
 		if (!selectedImage?.[0]) {
@@ -156,6 +169,7 @@ const CreateSpeakingMaterial = () => {
 		// Material fields
 		formData.append("materialTitle", data.materialTitle);
 		if (data.partTitle) formData.append("partTitle", data.partTitle);
+		if (data.part2Title) formData.append("part2Title", data.part2Title);
 		if (data.materialDescription)
 			formData.append("materialDescription", data.materialDescription);
 		if (data.materialId) formData.append("materialId", data.materialId);
@@ -183,6 +197,7 @@ const CreateSpeakingMaterial = () => {
 				`part2Questions[${i}].transcriptText`,
 				data.part2Questions[i].transcriptText,
 			);
+			formData.append(`part2Questions[${i}].config`, JSON.stringify({}));
 			if (data.part2Questions[i].audio && data.part2Questions[i].audio[0]) {
 				formData.append(
 					`part2Questions[${i}].audio`,
@@ -195,7 +210,7 @@ const CreateSpeakingMaterial = () => {
 				alert("Material ID is required for upload.");
 				return;
 			}
-			await uploadPart1Speaking(formData);
+			await uploadSpeakingSection(formData);
 			alert("Upload successful!");
 		} catch (e) {
 			alert("Upload error: " + (e?.response?.data?.message || e.message));
@@ -336,211 +351,184 @@ const CreateSpeakingMaterial = () => {
 					</legend>
 					{activePart === 1 && step === 0 && (
 						<div className={styles.section}>
-							<h2>Step 1: Material Info</h2>
-							<p className={styles.helper}>
-								Enter a clear title and optional description for this test part.
-								The Material ID must be unique.
-							</p>
-							<label htmlFor="materialTitle" className={styles.label}>
-								Material Title
-								<input
-									type="text"
-									{...register("materialTitle", { required: true })}
-									id="materialTitle"
-									className={styles.text_input}
-									aria-invalid={!!errors.materialTitle}
-								/>
-								{errors.materialTitle && (
-									<span className={styles.error}>Title is required</span>
-								)}
-							</label>
-							<label htmlFor="materialDescription" className={styles.label}>
-								Material Description
-								<input
-									type="text"
-									{...register("materialDescription")}
-									id="materialDescription"
-									className={styles.text_input}
-								/>
-							</label>
-							<label htmlFor="materialId" className={styles.label}>
-								Material ID
-								<input
-									type="text"
-									{...register("materialId", { required: true })}
-									id="materialId"
-									className={styles.text_input}
-									aria-invalid={!!errors.materialId}
-								/>
-								{errors.materialId && (
-									<span className={styles.error}>ID is required</span>
-								)}
-							</label>
-							<button
-								type="button"
-								onClick={goToNextStep}
-								disabled={!materialInfoValid()}
-								className={styles.next_button}
-							>
-								Next
-							</button>
-						</div>
-					)}
-					{activePart === 1 && step === 1 && (
-						<div className={styles.section}>
-							<h2>Step 2: Select & Crop Image</h2>
-							<p className={styles.helper}>
-								Give this part a title, upload an image, and crop it to the area
-								students should see.
-							</p>
-							<label htmlFor="partTitle" className={styles.label}>
-								Part Title
-								<input
-									{...register("partTitle", { required: true })}
-									id="partTitle"
-									className={styles.text_input}
-									aria-invalid={!!errors.partTitle}
-								/>
-								{errors.partTitle && (
-									<span className={styles.error}>Part title is required</span>
-								)}
-							</label>
-							{/* Dropzone for image upload */}
-							<div className={styles.dropzone_wrapper}>
-								<label htmlFor="image" className={styles.dropzone_label}>
-									<span className={styles.dropzone_text}>
-										{selectedImage
-											? selectedImageName
-											: "Drag & drop or click to select an image"}
-									</span>
-									<input
-										type="file"
-										{...register("image", { required: true })}
-										id="image"
-										className={styles.file_input}
-										accept="image/*"
-									/>
-								</label>
-								{errors.image && (
-									<span className={styles.error}>Image is required</span>
-								)}
-							</div>
-							{/* Image cropper */}
-							<div className={styles.image_section}>
-								{selectedImage ? (
-									<>
-										{croppedImageUrl ? (
-											<img
-												src={croppedImageUrl}
-												alt="Confirmed crop preview"
-												className={styles.preview_image}
-											/>
-										) : (
-											<>
-												<div className={styles.cropper_instruction}>
-													Crop the image to the area students should see, then
-													confirm.
-												</div>
-												<CropEditor
-													imageUrl={imagePreviewUrl}
-													onCropConfirmed={(url) => setCroppedImageUrl(url)}
-												/>
-											</>
+							<SectionHeader
+								badge="1"
+								title="Step 1: Material Info"
+								subtitle="Enter a clear title and optional description for this test part. The Material ID must be unique."
+								styles={styles}
+							/>
+							<div className={styles.step3_fields_card}>
+								<div className={styles.fields_inner}>
+									<label htmlFor="materialTitle" className={styles.label}>
+										Material Title
+										<input
+											type="text"
+											{...register("materialTitle", { required: true })}
+											id="materialTitle"
+											className={styles.text_input}
+											aria-invalid={!!errors.materialTitle}
+										/>
+										{errors.materialTitle && (
+											<span className={styles.error}>Title is required</span>
 										)}
-									</>
-								) : null}
-								<button
-									type="button"
-									onClick={goToPrevStep}
-									className={styles.back_button}
-								>
-									Back
-								</button>
+									</label>
+									<label htmlFor="materialDescription" className={styles.label}>
+										Material Description
+										<input
+											type="text"
+											{...register("materialDescription")}
+											id="materialDescription"
+											className={styles.text_input}
+										/>
+									</label>
+									<label htmlFor="materialId" className={styles.label}>
+										Material ID
+										<input
+											type="text"
+											{...register("materialId", { required: true })}
+											id="materialId"
+											className={styles.text_input}
+											aria-invalid={!!errors.materialId}
+										/>
+										{errors.materialId && (
+											<span className={styles.error}>ID is required</span>
+										)}
+									</label>
+								</div>
+							</div>
+							<div className={styles.step_actions_right}>
 								<button
 									type="button"
 									onClick={goToNextStep}
-									disabled={!croppedImageUrl}
-									className={styles.next_button}
+									disabled={!materialInfoValid()}
+									className={`${styles.submit_button} ${styles.step_action_button}`}
 								>
 									Next
 								</button>
 							</div>
 						</div>
 					)}
-					{activePart === 1 && step === 2 && (
+					{activePart === 1 && step === 1 && (
 						<div className={styles.section}>
-							{/* Step header */}
-							<div className={styles.step3_header}>
-								<div className={styles.step3_badge}>3</div>
-								<div>
-									<h2 className={styles.step3_title}>Step 3: Questions</h2>
-									<p className={styles.step3_subtitle}>
-										Draw highlights on the image and add audio and transcript
-										for each question.
-									</p>
+							<SectionHeader
+								badge="2"
+								title="Step 2: Select & Crop Image"
+								subtitle="Give this part a title, upload an image, and crop it to the area students should see."
+								styles={styles}
+							/>
+
+							{/* Part Title field */}
+							<div className={styles.step3_fields_card}>
+								<div className={styles.fields_inner}>
+									<label htmlFor="partTitle" className={styles.label}>
+										Part Title
+										<input
+											{...register("partTitle", { required: true })}
+											id="partTitle"
+											className={styles.text_input}
+											aria-invalid={!!errors.partTitle}
+										/>
+										{errors.partTitle && (
+											<span className={styles.error}>
+												Part title is required
+											</span>
+										)}
+									</label>
 								</div>
 							</div>
 
-							{/* Question tabs card */}
-							<div className={styles.step3_tabs_card}>
-								<div className={styles.questions_selector_row}>
-									<button
-										type="button"
-										aria-label="Previous question"
-										onClick={goPrev}
-										disabled={currentQuestion === 0}
-										className={
-											styles.chevron_button_left +
-											(currentQuestion === 0
-												? " " + styles.chevron_button_disabled
-												: "")
-										}
-									>
-										<ChevronLeft size={40} strokeWidth={2.25} />
-									</button>
-									<nav className={styles.questions_nav} aria-label="Questions">
-										{paddedFields.map((_, idx) => (
+							{/* Image upload + crop card */}
+							<div className={styles.step3_image_card}>
+								{!selectedImage?.[0] ? (
+									<>
+										<ImageDropzone
+											id="image"
+											registration={register("image", { required: true })}
+											selectedFile={selectedImage}
+											ariaInvalid={!!errors.image}
+										/>
+										{errors.image && (
+											<span className={styles.error}>Image is required</span>
+										)}
+									</>
+								) : croppedImageUrl ? (
+									<>
+										<img
+											src={croppedImageUrl}
+											alt="Confirmed crop preview"
+											className={styles.preview_image}
+										/>
+										<div className={styles.image_action_row}>
 											<button
-												key={idx}
 												type="button"
-												className={
-													styles.question_tab +
-													(idx === currentQuestion
-														? " " + styles.active_tab
-														: "") +
-													(questionCompletion[idx]
-														? " " + styles.completed_tab
-														: "")
-												}
-												onClick={() => setCurrentQuestion(idx)}
-												aria-current={
-													idx === currentQuestion ? "step" : undefined
-												}
-												aria-label={`Go to question ${idx + 1}`}
+												className={styles.back_button}
+												onClick={() => setCroppedImageUrl("")}
 											>
-												<span className={styles.question_tab_label}>
-													Q{idx + 1}
-												</span>
-												<span className={styles.question_tab_circle} />
+												Re-crop
 											</button>
-										))}
-									</nav>
-									<button
-										type="button"
-										aria-label="Next question"
-										onClick={goNext}
-										disabled={currentQuestion === questionCount - 1}
-										className={
-											styles.chevron_button_right +
-											(currentQuestion === questionCount - 1
-												? " " + styles.chevron_button_disabled
-												: "")
-										}
-									>
-										<ChevronRight size={40} strokeWidth={2.25} />
-									</button>
-								</div>
+											<button
+												type="button"
+												className={styles.back_button}
+												onClick={clearImage}
+											>
+												Change Image
+											</button>
+										</div>
+									</>
+								) : (
+									<>
+										<div className={styles.cropper_instruction}>
+											Crop the image to the area students should see, then
+											confirm.
+										</div>
+										<CropEditor
+											imageUrl={imagePreviewUrl}
+											onCropConfirmed={(url) => setCroppedImageUrl(url)}
+										/>
+										<button
+											type="button"
+											className={styles.back_button}
+											onClick={clearImage}
+										>
+											Change Image
+										</button>
+									</>
+								)}
 							</div>
+
+							<StepActionsRow
+								leftLabel="Back"
+								leftOnClick={goToPrevStep}
+								rightLabel="Next"
+								rightOnClick={goToNextStep}
+								rightDisabled={!croppedImageUrl}
+								rightType="button"
+								styles={styles}
+							/>
+						</div>
+					)}
+					{activePart === 1 && step === 2 && (
+						<div className={styles.section}>
+							{/* Step header */}
+							<SectionHeader
+								badge="3"
+								title="Step 3: Questions"
+								subtitle="Draw highlights on the image and add audio and transcript for each question."
+								styles={styles}
+							/>
+
+							{/* Question tabs card */}
+							<QuestionTabsNavigator
+								totalQuestions={questionCount}
+								currentIndex={currentQuestion}
+								onPrev={goPrev}
+								onNext={goNext}
+								onSelect={setCurrentQuestion}
+								completion={questionCompletion}
+								navAriaLabel="Questions"
+								questionAriaLabelPrefix="question"
+								styles={styles}
+							/>
 
 							{/* Visual Prompt card */}
 							<div className={styles.step3_image_card}>
@@ -570,156 +558,96 @@ const CreateSpeakingMaterial = () => {
 							</div>
 
 							{/* Question fields card */}
-							<div className={styles.step3_fields_card}>
-								<div className={styles.question_slide_area}>
-									{paddedFields.map((_, idx) => (
-										<div
-											key={idx}
-											className={`${styles.question_panel}${idx === currentQuestion ? ` ${styles.question_panel_active}` : ""}`}
-											aria-hidden={idx !== currentQuestion}
-										>
-											<SpeakingPart1AudioQuestionFields
-												idx={idx}
-												number={idx + 1}
-												register={register}
-												errors={errors}
-												selectedAudioFile={selectedAudioFiles[idx]}
-											/>
-										</div>
-									))}
-								</div>
-							</div>
+							<QuestionPanels
+								totalQuestions={questionCount}
+								currentIndex={currentQuestion}
+								renderPanel={(idx) => (
+									<SpeakingPart1AudioQuestionFields
+										idx={idx}
+										number={idx + 1}
+										register={register}
+										errors={errors}
+										selectedAudioFile={selectedAudioFiles[idx]}
+									/>
+								)}
+								styles={styles}
+							/>
 
-							<div className={styles.step_actions_row}>
-								<button
-									type="button"
-									onClick={goBackToImageStep}
-									className={`${styles.back_button} ${styles.step_action_button}`}
-								>
-									Back
-								</button>
-								<button
-									type="button"
-									onClick={goToPart2}
-									className={`${styles.submit_button} ${styles.step_action_button}`}
-									disabled={part1NextDisabled}
-								>
-									Next: Part 2
-								</button>
-							</div>
+							<StepActionsRow
+								leftLabel="Back"
+								leftOnClick={goBackToImageStep}
+								rightLabel="Next: Part 2"
+								rightOnClick={goToPart2}
+								rightType="button"
+								rightDisabled={part1NextDisabled}
+								styles={styles}
+							/>
 						</div>
 					)}
 					<div className={styles.section} hidden={activePart !== 2}>
-						<div className={styles.step3_header}>
-							<div className={styles.step3_badge}>4</div>
-							<div>
-								<h2 className={styles.step3_title}>Part 2: Questions</h2>
-								<p className={styles.step3_subtitle}>
-									Add 4 audio questions and matching transcripts.
-								</p>
-							</div>
-						</div>
-
-						<div className={styles.step3_tabs_card}>
-							<div className={styles.questions_selector_row}>
-								<button
-									type="button"
-									aria-label="Previous part 2 question"
-									onClick={goPart2Prev}
-									disabled={currentPart2Question === 0}
-									className={
-										styles.chevron_button_left +
-										(currentPart2Question === 0
-											? " " + styles.chevron_button_disabled
-											: "")
-									}
-								>
-									<ChevronLeft size={40} strokeWidth={2.25} />
-								</button>
-								<nav
-									className={styles.questions_nav}
-									aria-label="Part 2 Questions"
-								>
-									{paddedPart2Fields.map((_, idx) => (
-										<button
-											key={idx}
-											type="button"
-											className={
-												styles.question_tab +
-												(idx === currentPart2Question
-													? " " + styles.active_tab
-													: "") +
-												(part2QuestionCompletion[idx]
-													? " " + styles.completed_tab
-													: "")
-											}
-											onClick={() => setCurrentPart2Question(idx)}
-											aria-current={
-												idx === currentPart2Question ? "step" : undefined
-											}
-											aria-label={`Go to part 2 question ${idx + 1}`}
-										>
-											<span className={styles.question_tab_label}>
-												Q{idx + 1}
-											</span>
-											<span className={styles.question_tab_circle} />
-										</button>
-									))}
-								</nav>
-								<button
-									type="button"
-									aria-label="Next part 2 question"
-									onClick={goPart2Next}
-									disabled={currentPart2Question === part2QuestionCount - 1}
-									className={
-										styles.chevron_button_right +
-										(currentPart2Question === part2QuestionCount - 1
-											? " " + styles.chevron_button_disabled
-											: "")
-									}
-								>
-									<ChevronRight size={40} strokeWidth={2.25} />
-								</button>
-							</div>
-						</div>
+						<SectionHeader
+							badge="4"
+							title="Part 2: Questions"
+							subtitle="Add 4 audio questions and matching transcripts."
+							styles={styles}
+						/>
 
 						<div className={styles.step3_fields_card}>
-							<div className={styles.question_slide_area}>
-								{paddedPart2Fields.map((_, idx) => (
-									<div
-										key={idx}
-										className={`${styles.question_panel}${idx === currentPart2Question ? ` ${styles.question_panel_active}` : ""}`}
-										aria-hidden={idx !== currentPart2Question}
-									>
-										<SpeakingPart1AudioQuestionFields
-											idx={idx}
-											number={idx + 1}
-											register={register}
-											errors={errors}
-											selectedAudioFile={selectedPart2AudioFiles[idx]}
-											fieldPathPrefix="part2Questions"
-										/>
-									</div>
-								))}
+							<div className={styles.fields_inner}>
+								<label htmlFor="part2Title" className={styles.label}>
+									Part 2 Title
+									<input
+										type="text"
+										{...register("part2Title", { required: true })}
+										id="part2Title"
+										className={styles.text_input}
+										aria-invalid={!!errors.part2Title}
+									/>
+									{errors.part2Title && (
+										<span className={styles.error}>
+											Part 2 title is required
+										</span>
+									)}
+								</label>
 							</div>
 						</div>
 
-						<div className={styles.step_actions_row}>
-							<button
-								type="button"
-								onClick={goBackToPart1Questions}
-								className={`${styles.back_button} ${styles.step_action_button}`}
-							>
-								Back to Part 1
-							</button>
-							<button
-								type="submit"
-								className={`${styles.submit_button} ${styles.step_action_button}`}
-								disabled={submitDisabled}
-							>
-								Submit
-							</button>
-						</div>
+						<QuestionTabsNavigator
+							totalQuestions={part2QuestionCount}
+							currentIndex={currentPart2Question}
+							onPrev={goPart2Prev}
+							onNext={goPart2Next}
+							onSelect={setCurrentPart2Question}
+							completion={part2QuestionCompletion}
+							navAriaLabel="Part 2 Questions"
+							questionAriaLabelPrefix="part 2 question"
+							styles={styles}
+						/>
+
+						<QuestionPanels
+							totalQuestions={part2QuestionCount}
+							currentIndex={currentPart2Question}
+							renderPanel={(idx) => (
+								<SpeakingPart1AudioQuestionFields
+									idx={idx}
+									number={idx + 1}
+									register={register}
+									errors={errors}
+									selectedAudioFile={selectedPart2AudioFiles[idx]}
+									fieldPathPrefix="part2Questions"
+								/>
+							)}
+							styles={styles}
+						/>
+
+						<StepActionsRow
+							leftLabel="Back to Part 1"
+							leftOnClick={goBackToPart1Questions}
+							rightLabel="Submit"
+							rightType="submit"
+							rightDisabled={submitDisabled}
+							styles={styles}
+						/>
 					</div>
 				</fieldset>
 				{/* Inline validation for audio fields */}
