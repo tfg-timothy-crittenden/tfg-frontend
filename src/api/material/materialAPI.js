@@ -137,6 +137,27 @@ export const uploadSpeakingSection = async (formData) => {
 	return data;
 };
 
+export const getSpeakingSectionByMaterialId = async (materialId) => {
+	const { data } = await httpClient.get(
+		`/toefl-speaking/material/${materialId}/section`,
+		{
+			baseURL: MATERIALS_BASE_URL,
+		},
+	);
+	return data;
+};
+
+export const updateSpeakingSection = async (materialId, formData) => {
+	const { data } = await httpClient.patch(
+		`/toefl-speaking/material/${materialId}/section`,
+		formData,
+		{
+			baseURL: MATERIALS_BASE_URL,
+		},
+	);
+	return data;
+};
+
 export const getAllSpeakingSectionsSummaries = async () => {
 	const { data } = await httpClient.get(`/toefl-speaking/sections-summaries`, {
 		baseURL: MATERIALS_BASE_URL,

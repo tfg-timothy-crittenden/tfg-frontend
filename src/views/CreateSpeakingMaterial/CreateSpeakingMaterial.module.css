@@ -24,6 +24,15 @@
 	border-color: var(--actionable_text_active);
 	color: var(--actionable_text_active);
 }
+
+.form {
+	width: 100%;
+	max-width: 1120px;
+	margin: 0 auto;
+	padding: 0.75rem 0.75rem 1.5rem;
+	box-sizing: border-box;
+}
+
 .image_cropper_container {
 	width: 400px;
 	height: 400px;

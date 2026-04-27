@@ -22,6 +22,7 @@ import {
 	PasswordResetConfirm,
 } from "@/routes/lazyRoutes";
 import CreateSpeakingMaterial from "./views/CreateSpeakingMaterial/CreateSpeakingMaterial";
+import EditSpeakingMaterial from "./views/CreateSpeakingMaterial/EditSpeakingMaterial";
 
 const Fallback = () => <div style={{ padding: 24 }}>Loading…</div>;
 
@@ -101,6 +102,10 @@ function App() {
 						<Route
 							path={ROUTES.CREATE_SPEAKING_MATERIAL}
 							element={<CreateSpeakingMaterial />}
+						/>
+						<Route
+							path={ROUTES.EDIT_SPEAKING_MATERIAL}
+							element={<EditSpeakingMaterial />}
 						/>
 						<Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />}>
 							<Route

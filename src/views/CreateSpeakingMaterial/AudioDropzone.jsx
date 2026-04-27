@@ -7,6 +7,7 @@ const AudioDropzone = ({
 	id,
 	registration,
 	selectedFile,
+	existingAudioUrl = "",
 	accept = "audio/*",
 	helperText = "Files Supported: MP3, WAV, MP4A (max size 50mb)",
 	ariaInvalid = false,
@@ -24,6 +25,8 @@ const AudioDropzone = ({
 	const selectedAudio = selectedFile?.[0] || null;
 	const fileName = selectedAudio?.name || "";
 	const [audioUrl, setAudioUrl] = useState("");
+	const hasSelectedAudio = !!selectedAudio;
+	const displayAudioUrl = audioUrl || existingAudioUrl;
 
 	// Keep the native input ref and react-hook-form ref pointed at the same node.
 	const setRefs = (node) => {
@@ -239,7 +242,7 @@ const AudioDropzone = ({
 						<span className={styles.fileName}>{fileName}</span>
 					</div>
 				) : null}
-				{!audioUrl && (
+				{!displayAudioUrl && (
 					<button
 						type="button"
 						className={`${styles.iconHaloButton}${isRecording ? ` ${styles.recording}` : ""}`}
@@ -256,7 +259,7 @@ const AudioDropzone = ({
 						</div>
 					</button>
 				)}
-				{audioUrl && !isRecording ? (
+				{displayAudioUrl && !isRecording ? (
 					// Player + remove button; stopPropagation prevents clicks from
 					// opening the file picker.
 					<div
@@ -264,23 +267,28 @@ const AudioDropzone = ({
 						onClick={(e) => e.stopPropagation()}
 					>
 						<audio
-							key={audioUrl}
+							key={displayAudioUrl}
 							controls
 							preload="metadata"
 							className={styles.audioPlayer}
 						>
-							<source src={audioUrl} type={selectedAudio?.type || undefined} />
+							<source
+								src={displayAudioUrl}
+								type={selectedAudio?.type || undefined}
+							/>
 							Your browser cannot play this audio file.
 						</audio>
-						<button
-							type="button"
-							className={styles.removeButton}
-							onClick={clearFile}
-							aria-label="Remove audio file"
-						>
-							<X size={13} strokeWidth={2.5} />
-							Remove file
-						</button>
+						{hasSelectedAudio && (
+							<button
+								type="button"
+								className={styles.removeButton}
+								onClick={clearFile}
+								aria-label="Remove audio file"
+							>
+								<X size={13} strokeWidth={2.5} />
+								Remove file
+							</button>
+						)}
 					</div>
 				) : (
 					<>

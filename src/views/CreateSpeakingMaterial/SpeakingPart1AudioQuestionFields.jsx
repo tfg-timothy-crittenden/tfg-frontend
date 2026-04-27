@@ -8,7 +8,9 @@ const SpeakingPart1AudioQuestionFields = ({
 	register,
 	errors,
 	selectedAudioFile,
+	existingAudioUrl,
 	fieldPathPrefix = "questions",
+	requireAudio = true,
 }) => {
 	const fieldErrors = errors?.[fieldPathPrefix]?.[idx];
 	const transcriptPath = `${fieldPathPrefix}.${idx}.transcriptText`;
@@ -47,9 +49,10 @@ const SpeakingPart1AudioQuestionFields = ({
 					<AudioDropzone
 						id={`${fieldPathPrefix}-question-audio-${idx}`}
 						registration={register(audioPath, {
-							required: true,
+							required: requireAudio,
 						})}
 						selectedFile={selectedAudioFile}
+						existingAudioUrl={existingAudioUrl}
 						ariaInvalid={!!fieldErrors?.audio}
 						showLabel={false}
 					/>

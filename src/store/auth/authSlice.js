@@ -6,14 +6,54 @@ import { setAuthHeaders } from "@/api/httpClient";
 const API_BASE = import.meta.env.VITE_API_URL || "/users/api";
 
 const initialToken = localStorage.getItem("token");
+const initialUserFromStorage = (() => {
+	try {
+		const rawUser = localStorage.getItem("user");
+		if (!rawUser) return null;
+		return JSON.parse(rawUser);
+	} catch {
+		return null;
+	}
+})();
 if (initialToken) setAuthHeaders(initialToken);
 
 const initialState = {
-	user: null,
+	user: initialUserFromStorage,
 	token: initialToken || null,
 	status: "idle",
 	error: null,
 	userStatus: null, // For email-based auth method checking
+};
+
+const normalizeRoleValue = (role) =>
+	String(role || "")
+		.trim()
+		.toLowerCase()
+		.replace(/^role_/, "");
+
+const extractRolesFromUser = (user) => {
+	if (!user || typeof user !== "object") return [];
+
+	if (Array.isArray(user.roles)) {
+		return user.roles;
+	}
+
+	if (typeof user.role === "string") {
+		return [user.role];
+	}
+
+	if (Array.isArray(user.authorities)) {
+		return user.authorities.map((authority) => {
+			if (typeof authority === "string") return authority;
+			return authority?.authority || authority?.role || "";
+		});
+	}
+
+	if (typeof user.authority === "string") {
+		return [user.authority];
+	}
+
+	return [];
 };
 
 // --- Existing thunks (unchanged) ---
@@ -96,9 +136,13 @@ const authSlice = createSlice({
 			state.error = null;
 			if (token) {
 				localStorage.setItem("token", token);
+				if (user) {
+					localStorage.setItem("user", JSON.stringify(user));
+				}
 				setAuthHeaders(token);
 			} else {
 				localStorage.removeItem("token");
+				localStorage.removeItem("user");
 				setAuthHeaders(null);
 			}
 		},
@@ -136,6 +180,7 @@ const authSlice = createSlice({
 				state.user = action.payload.user;
 				state.token = action.payload.token;
 				state.error = null;
+				localStorage.setItem("user", JSON.stringify(action.payload.user));
 			})
 			.addCase(login.rejected, (state, action) => {
 				state.status = "failed";
@@ -149,6 +194,7 @@ const authSlice = createSlice({
 				state.status = "succeeded";
 				state.user = action.payload;
 				state.error = null;
+				localStorage.setItem("user", JSON.stringify(action.payload));
 			})
 			.addCase(fetchMe.rejected, (state, action) => {
 				state.status = "failed";
@@ -201,15 +247,15 @@ export const {
 export const selectIsAuthenticated = (state) => !!state.auth.token;
 export const selectUser = (state) => state.auth.user;
 export const selectUsername = (state) => state.auth.user?.username || "Guest";
-export const selectUserRoles = (state) => state.auth.user?.roles || [];
+export const selectUserRoles = (state) => extractRolesFromUser(state.auth.user);
 export const selectUserRole = (state) => selectUserRoles(state)[0] || null;
 export const selectHasRole = (roles) => (state) => {
-	const normalizedUserRoles = selectUserRoles(state).map((role) =>
-		String(role).toLowerCase(),
-	);
-	const normalizedRoles = (roles || []).map((role) =>
-		String(role).toLowerCase(),
-	);
+	const normalizedUserRoles = selectUserRoles(state)
+		.map((role) => normalizeRoleValue(role))
+		.filter(Boolean);
+	const normalizedRoles = (roles || [])
+		.map((role) => normalizeRoleValue(role))
+		.filter(Boolean);
 
 	return normalizedRoles.some((role) => normalizedUserRoles.includes(role));
 };
