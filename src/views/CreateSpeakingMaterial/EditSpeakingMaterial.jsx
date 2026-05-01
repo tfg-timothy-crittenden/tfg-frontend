@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
 	getPresignedUrl,
@@ -6,6 +6,7 @@ import {
 	getSpeakingSectionByMaterialId,
 	getToeflSpeakingMaterialQuestion,
 	updateSpeakingSection,
+	publishSpeakingMaterial,
 } from "@/api/material/materialAPI";
 import CreateSpeakingMaterialPresentation from "./CreateSpeakingMaterialPresentation";
 import {
@@ -39,6 +40,56 @@ const toMediaRefFromAsset = (asset) => {
 		url,
 		objectKey,
 		bucket: asset.bucket || null,
+	};
+};
+
+const toMediaRefFromQuestionNode = (questionNode) => {
+	if (!questionNode) return null;
+
+	const questionAssets =
+		questionNode?.assets || questionNode?.materialAssets || [];
+	const audioAsset = pickAudioAsset(questionAssets);
+
+	const directUrl =
+		questionNode?.audioUrl ||
+		questionNode?.audio_url ||
+		questionNode?.audioSignedUrl ||
+		questionNode?.audioAssetUrl ||
+		questionNode?.audioPreviewUrl ||
+		questionNode?.audio?.url ||
+		questionNode?.audio?.signedUrl ||
+		questionNode?.audio?.assetUrl ||
+		audioAsset?.signedUrl ||
+		audioAsset?.url ||
+		audioAsset?.assetUrl ||
+		audioAsset?.previewUrl ||
+		null;
+
+	const objectKey =
+		questionNode?.audioObjectKey ||
+		questionNode?.audioStorageKey ||
+		questionNode?.audioKey ||
+		questionNode?.audio_object_key ||
+		questionNode?.audio_storage_key ||
+		questionNode?.audio_key ||
+		questionNode?.audio?.objectKey ||
+		questionNode?.audio?.storageKey ||
+		questionNode?.audio?.key ||
+		questionNode?.audio?.object_key ||
+		questionNode?.audio?.storage_key ||
+		audioAsset?.objectKey ||
+		audioAsset?.storageKey ||
+		audioAsset?.key ||
+		audioAsset?.object_key ||
+		audioAsset?.storage_key ||
+		null;
+
+	if (!directUrl && !objectKey) return null;
+
+	return {
+		url: directUrl || null,
+		objectKey,
+		bucket: questionNode?.audio?.bucket || audioAsset?.bucket || null,
 	};
 };
 
@@ -183,17 +234,14 @@ const resolveQuestionAudioFromQuestionEndpoint = async ({
 		questionNumber,
 	);
 
-	const questionAssets =
-		questionNode?.assets || questionNode?.materialAssets || [];
-	const audioAsset = pickAudioAsset(questionAssets);
-
-	return resolveMediaRefToUrl(toMediaRefFromAsset(audioAsset));
+	return resolveMediaRefToUrl(toMediaRefFromQuestionNode(questionNode));
 };
 
 const EditSpeakingMaterial = () => {
 	const { id } = useParams();
 	const [isLoading, setIsLoading] = useState(true);
 	const [initialValues, setInitialValues] = useState(null);
+	const [sectionStatus, setSectionStatus] = useState(null);
 	const [initialHighlightDataByQuestion, setInitialHighlightDataByQuestion] =
 		useState(Array(QUESTION_COUNT).fill(null));
 	const [initialPart2ConfigByQuestion, setInitialPart2ConfigByQuestion] =
@@ -212,6 +260,9 @@ const EditSpeakingMaterial = () => {
 			try {
 				const section = await getSpeakingSectionByMaterialId(id);
 				if (isCancelled) return;
+				setSectionStatus(
+					section?.status ? String(section.status).toLowerCase() : null,
+				);
 
 				const normalized = normalizeSectionToFormState(
 					section,
@@ -329,30 +380,82 @@ const EditSpeakingMaterial = () => {
 		};
 	}, [id]);
 
+	const persistSectionChanges = useCallback(
+		async ({
+			data,
+			highlightDataByQuestion,
+			part2ConfigByQuestion,
+			allowNoChanges = false,
+		}) => {
+			if (!id) {
+				throw new Error("Missing material id for update.");
+			}
+
+			const patchFormData = buildPatchSpeakingSectionFormData({
+				initialValues,
+				initialHighlightDataByQuestion,
+				initialPart2ConfigByQuestion,
+				data,
+				highlightDataByQuestion,
+				part2ConfigByQuestion,
+			});
+
+			if (!patchFormData) {
+				if (allowNoChanges) return;
+				throw new Error("No changes detected.");
+			}
+
+			await updateSpeakingSection(id, patchFormData);
+		},
+		[
+			id,
+			initialValues,
+			initialHighlightDataByQuestion,
+			initialPart2ConfigByQuestion,
+		],
+	);
+
 	const handleSubmitForm = async ({
 		data,
 		highlightDataByQuestion,
 		part2ConfigByQuestion,
 	}) => {
-		if (!id) {
-			throw new Error("Missing material id for update.");
-		}
-
-		const patchFormData = buildPatchSpeakingSectionFormData({
-			initialValues,
-			initialHighlightDataByQuestion,
-			initialPart2ConfigByQuestion,
+		await persistSectionChanges({
 			data,
 			highlightDataByQuestion,
 			part2ConfigByQuestion,
+			allowNoChanges: false,
 		});
-
-		if (!patchFormData) {
-			throw new Error("No changes detected.");
-		}
-
-		await updateSpeakingSection(id, patchFormData);
 	};
+
+	const handleDraftSaveForm = async ({
+		data,
+		highlightDataByQuestion,
+		part2ConfigByQuestion,
+	}) => {
+		await persistSectionChanges({
+			data,
+			highlightDataByQuestion,
+			part2ConfigByQuestion,
+			allowNoChanges: false,
+		});
+	};
+
+	const handlePublish = useCallback(
+		async (payload) => {
+			if (!id) return;
+			if (payload) {
+				await persistSectionChanges({
+					...payload,
+					allowNoChanges: true,
+				});
+			}
+			await publishSpeakingMaterial(id);
+		},
+		[id, persistSectionChanges],
+	);
+
+	const canSaveDraft = sectionStatus !== "published";
 
 	return (
 		<CreateSpeakingMaterialPresentation
@@ -363,7 +466,9 @@ const EditSpeakingMaterial = () => {
 			initialPart2ConfigByQuestion={initialPart2ConfigByQuestion}
 			existingMedia={existingMedia}
 			onSubmitForm={handleSubmitForm}
+			onDraftSaveForm={canSaveDraft ? handleDraftSaveForm : undefined}
 			submitLabel="Save Changes"
+			onPublish={handlePublish}
 		/>
 	);
 };

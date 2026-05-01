@@ -19,7 +19,13 @@ const toMediaRef = ({ directUrl = null, objectKey = null, bucket = null }) => {
 	};
 };
 
+const isLikelyAbsoluteUrl = (value) =>
+	typeof value === "string" && /^(https?:)?\/\//i.test(value);
+
 const getObjectKey = (source) =>
+	(typeof source === "string" && !isLikelyAbsoluteUrl(source)
+		? source
+		: null) ||
 	source?.objectKey ||
 	source?.storageKey ||
 	source?.key ||
@@ -28,6 +34,7 @@ const getObjectKey = (source) =>
 	null;
 
 const getDirectUrl = (source) =>
+	(typeof source === "string" && isLikelyAbsoluteUrl(source) ? source : null) ||
 	source?.signedUrl ||
 	source?.url ||
 	source?.assetUrl ||
@@ -70,11 +77,22 @@ const getQuestionAudioUrl = (question) => {
 		directUrl:
 			question?.audioUrl ||
 			question?.audio_url ||
+			question?.audioSignedUrl ||
+			question?.audioAssetUrl ||
+			question?.audioPreviewUrl ||
 			question?.audio?.url ||
 			question?.audio?.signedUrl ||
 			question?.audio?.assetUrl ||
 			getDirectUrl(audioAsset),
-		objectKey: getObjectKey(question?.audio) || getObjectKey(audioAsset),
+		objectKey:
+			question?.audioObjectKey ||
+			question?.audioStorageKey ||
+			question?.audioKey ||
+			question?.audio_object_key ||
+			question?.audio_storage_key ||
+			question?.audio_key ||
+			getObjectKey(question?.audio) ||
+			getObjectKey(audioAsset),
 		bucket: getBucket(question?.audio) || getBucket(audioAsset),
 	});
 
@@ -122,11 +140,22 @@ const getQuestionAudioRef = (question) => {
 		directUrl:
 			question?.audioUrl ||
 			question?.audio_url ||
+			question?.audioSignedUrl ||
+			question?.audioAssetUrl ||
+			question?.audioPreviewUrl ||
 			question?.audio?.url ||
 			question?.audio?.signedUrl ||
 			question?.audio?.assetUrl ||
 			getDirectUrl(audioAsset),
-		objectKey: getObjectKey(question?.audio) || getObjectKey(audioAsset),
+		objectKey:
+			question?.audioObjectKey ||
+			question?.audioStorageKey ||
+			question?.audioKey ||
+			question?.audio_object_key ||
+			question?.audio_storage_key ||
+			question?.audio_key ||
+			getObjectKey(question?.audio) ||
+			getObjectKey(audioAsset),
 		bucket: getBucket(question?.audio) || getBucket(audioAsset),
 	});
 };
@@ -141,16 +170,24 @@ const getPartImageRef = (section) => {
 			section?.partImage?.url ||
 			section?.partImage?.signedUrl ||
 			section?.partImage?.assetUrl ||
+			getDirectUrl(section?.partImage) ||
 			section?.part1?.imageUrl ||
 			section?.part1?.partImageUrl ||
 			section?.part1?.partImage?.url ||
 			section?.part1?.partImage?.signedUrl ||
 			section?.part1?.partImage?.assetUrl ||
+			getDirectUrl(section?.part1?.partImage) ||
 			getDirectUrl(sectionImageAsset) ||
 			getDirectUrl(partImageAsset),
 		objectKey:
 			getObjectKey(section?.partImage) ||
+			section?.partImageObjectKey ||
+			section?.partImageStorageKey ||
+			section?.partImageKey ||
 			getObjectKey(section?.part1?.partImage) ||
+			section?.part1?.partImageObjectKey ||
+			section?.part1?.partImageStorageKey ||
+			section?.part1?.partImageKey ||
 			getObjectKey(sectionImageAsset) ||
 			getObjectKey(partImageAsset),
 		bucket:
@@ -302,6 +339,75 @@ export const buildCreateSpeakingSectionFormData = ({
 				`part2Questions[${i}].audio`,
 				data.part2Questions[i].audio[0],
 			);
+		}
+	}
+
+	return formData;
+};
+
+export const buildCreateSpeakingSectionDraftFormData = ({
+	data,
+	highlightDataByQuestion,
+	part2ConfigByQuestion,
+}) => {
+	const formData = new FormData();
+
+	if (data.materialTitle?.trim()) {
+		formData.append("materialTitle", data.materialTitle.trim());
+	}
+	if (data.partTitle?.trim()) {
+		formData.append("partTitle", data.partTitle.trim());
+	}
+	if (data.part2Title?.trim()) {
+		formData.append("part2Title", data.part2Title.trim());
+	}
+	if (data.materialDescription?.trim()) {
+		formData.append("materialDescription", data.materialDescription.trim());
+	}
+	if (data.materialId?.trim()) {
+		formData.append("materialId", data.materialId.trim());
+	}
+	if (data.image?.[0]) {
+		formData.append("partImage", data.image[0]);
+	}
+
+	for (let i = 0; i < (data.questions?.length || 0); i++) {
+		const transcript = data.questions?.[i]?.transcriptText || "";
+		const audioFile = data.questions?.[i]?.audio?.[0] || null;
+		const config = {};
+		if (highlightDataByQuestion?.[i]) {
+			config.highlight_data = highlightDataByQuestion[i];
+		}
+		const hasConfig = Object.keys(config).length > 0;
+
+		if (transcript.trim()) {
+			formData.append(`questions[${i}].transcriptText`, transcript);
+		}
+		if (audioFile) {
+			formData.append(`questions[${i}].audio`, audioFile);
+		}
+		if (hasConfig) {
+			formData.append(`questions[${i}].config`, JSON.stringify(config));
+		}
+	}
+
+	for (let i = 0; i < (data.part2Questions?.length || 0); i++) {
+		const transcript = data.part2Questions?.[i]?.transcriptText || "";
+		const audioFile = data.part2Questions?.[i]?.audio?.[0] || null;
+		const part2Config = part2ConfigByQuestion?.[i] || {};
+		const hasConfig = Object.keys(part2Config).length > 0;
+
+		if (transcript.trim()) {
+			formData.append(`part2Questions[${i}].transcriptText`, transcript);
+		}
+		if (hasConfig) {
+			formData.append(
+				`part2Questions[${i}].config`,
+				JSON.stringify(part2Config),
+			);
+		}
+		if (audioFile) {
+			formData.append(`part2Questions[${i}].audio`, audioFile);
 		}
 	}
 

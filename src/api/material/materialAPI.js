@@ -75,15 +75,41 @@ export const getToeflSpeakingMaterialQuestion = async (
 };
 
 export const getAllMaterial = async () => {
-	const { data } = await httpClient.get(`/materials`, {
-		baseURL: MATERIALS_BASE_URL,
-	});
-	return normalizeMaterialList(data);
+	const [publishedResult, draftsResult] = await Promise.allSettled([
+		httpClient.get(`/toefl-speaking/sections-summaries`, {
+			baseURL: MATERIALS_BASE_URL,
+		}),
+		httpClient.get(`/toefl-speaking/sections-summaries/drafts`, {
+			baseURL: MATERIALS_BASE_URL,
+		}),
+	]);
+
+	const publishedData =
+		publishedResult.status === "fulfilled" ? publishedResult.value.data : [];
+	const draftsData =
+		draftsResult.status === "fulfilled" ? draftsResult.value.data : [];
+
+	const combined = [
+		...normalizeMaterialList(publishedData),
+		...normalizeMaterialList(draftsData),
+	];
+
+	const uniqueByMaterialId = new Map();
+	for (const item of combined) {
+		const id = item?.materialId ?? item?.material_id ?? item?.id;
+		const key = id === null || id === undefined ? null : String(id);
+		if (!key) continue;
+		if (!uniqueByMaterialId.has(key)) {
+			uniqueByMaterialId.set(key, item);
+		}
+	}
+
+	return Array.from(uniqueByMaterialId.values());
 };
 
 export const getMaterialNodeAssets = async (materialNodeId) => {
 	const { data } = await httpClient.get(
-		`/material-nodes/${materialNodeId}/assets`,
+		`/toefl-speaking/material-nodes/${materialNodeId}/assets`,
 		{
 			baseURL: MATERIALS_BASE_URL,
 		},
@@ -137,6 +163,21 @@ export const uploadSpeakingSection = async (formData) => {
 	return data;
 };
 
+export const uploadSpeakingSectionDraft = async (formData) => {
+	console.log("FormData entries:");
+	for (let pair of formData.entries()) {
+		console.log(pair[0], pair[1]);
+	}
+	const { data } = await httpClient.post(
+		"/toefl-speaking/material/section/draft",
+		formData,
+		{
+			baseURL: MATERIALS_BASE_URL,
+		},
+	);
+	return data;
+};
+
 export const getSpeakingSectionByMaterialId = async (materialId) => {
 	const { data } = await httpClient.get(
 		`/toefl-speaking/material/${materialId}/section`,
@@ -162,5 +203,24 @@ export const getAllSpeakingSectionsSummaries = async () => {
 	const { data } = await httpClient.get(`/toefl-speaking/sections-summaries`, {
 		baseURL: MATERIALS_BASE_URL,
 	});
+	return data;
+};
+
+export const getDraftSpeakingSectionsSummaries = async () => {
+	const { data } = await httpClient.get(
+		`/toefl-speaking/sections-summaries/drafts`,
+		{
+			baseURL: MATERIALS_BASE_URL,
+		},
+	);
+	return data;
+};
+
+export const publishSpeakingMaterial = async (materialId) => {
+	const { data } = await httpClient.patch(
+		`/toefl-speaking/material/${materialId}/publish`,
+		{},
+		{ baseURL: MATERIALS_BASE_URL },
+	);
 	return data;
 };

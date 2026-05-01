@@ -35,6 +35,7 @@ export const ADMIN_SEGMENTS = {
 	TEACHERS: "teachers",
 	CLASSES: "classes",
 	MATERIALS: "materials",
+	MATERIAL_LIBRARY: "material-library",
 };
 
 /**
@@ -78,6 +79,7 @@ export const ROUTES = {
 	ADMIN_TEACHERS: `/${ROUTE_SEGMENTS.ADMIN_DASHBOARD}/${ADMIN_SEGMENTS.TEACHERS}`,
 	ADMIN_CLASSES: `/${ROUTE_SEGMENTS.ADMIN_DASHBOARD}/${ADMIN_SEGMENTS.CLASSES}`,
 	ADMIN_MATERIAL: `/${ROUTE_SEGMENTS.ADMIN_DASHBOARD}/${ADMIN_SEGMENTS.MATERIAL}`,
+	ADMIN_MATERIAL_LIBRARY: `/${ROUTE_SEGMENTS.ADMIN_DASHBOARD}/${ADMIN_SEGMENTS.MATERIAL_LIBRARY}`,
 };
 
 /**
@@ -134,6 +136,9 @@ export const buildRoute = {
 
 	testInstructions: (classroomId, sectionId) =>
 		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.SECTION}/${sectionId}/${MODE_SEGMENTS.INSTRUCTIONS}`,
+
+	editSpeakingMaterial: (materialId) =>
+		`/${ROUTE_SEGMENTS.CREATE_SPEAKING_MATERIAL}/${materialId}/edit`,
 };
 
 /**

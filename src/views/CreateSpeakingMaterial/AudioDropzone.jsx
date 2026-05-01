@@ -16,6 +16,7 @@ const AudioDropzone = ({
 	const [isDragging, setIsDragging] = useState(false);
 	const [isRecording, setIsRecording] = useState(false);
 	const [recordingError, setRecordingError] = useState("");
+	const [hasUserCleared, setHasUserCleared] = useState(false);
 	const inputRef = useRef(null);
 	const mediaRecorderRef = useRef(null);
 	const mediaStreamRef = useRef(null);
@@ -26,7 +27,8 @@ const AudioDropzone = ({
 	const fileName = selectedAudio?.name || "";
 	const [audioUrl, setAudioUrl] = useState("");
 	const hasSelectedAudio = !!selectedAudio;
-	const displayAudioUrl = audioUrl || existingAudioUrl;
+	// Only show existing audio if the user hasn't explicitly cleared it
+	const displayAudioUrl = audioUrl || (hasUserCleared ? "" : existingAudioUrl);
 
 	// Keep the native input ref and react-hook-form ref pointed at the same node.
 	const setRefs = (node) => {
@@ -58,6 +60,7 @@ const AudioDropzone = ({
 
 	const applyFiles = (fileList) => {
 		if (!inputRef.current || !fileList?.length) return;
+		setHasUserCleared(false);
 
 		const dataTransfer = new DataTransfer();
 		Array.from(fileList).forEach((file) => dataTransfer.items.add(file));
@@ -67,6 +70,9 @@ const AudioDropzone = ({
 
 	const handleInputChange = (event) => {
 		const files = Array.from(event.target.files || []);
+		if (files.length > 0) {
+			setHasUserCleared(false);
+		}
 		pushFilesToForm(files);
 	};
 
@@ -178,6 +184,7 @@ const AudioDropzone = ({
 	const clearFile = (event) => {
 		event.preventDefault();
 		event.stopPropagation();
+		setHasUserCleared(true);
 		if (!inputRef.current) return;
 		inputRef.current.files = new DataTransfer().files;
 		pushFilesToForm([]);

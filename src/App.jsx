@@ -16,6 +16,7 @@ import {
 	AdminTeachers,
 	AdminClasses,
 	AdminMaterial,
+	AdminMaterialLibrary,
 	StudentSignup,
 	EmailVerification,
 	PasswordResetRequest,
@@ -116,6 +117,10 @@ function App() {
 							<Route
 								path={ADMIN_SEGMENTS.MATERIALS}
 								element={<AdminMaterial />}
+							/>
+							<Route
+								path={ADMIN_SEGMENTS.MATERIAL_LIBRARY}
+								element={<AdminMaterialLibrary />}
 							/>
 						</Route>
 					</Route>

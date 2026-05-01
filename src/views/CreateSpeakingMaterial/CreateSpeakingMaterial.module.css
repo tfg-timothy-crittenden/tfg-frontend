@@ -110,16 +110,50 @@
 
 .breadcrumb li {
 	display: inline-flex;
-	align-items: center;
-	color: var(--card_border);
-}
-
-.breadcrumb_parts {
-	justify-content: flex-start;
-	gap: 0.9rem;
 	font-size: 0.84rem;
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
+}
+
+.legend {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.65rem;
+	flex-wrap: wrap;
+	font-size: 1.18rem;
+	font-weight: 700;
+	margin-bottom: 1.1rem;
+	color: var(--actionable_text_active);
+	letter-spacing: 0.01em;
+	text-align: center;
+}
+
+.autosave_indicator {
+	font-size: 0.78rem;
+	font-weight: 500;
+	padding: 2px 10px;
+	border-radius: 999px;
+	letter-spacing: 0;
+}
+
+.autosave_saving {
+	background-color: color-mix(in srgb, var(--text_light) 18%, transparent);
+	color: var(--text_light);
+}
+
+.autosave_saved {
+	background-color: color-mix(
+		in srgb,
+		var(--actionable_text_active) 15%,
+		transparent
+	);
+	color: var(--actionable_text_active);
+}
+
+.autosave_error {
+	background-color: color-mix(in srgb, #e53935 15%, transparent);
+	color: #e53935;
 }
 
 .breadcrumb_steps {
@@ -428,6 +462,36 @@
 	cursor: not-allowed;
 }
 
+.publish_button {
+	padding: 0.5rem 1.2rem;
+	border-radius: 6px;
+	border: 2px solid var(--actionable_text_active);
+	background: transparent;
+	color: var(--actionable_text_active);
+	font-weight: 600;
+	font-size: 1rem;
+	cursor: pointer;
+	transition:
+		background-color 0.18s,
+		color 0.18s;
+}
+
+.publish_button:hover:not(:disabled) {
+	background: var(--actionable_text_active);
+	color: var(--button_text_confirm);
+}
+
+.publish_button:disabled {
+	opacity: 0.55;
+	cursor: not-allowed;
+}
+
+.step_actions_right_group {
+	display: flex;
+	gap: 0.6rem;
+	align-items: center;
+}
+
 .step_actions_row {
 	display: flex;
 	justify-content: space-between;
@@ -567,15 +631,6 @@
 
 .file_input {
 	display: none;
-}
-
-.legend {
-	font-size: 1.18rem;
-	font-weight: 700;
-	margin-bottom: 1.1rem;
-	color: var(--actionable_text_active);
-	letter-spacing: 0.01em;
-	text-align: center;
 }
 
 .questions_header {

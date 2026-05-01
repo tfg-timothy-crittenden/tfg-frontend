@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { ImageIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 import SpeakingPart1AudioQuestionFields from "./SpeakingPart1AudioQuestionFields";
 import QuestionTabsNavigator from "./QuestionTabsNavigator";
@@ -23,6 +23,25 @@ const makeDefaultQuestions = (count) =>
 		audio: [],
 	}));
 
+const extractMaterialId = (payload) => {
+	const value =
+		payload?.materialId ??
+		payload?.material_id ??
+		payload?.id ??
+		payload?.material?.materialId ??
+		payload?.material?.id ??
+		payload?.section?.materialId ??
+		payload?.section?.material_id ??
+		payload?.section?.id ??
+		payload?.data?.materialId ??
+		payload?.data?.material_id ??
+		payload?.data?.id ??
+		null;
+
+	if (value === null || value === undefined) return null;
+	return String(value);
+};
+
 const CreateSpeakingMaterialPresentation = ({
 	mode = "create",
 	initialValues,
@@ -32,6 +51,8 @@ const CreateSpeakingMaterialPresentation = ({
 	isLoading = false,
 	submitLabel = "Submit",
 	onSubmitForm,
+	onDraftSaveForm,
+	onPublish,
 }) => {
 	// Resolve question counts from incoming data so create/edit modes share the
 	// same presentation without hard-coding array sizes into the form setup.
@@ -61,10 +82,11 @@ const CreateSpeakingMaterialPresentation = ({
 		register,
 		handleSubmit,
 		watch,
+		getValues,
 		control,
 		setValue,
 		reset,
-		formState: { errors },
+		formState: { errors, isDirty },
 	} = useForm({
 		shouldUnregister: false,
 		defaultValues: resolvedInitialValues,
@@ -119,6 +141,7 @@ const CreateSpeakingMaterialPresentation = ({
 	const selectedImage = watch("image");
 	const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 	const [croppedImageUrl, setCroppedImageUrl] = useState("");
+	const [croppedImageFile, setCroppedImageFile] = useState(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	// Derived field accessors
@@ -159,14 +182,30 @@ const CreateSpeakingMaterialPresentation = ({
 	// Image actions
 	const goBackToImageStep = () => {
 		setCroppedImageUrl("");
+		setCroppedImageFile(null);
 		setStep(1);
 	};
 
 	const clearImage = () => {
 		setValue("image", []);
 		setCroppedImageUrl("");
+		setCroppedImageFile(null);
 		setImagePreviewUrl("");
 		setShowImagePicker(!normalizedExistingMedia.partImageUrl);
+	};
+
+	// Keep crop confirmation local; the cropped file is submitted on manual save.
+	const handleCropConfirmed = async (croppedUrl) => {
+		setCroppedImageUrl(croppedUrl);
+		try {
+			const blob = await fetch(croppedUrl).then((res) => res.blob());
+			const file = new File([blob], "cropped-image.png", {
+				type: blob.type || "image/png",
+			});
+			setCroppedImageFile(file);
+		} catch {
+			setCroppedImageFile(null);
+		}
 	};
 
 	// Validation helpers
@@ -229,6 +268,7 @@ const CreateSpeakingMaterialPresentation = ({
 	// Reset any previous crop whenever the source image changes.
 	useEffect(() => {
 		setCroppedImageUrl("");
+		setCroppedImageFile(null);
 	}, [imagePreviewUrl]);
 
 	// Clean up blob URLs created by the cropper preview.
@@ -246,6 +286,9 @@ const CreateSpeakingMaterialPresentation = ({
 	const [part2ConfigByQuestion] = useState(
 		() => initialPart2ConfigByQuestion || Array(part2QuestionCount).fill({}),
 	);
+
+	// ── Publish ─────────────────────────────────────────────────────────────────
+	const [isPublishing, setIsPublishing] = useState(false);
 
 	// Keep per-question highlight state in sync with edit-mode hydration.
 	useEffect(() => {
@@ -267,15 +310,15 @@ const CreateSpeakingMaterialPresentation = ({
 		croppedImageUrl ||
 		(!selectedImage?.[0] ? normalizedExistingMedia.partImageUrl : "");
 
-	// Submit the cropped blob as a real File so the backend receives the actual
-	// cropped image instead of the original uploaded source.
-	const handleFormSubmit = async (data) => {
-		if (!onSubmitForm) return;
-		setIsSubmitting(true);
-		try {
-			const submissionData = { ...data };
+	const buildSubmissionData = async (data) => {
+		const submissionData = { ...data };
 
-			if (croppedImageUrl && croppedImageUrl.startsWith("blob:")) {
+		if (croppedImageFile) {
+			const dataTransfer = new DataTransfer();
+			dataTransfer.items.add(croppedImageFile);
+			submissionData.image = Array.from(dataTransfer.files);
+		} else if (croppedImageUrl) {
+			try {
 				const blob = await fetch(croppedImageUrl).then((res) => res.blob());
 				const croppedFile = new File([blob], "cropped-image.png", {
 					type: blob.type || "image/png",
@@ -283,7 +326,27 @@ const CreateSpeakingMaterialPresentation = ({
 				const dataTransfer = new DataTransfer();
 				dataTransfer.items.add(croppedFile);
 				submissionData.image = Array.from(dataTransfer.files);
+			} catch {
+				// Fall back to the currently selected file if crop conversion fails.
 			}
+		}
+
+		if (!submissionData.image?.[0] && selectedImage?.[0]) {
+			const dataTransfer = new DataTransfer();
+			dataTransfer.items.add(selectedImage[0]);
+			submissionData.image = Array.from(dataTransfer.files);
+		}
+
+		return submissionData;
+	};
+
+	// Submit the cropped blob as a real File so the backend receives the actual
+	// cropped image instead of the original uploaded source.
+	const handleFormSubmit = async (data) => {
+		if (!onSubmitForm) return;
+		setIsSubmitting(true);
+		try {
+			const submissionData = await buildSubmissionData(data);
 
 			await onSubmitForm({
 				data: submissionData,
@@ -295,6 +358,52 @@ const CreateSpeakingMaterialPresentation = ({
 			alert("Upload error: " + (e?.response?.data?.message || e.message));
 		} finally {
 			setIsSubmitting(false);
+		}
+	};
+
+	const handleDraftSave = async () => {
+		const saveDraft = onDraftSaveForm || onSubmitForm;
+		if (!saveDraft) return;
+		setIsSubmitting(true);
+		try {
+			const submissionData = await buildSubmissionData(getValues());
+			const response = await saveDraft({
+				data: submissionData,
+				highlightDataByQuestion,
+				part2ConfigByQuestion,
+			});
+			const nextMaterialId =
+				extractMaterialId(response) || submissionData.materialId || "";
+			const nextSubmissionData = {
+				...submissionData,
+				materialId: nextMaterialId,
+			};
+			// Mark current values as the new baseline so Save Draft disables until
+			// the user makes another change.
+			reset(nextSubmissionData);
+			alert("Draft saved!");
+		} catch (e) {
+			alert("Upload error: " + (e?.response?.data?.message || e.message));
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
+	const handlePublishSubmit = async (data) => {
+		if (!onPublish) return;
+		setIsPublishing(true);
+		try {
+			const submissionData = await buildSubmissionData(data);
+			await onPublish({
+				data: submissionData,
+				highlightDataByQuestion,
+				part2ConfigByQuestion,
+			});
+			alert("Publish successful!");
+		} catch (e) {
+			alert("Publish error: " + (e?.response?.data?.message || e.message));
+		} finally {
+			setIsPublishing(false);
 		}
 	};
 
@@ -419,16 +528,28 @@ const CreateSpeakingMaterialPresentation = ({
 				</nav>
 				<fieldset className={styles.listen_repeat_container}>
 					<legend className={styles.legend}>
-						{mode === "edit"
-							? "Edit TOEFL Speaking Material"
-							: "Create TOEFL Speaking Material"}
+						<span>
+							{mode === "edit"
+								? "Edit TOEFL Speaking Material"
+								: "Create TOEFL Speaking Material"}
+						</span>
+						{onDraftSaveForm && (
+							<button
+								type="button"
+								className={`${styles.submit_button} ${styles.step_action_button}`}
+								onClick={handleDraftSave}
+								disabled={!isDirty || isSubmitting}
+							>
+								{isSubmitting ? "Saving..." : "Save Draft"}
+							</button>
+						)}
 					</legend>
 					{activePart === 1 && step === 0 && (
 						<div className={styles.section}>
 							<SectionHeader
 								badge="1"
 								title="Step 1: Material Info"
-								subtitle="Enter a clear title and optional description for this test part. The Material ID must be unique."
+								subtitle="Enter a clear title and optional description for this test part. Material ID is assigned automatically."
 								styles={styles}
 							/>
 							<div className={styles.step3_fields_card}>
@@ -455,19 +576,7 @@ const CreateSpeakingMaterialPresentation = ({
 											className={styles.text_input}
 										/>
 									</label>
-									<label htmlFor="materialId" className={styles.label}>
-										Material ID
-										<input
-											type="text"
-											{...register("materialId", { required: true })}
-											id="materialId"
-											className={styles.text_input}
-											aria-invalid={!!errors.materialId}
-										/>
-										{errors.materialId && (
-											<span className={styles.error}>ID is required</span>
-										)}
-									</label>
+									<input type="hidden" {...register("materialId")} />
 								</div>
 							</div>
 							<div className={styles.step_actions_right}>
@@ -544,7 +653,7 @@ const CreateSpeakingMaterialPresentation = ({
 											</div>
 											<CropEditor
 												imageUrl={imagePreviewUrl}
-												onCropConfirmed={(url) => setCroppedImageUrl(url)}
+												onCropConfirmed={handleCropConfirmed}
 											/>
 											<button
 												type="button"
@@ -737,14 +846,43 @@ const CreateSpeakingMaterialPresentation = ({
 							styles={styles}
 						/>
 
-						<StepActionsRow
-							leftLabel="Back to Part 1"
-							leftOnClick={goBackToPart1Questions}
-							rightLabel={isSubmitting ? "Saving..." : submitLabel}
-							rightType="submit"
-							rightDisabled={submitDisabled || isSubmitting}
-							styles={styles}
-						/>
+						{onPublish ? (
+							<div className={styles.step_actions_row}>
+								<button
+									type="button"
+									onClick={goBackToPart1Questions}
+									className={`${styles.back_button} ${styles.step_action_button}`}
+								>
+									Back to Part 1
+								</button>
+								<div className={styles.step_actions_right_group}>
+									<button
+										type="submit"
+										className={`${styles.submit_button} ${styles.step_action_button}`}
+										disabled={submitDisabled || isSubmitting}
+									>
+										{isSubmitting ? "Saving..." : submitLabel}
+									</button>
+									<button
+										type="button"
+										className={`${styles.publish_button} ${styles.step_action_button}`}
+										disabled={submitDisabled || isPublishing || isSubmitting}
+										onClick={handleSubmit(handlePublishSubmit)}
+									>
+										{isPublishing ? "Publishing…" : "Publish"}
+									</button>
+								</div>
+							</div>
+						) : (
+							<StepActionsRow
+								leftLabel="Back to Part 1"
+								leftOnClick={goBackToPart1Questions}
+								rightLabel={isSubmitting ? "Saving..." : submitLabel}
+								rightType="submit"
+								rightDisabled={submitDisabled || isSubmitting}
+								styles={styles}
+							/>
+						)}
 					</div>
 				</fieldset>
 				{fields.map((field, idx) => (
