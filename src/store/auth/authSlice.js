@@ -67,7 +67,7 @@ export const login = createAsyncThunk(
 			return { user, token };
 		} catch (err) {
 			return thunkAPI.rejectWithValue(
-				err.response?.data?.message || "Login failed",
+				err?.response?.data?.error || err?.message || "Login failed",
 			);
 		}
 	},

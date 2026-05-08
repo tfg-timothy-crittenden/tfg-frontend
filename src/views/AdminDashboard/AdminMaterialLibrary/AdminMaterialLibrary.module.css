@@ -301,6 +301,31 @@
 	align-self: center;
 }
 
+.actionsCol {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: stretch;
+	flex-shrink: 0;
+	min-width: 92px;
+}
+
+.deleteButton {
+	background: color-mix(in srgb, #b3261e 88%, white);
+	color: #fff;
+	border: 1px solid color-mix(in srgb, #8f1f18 70%, transparent);
+}
+
+.deleteButton:hover:not(:disabled),
+.deleteButton:focus-visible:not(:disabled) {
+	background: color-mix(in srgb, #8f1f18 92%, white);
+}
+
+.deleteButton:disabled {
+	opacity: 0.7;
+	cursor: not-allowed;
+}
+
 .disabledEdit {
 	display: inline-flex;
 	align-items: center;
@@ -339,5 +364,11 @@
 	.row {
 		flex-direction: column;
 		align-items: flex-start;
+	}
+
+	.actionsCol {
+		width: 100%;
+		flex-direction: row;
+		justify-content: flex-start;
 	}
 }

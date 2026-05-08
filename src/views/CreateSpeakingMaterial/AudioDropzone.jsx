@@ -232,24 +232,61 @@ const AudioDropzone = ({
 					Audio
 				</label>
 			)}
-			<div
-				className={`${styles.dropzone}${isDragging ? ` ${styles.dragging}` : ""}`}
-				onDragOver={handleDragOver}
-				onDragLeave={handleDragLeave}
-				onDrop={handleDrop}
-				onClick={openPicker}
-				onKeyDown={handleKeyDown}
-				role="button"
-				tabIndex={0}
-				aria-label="Upload audio file"
-			>
-				{fileName ? (
-					<div className={styles.fileBadge}>
-						<FileAudio size={16} strokeWidth={2} />
-						<span className={styles.fileName}>{fileName}</span>
+			{displayAudioUrl && !isRecording ? (
+				<div className={styles.playerOnlyContainer}>
+					<div className={styles.playerContainer}>
+						<audio
+							key={displayAudioUrl}
+							controls
+							preload="metadata"
+							className={styles.audioPlayer}
+						>
+							<source
+								src={displayAudioUrl}
+								type={selectedAudio?.type || undefined}
+							/>
+							Your browser cannot play this audio file.
+						</audio>
+						<button
+							type="button"
+							className={styles.removeButton}
+							onClick={clearFile}
+							aria-label="Remove audio file"
+						>
+							<X size={13} strokeWidth={2.5} />
+							Remove file
+						</button>
 					</div>
-				) : null}
-				{!displayAudioUrl && (
+					<input
+						id={id}
+						type="file"
+						name={name}
+						accept={accept}
+						ref={setRefs}
+						onChange={handleInputChange}
+						onBlur={onBlur}
+						className={styles.hiddenInput}
+						aria-invalid={ariaInvalid}
+					/>
+				</div>
+			) : (
+				<div
+					className={`${styles.dropzone}${isDragging ? ` ${styles.dragging}` : ""}`}
+					onDragOver={handleDragOver}
+					onDragLeave={handleDragLeave}
+					onDrop={handleDrop}
+					onClick={openPicker}
+					onKeyDown={handleKeyDown}
+					role="button"
+					tabIndex={0}
+					aria-label="Upload audio file"
+				>
+					{fileName ? (
+						<div className={styles.fileBadge}>
+							<FileAudio size={16} strokeWidth={2} />
+							<span className={styles.fileName}>{fileName}</span>
+						</div>
+					) : null}
 					<button
 						type="button"
 						className={`${styles.iconHaloButton}${isRecording ? ` ${styles.recording}` : ""}`}
@@ -265,39 +302,6 @@ const AudioDropzone = ({
 							)}
 						</div>
 					</button>
-				)}
-				{displayAudioUrl && !isRecording ? (
-					// Player + remove button; stopPropagation prevents clicks from
-					// opening the file picker.
-					<div
-						className={styles.playerContainer}
-						onClick={(e) => e.stopPropagation()}
-					>
-						<audio
-							key={displayAudioUrl}
-							controls
-							preload="metadata"
-							className={styles.audioPlayer}
-						>
-							<source
-								src={displayAudioUrl}
-								type={selectedAudio?.type || undefined}
-							/>
-							Your browser cannot play this audio file.
-						</audio>
-						{hasSelectedAudio && (
-							<button
-								type="button"
-								className={styles.removeButton}
-								onClick={clearFile}
-								aria-label="Remove audio file"
-							>
-								<X size={13} strokeWidth={2.5} />
-								Remove file
-							</button>
-						)}
-					</div>
-				) : (
 					<>
 						<p className={styles.prompt}>
 							{isRecording
@@ -314,19 +318,19 @@ const AudioDropzone = ({
 							{recordingError || helperText}
 						</p>
 					</>
-				)}
-				<input
-					id={id}
-					type="file"
-					name={name}
-					accept={accept}
-					ref={setRefs}
-					onChange={handleInputChange}
-					onBlur={onBlur}
-					className={styles.hiddenInput}
-					aria-invalid={ariaInvalid}
-				/>
-			</div>
+					<input
+						id={id}
+						type="file"
+						name={name}
+						accept={accept}
+						ref={setRefs}
+						onChange={handleInputChange}
+						onBlur={onBlur}
+						className={styles.hiddenInput}
+						aria-invalid={ariaInvalid}
+					/>
+				</div>
+			)}
 		</div>
 	);
 };

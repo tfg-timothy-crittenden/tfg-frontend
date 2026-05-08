@@ -32,3 +32,38 @@
 	max-width: var(--listen-content-max-width);
 	margin: auto;
 }
+
+.skeletonImage,
+.skeletonImage {
+	position: relative;
+	overflow: hidden;
+	background: var(--card_background_mid);
+	border-radius: var(--radius-md);
+	margin-bottom: 12px;
+}
+
+.skeletonImage::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	transform: translateX(-100%);
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.45),
+		transparent
+	);
+	animation: skeletonShimmer 1.2s infinite;
+}
+
+.skeletonImage {
+	height: 260px;
+	width: 100%;
+	margin-bottom: 16px;
+}
+
+@keyframes skeletonShimmer {
+	100% {
+		transform: translateX(100%);
+	}
+}

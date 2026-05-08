@@ -24,16 +24,6 @@ const BatchInviteTeachers = ({ onInviteComplete }) => {
 				continue;
 			}
 
-			if (!teacher.email.endsWith("@fundaciocic.org")) {
-				results.push({
-					email: teacher.email,
-					status: "error",
-					message: "Email must end with @fundaciocic.org",
-				});
-				failedIndexes.push(i);
-				continue;
-			}
-
 			try {
 				const teacherData = {
 					name: `${teacher.firstName.trim()} ${teacher.surname.trim()}`,
@@ -48,10 +38,14 @@ const BatchInviteTeachers = ({ onInviteComplete }) => {
 			} catch (err) {
 				console.error("Failed to invite teacher:", err);
 
-				// Extract the actual error message from the API response
+				const errorPayload = err?.response?.data;
+
+				// Prioritize backend message from error payload shape.
 				const errorMessage =
-					err.response?.data?.error ||
-					err.response?.data?.message ||
+					errorPayload?.message ||
+					(errorPayload?.status && errorPayload?.error
+						? `${errorPayload.status} ${errorPayload.error}`
+						: null) ||
 					err.message ||
 					"Failed to send invitation.";
 
@@ -94,7 +88,7 @@ const BatchInviteTeachers = ({ onInviteComplete }) => {
 		{
 			name: "email",
 			label: "Email",
-			placeholder: "Email (must end with @fundaciocic.org)",
+			placeholder: "Email",
 			type: "email",
 			required: true,
 		},

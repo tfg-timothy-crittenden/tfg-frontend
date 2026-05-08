@@ -17,10 +17,12 @@ import {
 	AdminClasses,
 	AdminMaterial,
 	AdminMaterialLibrary,
+	AcceptInvite,
 	StudentSignup,
 	EmailVerification,
 	PasswordResetRequest,
 	PasswordResetConfirm,
+	Profile,
 } from "@/routes/lazyRoutes";
 import CreateSpeakingMaterial from "./views/CreateSpeakingMaterial/CreateSpeakingMaterial";
 import EditSpeakingMaterial from "./views/CreateSpeakingMaterial/EditSpeakingMaterial";
@@ -40,8 +42,8 @@ function App() {
 					<Route path={ROUTES.SIGNUP} element={<StudentSignup />} />
 					<Route path={ROUTES.SIGNUP_WITH_CODE} element={<StudentSignup />} />
 					<Route
-						path={ROUTES.VERIFY_EMAIL_WITH_TOKEN}
-						element={<EmailVerification />}
+						path={ROUTES.SIGNUP_WITH_INVITATION}
+						element={<AcceptInvite />}
 					/>
 					<Route path={ROUTES.VERIFY_EMAIL} element={<EmailVerification />} />
 					<Route path="/password-reset" element={<PasswordResetRequest />} />
@@ -49,6 +51,8 @@ function App() {
 
 					{/* Private routes */}
 					<Route element={<PrivateRoute />}>
+						{" "}
+						<Route path={ROUTES.PROFILE} element={<Profile />} />{" "}
 						<Route path={ROUTES.CLASSROOMS} element={<UserClassrooms />}>
 							{/* Welcome route - no test selected */}
 							<Route path=":id" element={<Classroom />} />

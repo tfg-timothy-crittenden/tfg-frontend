@@ -103,6 +103,8 @@ const useListenSpeakTask = () => {
 
 		const loadMaterial = async () => {
 			try {
+				setLoading(true);
+
 				const currentPartKey = `${sectionId}:${partNumber}`;
 				const isPartCacheHit =
 					cachedPartRef.current.key === currentPartKey &&
@@ -110,7 +112,6 @@ const useListenSpeakTask = () => {
 
 				// Keep shared image mounted during question switches within the same part.
 				if (!isPartCacheHit) {
-					setLoading(true);
 					setTestData(null);
 					setQuestionAudioUrl(null);
 					setSharedImageUrl(null);

@@ -7,7 +7,7 @@ export const BREAKPOINTS = {
 
 	// Content constraints
 	CONTENT_MAX_WIDTH: 1080,
-	SIDEBAR_WIDTH: 350,
+	SIDEBAR_WIDTH: 450,
 	SIDEBAR_COLLAPSED_WIDTH: 50,
 };
 

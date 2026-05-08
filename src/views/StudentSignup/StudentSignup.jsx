@@ -1,56 +1,66 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import httpClient from "@/api/httpClient";
-import { GraduationCap } from "lucide-react"; // <-- import icon
 import styles from "./StudentSignup.module.css";
 import { checkEmailExists } from "@/api/user/user";
 
-const StudentSignup = () => {
-	const { classCode: classCodeFromRoute } = useParams();
-	const [searchParams] = useSearchParams();
-	const classCodeFromQuery = searchParams.get("classCode");
+const extractApiMessage = (payload, fallback) => {
+	if (!payload) return fallback;
 
-	const initialClassCode = classCodeFromRoute || classCodeFromQuery || "";
+	if (typeof payload === "string") return payload;
+
+	if (typeof payload.message === "string" && payload.message.trim()) {
+		return payload.message;
+	}
+
+	if (typeof payload.error === "string" && payload.error.trim()) {
+		return payload.error;
+	}
+
+	if (Array.isArray(payload.errors) && payload.errors.length > 0) {
+		const firstError = payload.errors.find((item) => {
+			if (typeof item === "string" && item.trim()) return true;
+			if (item && typeof item.message === "string" && item.message.trim()) {
+				return true;
+			}
+			return false;
+		});
+
+		if (typeof firstError === "string") return firstError;
+		if (firstError?.message) return firstError.message;
+	}
+
+	if (payload.errors && typeof payload.errors === "object") {
+		const firstKey = Object.keys(payload.errors)[0];
+		const firstValue = payload.errors[firstKey];
+
+		if (Array.isArray(firstValue) && firstValue.length > 0) {
+			return String(firstValue[0]);
+		}
+
+		if (typeof firstValue === "string" && firstValue.trim()) {
+			return firstValue;
+		}
+	}
+
+	return fallback;
+};
+
+const StudentSignup = () => {
+	const authBaseUrl = import.meta.env.VITE_AUTH_API_URL || "/users/api/auth";
+	const navigate = useNavigate();
 
 	const [form, setForm] = useState({
 		name: "",
+		surname: "",
 		email: "",
 		username: "",
 		password: "",
-		classCode: initialClassCode,
 	});
 
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState(null);
 	const [error, setError] = useState(null);
-	const [className, setClassName] = useState("");
-	const [teachers, setTeachers] = useState([]);
-
-	useEffect(() => {
-		if (initialClassCode && !form.classCode) {
-			setForm((prev) => ({ ...prev, classCode: initialClassCode }));
-		}
-	}, [initialClassCode]);
-
-	// Fetch class name and teachers by code
-	useEffect(() => {
-		const fetchClassInfo = async () => {
-			if (!form.classCode) {
-				setClassName("");
-				setTeachers([]);
-				return;
-			}
-			try {
-				const res = await httpClient.get(`/classrooms/code/${form.classCode}`);
-				setClassName(res.data?.name || "");
-				setTeachers(res.data?.teachers || []);
-			} catch {
-				setClassName("");
-				setTeachers([]);
-			}
-		};
-		fetchClassInfo();
-	}, [form.classCode]);
 
 	const handleChange = (e) => {
 		setForm({ ...form, [e.target.name]: e.target.value });
@@ -65,10 +75,31 @@ const StudentSignup = () => {
 		setLoading(true);
 
 		try {
-			const res = await httpClient.post("/student/signup", form);
-			setMessage(res.data.message || "Signup successful!");
+			const res = await httpClient.post(`${authBaseUrl}/signup`, form);
+			const successMessage = extractApiMessage(
+				res?.data,
+				"Account created. Please verify your email before signing in.",
+			);
+			const loginInfoMessage =
+				"User created successfully. Please check your email to verify your account.";
+			setMessage(successMessage);
+			setTimeout(
+				() =>
+					navigate("/login", {
+						replace: true,
+						state: {
+							info: loginInfoMessage,
+						},
+					}),
+				1000,
+			);
 		} catch (err) {
-			setError(err.response?.data?.error || "Signup failed.");
+			setError(
+				extractApiMessage(
+					err?.response?.data,
+					err?.message || "Signup failed.",
+				),
+			);
 		} finally {
 			setLoading(false);
 		}
@@ -88,28 +119,14 @@ const StudentSignup = () => {
 	return (
 		<div className={styles.signup_container}>
 			<h1 className={styles.signup_title}>Student Signup</h1>
-			{className && (
-				<div className={styles.class_info}>
-					<div className={styles.class_name}>{className}</div>
-					{teachers.length > 0 && (
-						<div className={styles.teacher_info}>
-							<GraduationCap size={28} style={{ verticalAlign: "middle" }} />
-							<span>
-								Teacher{teachers.length > 1 ? "s" : ""}:{" "}
-								{teachers.map((t) => t.name).join(", ")}
-							</span>
-						</div>
-					)}
-				</div>
-			)}
 			<p className={styles.signup_desc}>
-				Fill in your details to join your class.
+				Fill in your details to create your account.
 			</p>
 			{message && <div className={styles.signup_success}>{message}</div>}
 			{error && (
 				<div className={styles.signup_error}>
 					{error}
-					{error.toLowerCase().includes("already") && (
+					{/(already|exists|taken|registered)/i.test(error) && (
 						<div style={{ marginTop: 8 }}>
 							Already have an account?{" "}
 							<Link
@@ -130,8 +147,17 @@ const StudentSignup = () => {
 				<input
 					type="text"
 					name="name"
-					placeholder="Full name"
+					placeholder="Name"
 					value={form.name}
+					onChange={handleChange}
+					required
+					className={styles.signup_input}
+				/>
+				<input
+					type="text"
+					name="surname"
+					placeholder="Surname"
+					value={form.surname}
 					onChange={handleChange}
 					required
 					className={styles.signup_input}
@@ -162,16 +188,6 @@ const StudentSignup = () => {
 					value={form.password}
 					onChange={handleChange}
 					required
-					className={styles.signup_input}
-				/>
-				<input
-					type="text"
-					name="classCode"
-					placeholder="Class code"
-					value={form.classCode}
-					onChange={handleChange}
-					required
-					readOnly={!!initialClassCode}
 					className={styles.signup_input}
 				/>
 				<button

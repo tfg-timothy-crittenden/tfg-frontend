@@ -14,14 +14,22 @@
 	transform: translate(1px, 1px);
 }
 
-.label {
-	cursor: pointer;
+.row {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: space-between;
 	gap: 0.5rem;
 	width: 100%;
-	font-size: var(--font-size-sm);
+	min-width: 0;
+}
+
+.iconWrapper {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 16px;
+	align-self: center;
+	flex-shrink: 0;
 }
 
 .selected {

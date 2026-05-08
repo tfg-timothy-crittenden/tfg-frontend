@@ -67,6 +67,8 @@ export const EmailVerification = lazy(
 	() => import("@/views/EmailVerification/EmailVerification"),
 );
 
+export const Profile = lazy(() => import("@/views/Profile/Profile"));
+
 // ===== Password Reset views (ADD THESE) =====
 export const PasswordResetRequest = lazy(
 	() =>

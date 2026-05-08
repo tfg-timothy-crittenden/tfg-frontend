@@ -1,25 +1,26 @@
-// src/pages/EmailVerification.jsx
-import React, { useEffect, useMemo, useState } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import httpClient from "@/api/httpClient";
+import { confirmEmail } from "@/api/auth/authAPI";
 import { setCredentials } from "@/store/auth/authSlice";
+import styles from "./EmailVerification.module.css";
 
 const EmailVerification = () => {
-	const { token: tokenParam } = useParams();
 	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const hasAutoVerified = useRef(false);
 
 	const tokenFromQuery = useMemo(() => {
 		const sp = new URLSearchParams(location.search);
 		return sp.get("token");
 	}, [location.search]);
+	const token = tokenFromQuery || "";
 
-	const [token, setToken] = useState(tokenParam || tokenFromQuery || "");
 	const [submitting, setSubmitting] = useState(false);
 	const [serverError, setServerError] = useState("");
 	const [info, setInfo] = useState("");
+	const [canGoToLogin, setCanGoToLogin] = useState(false);
 
 	useEffect(() => {
 		if (!token) return;
@@ -29,145 +30,81 @@ const EmailVerification = () => {
 	const handleVerify = async () => {
 		if (!token) {
 			setServerError(
-				"Verification token missing. Please use the link from your email."
+				"Verification token missing. Please use the link from your email.",
 			);
 			return;
 		}
+
 		setSubmitting(true);
 		setServerError("");
 		setInfo("");
+		setCanGoToLogin(false);
 
 		try {
-			const { data } = await httpClient.post("/auth/verify-email", { token });
+			const data = await confirmEmail(token);
+			const backendMessage = data?.message || data?.error;
 
 			if (data?.token && data?.user) {
 				dispatch(setCredentials({ token: data.token, user: data.user }));
-				setInfo(data?.message || "Verified! Redirecting…");
-				setTimeout(() => navigate("/my/classrooms"), 900);
+				setInfo(backendMessage || "Email verified successfully.");
+				setCanGoToLogin(true);
 				return;
 			}
 
-			setInfo(data?.message || "Email verified. You can now log in.");
-			setTimeout(() => navigate("/login"), 900);
+			setInfo(backendMessage || "Email verified. You can now log in.");
+			setCanGoToLogin(true);
 		} catch (err) {
 			const status = err?.response?.status;
-			const msg = err?.response?.data?.error;
+			const backendMessage =
+				err?.response?.data?.message ||
+				err?.response?.data?.error ||
+				err?.message;
 
 			if (status === 409) {
-				setInfo("Your email is already verified. Please log in.");
-				setTimeout(() => navigate("/login"), 900);
-			} else if (status === 400) {
-				setServerError(msg || "Invalid or expired verification link.");
+				setInfo(backendMessage || "Your email is already verified.");
+				setCanGoToLogin(true);
 			} else {
-				setServerError(msg || "Verification failed. Please try again.");
+				setServerError(
+					backendMessage || "Verification failed. Please try again.",
+				);
 			}
 		} finally {
 			setSubmitting(false);
 		}
 	};
 
+	useEffect(() => {
+		if (!token || hasAutoVerified.current) return;
+		hasAutoVerified.current = true;
+		handleVerify();
+	}, [token]);
+
 	return (
-		<div
-			style={{
-				maxWidth: 480,
-				margin: "64px auto",
-				background: "var(--button_background_cancel)",
-				borderRadius: "var(--radius-lg)",
-				boxShadow: "var(--shadow-md)",
-				padding: "2rem",
-				textAlign: "center",
-				fontFamily: "Roboto, sans-serif",
-			}}
-		>
-			<h1
-				style={{
-					marginBottom: "0.5rem",
-					color: "var(--actionable_text_active)",
-					fontSize: "2rem",
-					fontWeight: 700,
-					textAlign: "center",
-				}}
-			>
-				Verify your email
-			</h1>
-			<p
-				style={{
-					color: "var(--text_dark)",
-					marginBottom: "1.5rem",
-					fontSize: "1.05rem",
-				}}
-			>
-				Click the button below to confirm your email and continue.
+		<div className={styles.container}>
+			<h1 className={styles.title}>Verify your email</h1>
+			<p className={styles.description}>
+				If your link is valid, verification runs automatically.
 			</p>
 
-			{serverError && (
-				<div
-					style={{
-						background: "var(--card_background_mid)",
-						color: "var(--text_dark)",
-						padding: "10px 12px",
-						borderRadius: "var(--radius-md)",
-						marginBottom: "1rem",
-						fontWeight: 600,
-						border: "1px solid var(--card_background_mid)",
-					}}
-				>
-					{serverError}
-				</div>
-			)}
+			{serverError && <div className={styles.errorMessage}>{serverError}</div>}
 
-			{info && (
-				<div
-					style={{
-						background: "var(--actionable_background)",
-						color: "var(--button_background_confirm)",
-						padding: "10px 12px",
-						borderRadius: "var(--radius-md)",
-						marginBottom: "1rem",
-						fontWeight: 600,
-						border: "1px solid var(--actionable_background)",
-					}}
-				>
-					{info}
-				</div>
-			)}
+			{info && <div className={styles.infoMessage}>{info}</div>}
 
 			<button
-				onClick={handleVerify}
+				onClick={canGoToLogin ? () => navigate("/login") : handleVerify}
 				disabled={!token || submitting}
-				style={{
-					padding: "12px 16px",
-					borderRadius: "var(--radius-lg)",
-					border: "none",
-					background: submitting
-						? "var(--actionable_background)"
-						: "var(--actionable_text_active)",
-					color: "#fff",
-					fontWeight: 700,
-					cursor: submitting ? "default" : "pointer",
-					width: "100%",
-					maxWidth: 320,
-					fontSize: "1rem",
-					boxShadow: "var(--shadow-sm)",
-					transition: "background 0.2s",
-				}}
+				className={styles.verifyButton}
 			>
-				{submitting ? "Verifying…" : "Verify & Continue"}
+				{submitting
+					? "Verifying..."
+					: canGoToLogin
+						? "Go to Login"
+						: "Verify Email"}
 			</button>
 
 			{!token && (
-				<p style={{ marginTop: 16, color: "var(--text_dark)" }}>
-					Don’t have a token?{" "}
-					<a
-						href="/resend-verification"
-						style={{
-							color: "var(--actionable_text_active)",
-							textDecoration: "underline",
-							fontWeight: 500,
-						}}
-					>
-						Resend verification email
-					</a>
+				<p className={styles.missingTokenText}>
+					Verification token missing. Please open the link from your email.
 				</p>
 			)}
 		</div>

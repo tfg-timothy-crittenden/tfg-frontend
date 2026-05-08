@@ -1,19 +1,13 @@
 import styles from "./TransferListItem.module.css";
+import TransferListTestRepresentation from "./TransferListTestRepresentation";
 
 const getItemId = (item) => {
-	const value =
-		item?.materialId ??
-		item?.material_id ??
-		item?.id ??
-		item?.materialNodeId ??
-		item?.material_node_id ??
-		null;
+	const value = item?.materialId;
 	return value === null || value === undefined ? null : String(value);
 };
 
 const TransferListItem = ({ item, onToggle, isChecked, disabled }) => {
 	const itemId = getItemId(item);
-	const itemLabel = item?.name || item?.title || `Material ${itemId ?? ""}`;
 
 	return (
 		<li
@@ -24,10 +18,16 @@ const TransferListItem = ({ item, onToggle, isChecked, disabled }) => {
 				if (!disabled && itemId !== null) onToggle(itemId);
 			}}
 		>
-			<span className={styles.label}>
-				{itemLabel}
-				<span className={isChecked ? styles.removeIcon : styles.arrow}></span>
-			</span>
+			<div className={styles.row}>
+				<TransferListTestRepresentation
+					sectionTitle={item?.sectionTitle}
+					part1Title={item?.part1Title}
+					part2Title={item?.part2Title}
+				/>
+				<span className={styles.iconWrapper}>
+					<span className={isChecked ? styles.removeIcon : styles.arrow}></span>
+				</span>
+			</div>
 		</li>
 	);
 };

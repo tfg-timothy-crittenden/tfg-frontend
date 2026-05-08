@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const formatDate = (value) => {
 	if (!value) return null;
@@ -12,8 +12,10 @@ const formatDate = (value) => {
 	}
 };
 import { Link } from "react-router-dom";
+import { Pencil, Trash2 } from "lucide-react";
 
 import {
+	deleteSpeakingMaterial,
 	getAllSpeakingSectionsSummaries,
 	getDraftSpeakingSectionsSummaries,
 } from "@/api/material/materialAPI";
@@ -38,40 +40,24 @@ const normalizeSummary = (summary, idx) => {
 			id: `summary-${idx}`,
 			materialId: null,
 			sectionId: sectionId ? String(sectionId) : null,
-			title: "Untitled section",
-			sectionName: "Untitled section",
+			sectionTitle: "",
 			part1Title: "",
 			part2Title: "",
-			description: "No metadata available",
+			description: "",
 			status: null,
 			createdAt: null,
 			updatedAt: null,
 		};
 	}
 
-	const title =
-		summary?.materialTitle ||
-		summary?.title ||
-		summary?.name ||
-		summary?.description ||
-		`Material ${materialId}`;
-	const sectionName =
-		summary?.sectionName ||
-		summary?.sectionTitle ||
-		summary?.name ||
-		summary?.materialTitle ||
-		title;
-
 	return {
 		id: String(materialId),
 		materialId: String(materialId),
 		sectionId: sectionId ? String(sectionId) : null,
-		title,
-		sectionName,
-		part1Title: summary?.partTitle || summary?.part1Title || "",
-		part2Title: summary?.part2Title || summary?.partTwoTitle || "",
-		description: summary?.materialDescription || summary?.description || "",
-		status: summary?.status ? String(summary.status).toLowerCase() : null,
+		sectionTitle: summary?.sectionTitle || "",
+		part1Title: summary?.part1Title || "",
+		part2Title: summary?.part2Title || "",
+		status: summary?.status ? String(summary.status) : null,
 		createdAt: summary?.createdAt || summary?.created_at || null,
 		updatedAt: summary?.updatedAt || summary?.updated_at || null,
 	};
@@ -93,53 +79,78 @@ const AdminMaterialLibrary = () => {
 	const [currentSort, setCurrentSort] = useState("updated-desc");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [statusFilter, setStatusFilter] = useState("all");
+	const [deletingMaterialId, setDeletingMaterialId] = useState("");
+	const isMountedRef = useRef(true);
+
+	const loadSections = async () => {
+		if (!isMountedRef.current) return;
+		setLoading(true);
+		try {
+			const [publishedResponse, draftsResponse] = await Promise.all([
+				getAllSpeakingSectionsSummaries(),
+				getDraftSpeakingSectionsSummaries(),
+			]);
+			if (!isMountedRef.current) return;
+
+			const publishedList = toSummaryList(publishedResponse)
+				.map(normalizeSummary)
+				.filter(Boolean);
+			const draftsList = toSummaryList(draftsResponse)
+				.map((item, idx) =>
+					normalizeSummary(
+						{
+							...item,
+							status: item?.status || "draft",
+						},
+						idx,
+					),
+				)
+				.filter(Boolean);
+
+			setPublishedSections(publishedList);
+			setDraftSections(draftsList);
+		} catch (error) {
+			console.error("Failed to load speaking section summaries:", error);
+			if (isMountedRef.current) {
+				setPublishedSections([]);
+				setDraftSections([]);
+			}
+		} finally {
+			if (isMountedRef.current) setLoading(false);
+		}
+	};
 
 	useEffect(() => {
-		let cancelled = false;
-
-		const loadSections = async () => {
-			setLoading(true);
-			try {
-				const [publishedResponse, draftsResponse] = await Promise.all([
-					getAllSpeakingSectionsSummaries(),
-					getDraftSpeakingSectionsSummaries(),
-				]);
-				if (cancelled) return;
-
-				const publishedList = toSummaryList(publishedResponse)
-					.map(normalizeSummary)
-					.filter(Boolean);
-				const draftsList = toSummaryList(draftsResponse)
-					.map((item, idx) =>
-						normalizeSummary(
-							{
-								...item,
-								status: item?.status || "draft",
-							},
-							idx,
-						),
-					)
-					.filter(Boolean);
-
-				setPublishedSections(publishedList);
-				setDraftSections(draftsList);
-			} catch (error) {
-				console.error("Failed to load speaking section summaries:", error);
-				if (!cancelled) {
-					setPublishedSections([]);
-					setDraftSections([]);
-				}
-			} finally {
-				if (!cancelled) setLoading(false);
-			}
-		};
-
+		isMountedRef.current = true;
 		loadSections();
 
 		return () => {
-			cancelled = true;
+			isMountedRef.current = false;
 		};
 	}, []);
+
+	const handleDelete = async (item) => {
+		const materialId = item?.materialId;
+		if (!materialId) return;
+
+		const shouldDelete = window.confirm(
+			`Delete material ${materialId}? This cannot be undone.`,
+		);
+		if (!shouldDelete) return;
+
+		setDeletingMaterialId(String(materialId));
+		try {
+			await deleteSpeakingMaterial(materialId);
+			await loadSections();
+		} catch (error) {
+			alert(
+				"Failed to delete material: " +
+					(error?.response?.data?.message || error.message),
+			);
+		} finally {
+			setDeletingMaterialId("");
+		}
+	};
 
 	const sortOptions = [
 		{ key: "updated-desc", label: "Last Updated (Newest)" },
@@ -153,8 +164,7 @@ const AdminMaterialLibrary = () => {
 	const matchesSearch = (item) => {
 		if (!normalizedSearch) return true;
 		const haystack = [
-			item?.title,
-			item?.sectionName,
+			item?.sectionTitle,
 			item?.description,
 			item?.part1Title,
 			item?.part2Title,
@@ -185,10 +195,14 @@ const AdminMaterialLibrary = () => {
 				case "created-desc":
 					return toTime(b.createdAt) - toTime(a.createdAt);
 				case "title-desc":
-					return b.title.localeCompare(a.title);
+					return String(b.sectionTitle || "").localeCompare(
+						String(a.sectionTitle || ""),
+					);
 				case "title-asc":
 				default:
-					return a.title.localeCompare(b.title);
+					return String(a.sectionTitle || "").localeCompare(
+						String(b.sectionTitle || ""),
+					);
 			}
 		});
 		return next;
@@ -221,17 +235,20 @@ const AdminMaterialLibrary = () => {
 
 	const renderItem = (item) => {
 		const canEdit = !!item.materialId;
-		const editLabel = item.status === "draft" ? "Continue" : "Edit";
+		const canDelete = !!item.materialId;
+		const statusKey = String(item.status || "").toLowerCase();
+		const editLabel = statusKey === "draft" ? "Continue" : "Edit";
+		const isDeleting = String(item.materialId || "") === deletingMaterialId;
 
 		return (
 			<div className={styles.row}>
 				<div className={styles.meta}>
 					<div className={styles.titleRow}>
-						<p className={styles.title}>{item.title}</p>
+						<p className={styles.title}>{item.sectionTitle}</p>
 						{item.status && (
 							<span
 								className={`${styles.statusBadge} ${
-									item.status === "published"
+									statusKey === "published"
 										? styles.statusPublished
 										: styles.statusDraft
 								}`}
@@ -240,18 +257,8 @@ const AdminMaterialLibrary = () => {
 							</span>
 						)}
 					</div>
-					<div className={styles.metaChips}>
-						<span className={styles.metaChip}>
-							Material #{item.materialId || "N/A"}
-						</span>
-						{item.sectionId && (
-							<span className={styles.metaChip}>Section #{item.sectionId}</span>
-						)}
-						<span className={styles.metaChip}>Name: {item.sectionName}</span>
-					</div>
 					<p className={styles.partsLine}>
-						Part 1: {item.part1Title || "N/A"} | Part 2:{" "}
-						{item.part2Title || "N/A"}
+						Part 1: {item.part1Title} | Part 2: {item.part2Title}
 					</p>
 					{(item.createdAt || item.updatedAt) && (
 						<p className={styles.timestamps}>
@@ -263,21 +270,31 @@ const AdminMaterialLibrary = () => {
 							)}
 						</p>
 					)}
-					{item.description && (
-						<p className={styles.description}>{item.description}</p>
-					)}
 				</div>
 
-				{canEdit ? (
-					<Link
-						className={`action_button ${styles.editButton}`}
-						to={buildRoute.editSpeakingMaterial(item.materialId)}
-					>
-						{editLabel}
-					</Link>
-				) : (
-					<span className={styles.disabledEdit}>Unavailable</span>
-				)}
+				<div className={styles.actionsCol}>
+					{canEdit ? (
+						<Link
+							className={`action_button ${styles.editButton}`}
+							to={buildRoute.editSpeakingMaterial(item.materialId)}
+						>
+							<Pencil size={16} aria-hidden="true" /> {editLabel}
+						</Link>
+					) : (
+						<span className={styles.disabledEdit}>Unavailable</span>
+					)}
+					{canDelete && (
+						<button
+							type="button"
+							className={`action_button ${styles.deleteButton}`}
+							onClick={() => handleDelete(item)}
+							disabled={isDeleting}
+						>
+							<Trash2 size={16} aria-hidden="true" />
+							{isDeleting ? " Deleting..." : " Delete"}
+						</button>
+					)}
+				</div>
 			</div>
 		);
 	};
