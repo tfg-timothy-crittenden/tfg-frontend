@@ -1,6 +1,6 @@
-import AudioDropzone from "./AudioDropzone";
+import AudioDropzone from "../AudioDropzone/AudioDropzone";
 import styles from "./SpeakingPart1AudioQuestionFields.module.css";
-import { AlertCircle, Mic, AlignLeft } from "../../components/LucideMinimal";
+import { AlertCircle, Mic, AlignLeft } from "../../../../components/LucideMinimal";
 
 const SpeakingPart1AudioQuestionFields = ({
 	idx,

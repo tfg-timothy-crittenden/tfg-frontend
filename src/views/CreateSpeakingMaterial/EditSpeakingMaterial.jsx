@@ -6,11 +6,11 @@ import {
 	updateSpeakingSection,
 	publishSpeakingMaterial,
 } from "@/api/material/materialAPI";
-import CreateSpeakingMaterialPresentation from "./CreateSpeakingMaterialPresentation";
+import CreateSpeakingMaterialPresentation from "./components/CreateSpeakingMaterialPresentation/CreateSpeakingMaterialPresentation";
 import {
 	buildPatchSpeakingSectionFormData,
 	normalizeSectionToFormState,
-} from "./speakingSectionFormUtils";
+} from "./utils/speakingSectionFormUtils";
 
 const QUESTION_COUNT = 7;
 const PART2_QUESTION_COUNT = 4;

@@ -142,12 +142,43 @@
 	flex-wrap: wrap;
 }
 
+.form_header_title_group {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	flex-wrap: wrap;
+}
+
 .form_title {
 	margin: 0;
 	font-size: 1.2rem;
 	font-weight: 700;
 	color: var(--actionable_text_active);
 	letter-spacing: 0.01em;
+}
+
+.status_badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.22rem 0.65rem;
+	border-radius: 999px;
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	border: 1px solid transparent;
+	line-height: 1.2;
+}
+
+.status_draft {
+	background: #f4efe2;
+	border-color: #d9c9a1;
+	color: #6f5a22;
+}
+
+.status_published {
+	background: #eaf6e6;
+	border-color: #9acb8e;
+	color: #2f6630;
 }
 
 .draft_button {
@@ -791,6 +822,18 @@
 	margin-bottom: 0.5rem;
 	color: var(--text_dark);
 	gap: 0.2rem;
+}
+
+.label_text_row {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-weight: 600;
+}
+
+.label_icon {
+	color: var(--actionable_text_active);
+	flex-shrink: 0;
 }
 
 .text_input {

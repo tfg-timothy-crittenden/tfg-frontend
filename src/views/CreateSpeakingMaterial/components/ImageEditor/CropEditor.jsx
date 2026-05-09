@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import ImageCropper from "../../../components/ImageCropper";
-import Lucide from "../../../components/LucideIcons";
+import ImageCropper from "../../../../components/ImageCropper";
+import Lucide from "../../../../components/LucideIcons";
 import styles from "./ImageEditor.module.css";
 
 const OUTPUT_SIZE = 400;

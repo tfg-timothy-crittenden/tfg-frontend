@@ -5,11 +5,11 @@
 } from "@/api/material/materialAPI";
 import { buildRoute } from "@/routes/routeConfig";
 import { useNavigate } from "react-router-dom";
-import CreateSpeakingMaterialPresentation from "./CreateSpeakingMaterialPresentation";
+import CreateSpeakingMaterialPresentation from "./components/CreateSpeakingMaterialPresentation/CreateSpeakingMaterialPresentation";
 import {
 	buildCreateSpeakingSectionDraftFormData,
 	buildCreateSpeakingSectionFormData,
-} from "./speakingSectionFormUtils";
+} from "./utils/speakingSectionFormUtils";
 
 const CreateSpeakingMaterial = () => {
 	const navigate = useNavigate();
