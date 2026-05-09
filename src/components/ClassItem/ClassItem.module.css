@@ -67,17 +67,13 @@
 }
 
 .teachersLabel {
-	display: block;
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
 	font-size: 0.75rem;
 	color: var(--text_dark);
 	margin-bottom: 0.4rem;
 	font-weight: 500;
-}
-
-.teachersSection {
-	display: flex;
-	flex-direction: column;
-	gap: 0.4rem;
 }
 
 .teacherSelect :global(.react-select__control) {
@@ -132,12 +128,6 @@
 
 	.classSubject {
 		font-size: 0.8rem;
-	}
-
-	.teachersSection {
-		flex: 0 0 280px;
-		align-self: stretch;
-		justify-content: center;
 	}
 
 	.teacherSelect {

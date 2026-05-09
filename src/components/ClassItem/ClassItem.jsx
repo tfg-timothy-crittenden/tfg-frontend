@@ -1,4 +1,5 @@
 import Select from "react-select";
+import { GraduationCap } from "lucide-react";
 import ClassroomIcon from "../ClassroomIcon";
 import styles from "./ClassItem.module.css";
 
@@ -58,6 +59,10 @@ const ClassItem = ({
 
 			{/* Teachers Assignment Section */}
 			<div className={styles.teachersSection}>
+				<div className={styles.teachersLabel}>
+					<GraduationCap size={16} />
+					<span>Teachers</span>
+				</div>
 				<Select
 					isMulti
 					options={allTeachers.map((t) => ({

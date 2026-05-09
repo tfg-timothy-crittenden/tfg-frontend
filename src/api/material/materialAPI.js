@@ -117,7 +117,11 @@ export const getMaterialNodeAssets = async (materialNodeId) => {
 	return data;
 };
 
-//Cache presigined URLS in memory to reduce repeated calls to the backend for the same object.
+//Problem: Repeated requests for presigned URLS for the same object.
+//Solution: A simple in-memory cache to store presigned URLs with their expiration times.
+//          Before making a request for a presigned URL, check the cache first. If a valid
+//          URL is found, return it instead of making a new API call.
+
 const presignedUrlCache = new Map();
 
 export const getPresignedUrl = async ({
@@ -242,27 +246,9 @@ export const publishSpeakingMaterial = async (materialId) => {
 };
 
 export const deleteSpeakingMaterial = async (materialId) => {
-	if (!materialId) {
-		throw new Error("materialId is required to delete a speaking material.");
-	}
-
-	const deletePaths = [
+	const { data } = await httpClient.delete(
 		`/toefl-speaking/material/${materialId}`,
-		`/toefl-speaking/material/${materialId}/section`,
-		`/toefl-speaking/material/section/${materialId}`,
-	];
-
-	let lastError = null;
-	for (const path of deletePaths) {
-		try {
-			const { data } = await httpClient.delete(path, {
-				baseURL: MATERIALS_BASE_URL,
-			});
-			return data;
-		} catch (error) {
-			lastError = error;
-		}
-	}
-
-	throw lastError || new Error("Failed to delete speaking material.");
+		{ baseURL: MATERIALS_BASE_URL },
+	);
+	return data;
 };

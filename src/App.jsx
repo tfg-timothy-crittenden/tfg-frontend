@@ -20,6 +20,7 @@ import {
 	AcceptInvite,
 	StudentSignup,
 	EmailVerification,
+	CheckEmail,
 	PasswordResetRequest,
 	PasswordResetConfirm,
 	Profile,
@@ -46,6 +47,7 @@ function App() {
 						element={<AcceptInvite />}
 					/>
 					<Route path={ROUTES.VERIFY_EMAIL} element={<EmailVerification />} />
+					<Route path={ROUTES.CHECK_EMAIL} element={<CheckEmail />} />
 					<Route path="/password-reset" element={<PasswordResetRequest />} />
 					<Route path="/reset-password" element={<PasswordResetConfirm />} />
 

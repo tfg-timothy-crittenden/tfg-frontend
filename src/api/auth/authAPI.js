@@ -51,6 +51,26 @@ export const confirmEmail = async (token) => {
 	return data;
 };
 
+export const resendVerificationEmail = async (email) => {
+	try {
+		const { data } = await httpClient.post(
+			`${AUTH_BASE_URL}/resend-verification-email`,
+			{ email },
+		);
+		if (data?.error) {
+			throw new Error(data.error);
+		}
+		return data;
+	} catch (error) {
+		const backendMessage =
+			error?.response?.data?.error ||
+			error?.response?.data?.message ||
+			error?.message ||
+			"Something went wrong. Please try again.";
+		throw new Error(backendMessage);
+	}
+};
+
 export const signupWithInvitation = async ({
 	username,
 	name,

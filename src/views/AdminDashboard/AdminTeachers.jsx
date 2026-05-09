@@ -1,13 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { GraduationCap, MailOpen } from "lucide-react";
+import { getAllTeachers, removeTeacherRole } from "@/api/user/user";
 import {
-	fetchInvitedTeachers,
-	cancelInvite,
-	resendInvite,
-	fetchActiveTeachers,
-	removeTeacherFromSchool,
-} from "@/api/admin/admin";
-
-import { getAllTeachers } from "@/api/user/user";
+	getPendingTeacherInvitations,
+	batchDeletePlatformInvitations,
+	resendPlatformInvitation,
+} from "@/api/platformInvitation/platformInvitationAPI";
 
 import BatchInviteTeachers from "./BatchInviteTeachersNew";
 import AdminDeleteModal from "@/components/AdminDeleteModal";
@@ -18,6 +16,28 @@ import styles from "@/components/AdminList/AdminList.module.css"; // Use shared 
 
 const AdminTeachers = () => {
 	const [currentSort, setCurrentSort] = useState("name-asc");
+	const [pendingInvitations, setPendingInvitations] = useState([]);
+	const [invitationsLoading, setInvitationsLoading] = useState(true);
+	const [selectedInvitations, setSelectedInvitations] = useState(new Set());
+	const [invitationSort, setInvitationSort] = useState("date-desc");
+
+	useEffect(() => {
+		loadPendingInvitations();
+	}, []);
+
+	const loadPendingInvitations = async () => {
+		setInvitationsLoading(true);
+		try {
+			const invitations = await getPendingTeacherInvitations();
+			setPendingInvitations(invitations);
+			return invitations;
+		} catch {
+			setPendingInvitations([]);
+			return [];
+		} finally {
+			setInvitationsLoading(false);
+		}
+	};
 
 	// Load all teachers
 	const loadTeachers = async () => {
@@ -26,7 +46,7 @@ const AdminTeachers = () => {
 
 	// Delete function for individual teachers
 	const deleteTeacher = async (teacher) => {
-		await removeTeacherFromSchool(teacher.id);
+		await removeTeacherRole(teacher.id);
 	};
 
 	// Use the admin list hook
@@ -110,7 +130,7 @@ const AdminTeachers = () => {
 	const renderTeacherItem = (teacher, { isSelected, onSelect }) => {
 		const actions = [
 			{
-				label: "Remove",
+				label: "Remove Teacher Privileges",
 				handler: () => handleIndividualRemove(teacher),
 			},
 		];
@@ -163,8 +183,66 @@ const AdminTeachers = () => {
 		return [];
 	};
 
+	const handleInvitationBulkAction = async (actionKey, selectedItems) => {
+		if (actionKey === "resend") {
+			const invitationIds = Array.from(selectedItems);
+			try {
+				await Promise.all(
+					invitationIds.map((id) => resendPlatformInvitation(id)),
+				);
+			} catch (error) {
+				console.error("Failed to resend invitations:", error);
+			}
+			return;
+		}
+		if (actionKey !== "delete") return;
+		const invitationIds = Array.from(selectedItems);
+		const idSet = new Set(invitationIds.map(String));
+
+		try {
+			await batchDeletePlatformInvitations(invitationIds);
+			setPendingInvitations((prev) =>
+				prev.filter((inv) => !idSet.has(String(inv.id))),
+			);
+			setSelectedInvitations(new Set());
+			await loadPendingInvitations();
+		} catch (error) {
+			console.error("Failed to delete platform invitations:", error);
+		}
+	};
+
+	const handleResendInvitation = async (invitationId) => {
+		try {
+			await resendPlatformInvitation(invitationId);
+		} catch (error) {
+			console.error("Failed to resend invitation:", error);
+		}
+	};
+
+	const handleSingleInvitationDelete = async (invitationId) => {
+		try {
+			await batchDeletePlatformInvitations([invitationId]);
+			setPendingInvitations((prev) =>
+				prev.filter((inv) => String(inv.id) !== String(invitationId)),
+			);
+			setSelectedInvitations((prev) => {
+				const next = new Set(prev);
+				next.delete(invitationId);
+				next.delete(String(invitationId));
+				return next;
+			});
+			await loadPendingInvitations();
+		} catch (error) {
+			console.error("Failed to delete platform invitation:", error);
+		}
+	};
+
 	return (
 		<section>
+			<h2 className={`${styles.sectionHeading} ${styles.teachersHeading}`}>
+				<GraduationCap size={20} strokeWidth={2} />
+				<span>Teachers</span>
+			</h2>
 			<AdminList
 				items={sortedTeachers}
 				loading={loading}
@@ -181,7 +259,82 @@ const AdminTeachers = () => {
 				onSortChange={handleSortChange}
 			/>
 
-			<BatchInviteTeachers onInviteComplete={loadAllTeachers} />
+			<h2 className={`${styles.sectionHeading} ${styles.invitationsHeading}`}>
+				<MailOpen size={20} strokeWidth={2} />
+				<span>Pending Invitations</span>
+			</h2>
+			<AdminList
+				items={[...pendingInvitations].sort((a, b) => {
+					switch (invitationSort) {
+						case "date-asc":
+							return new Date(a.createdAt) - new Date(b.createdAt);
+						case "date-desc":
+							return new Date(b.createdAt) - new Date(a.createdAt);
+						case "email-asc":
+							return a.inviteeEmail.localeCompare(b.inviteeEmail);
+						case "email-desc":
+							return b.inviteeEmail.localeCompare(a.inviteeEmail);
+						default:
+							return 0;
+					}
+				})}
+				loading={invitationsLoading}
+				selectedItems={selectedInvitations}
+				onSelectionChange={setSelectedInvitations}
+				bulkActions={[
+					{
+						key: "resend",
+						label: "Resend Selected Invitations",
+						disabled: selectedInvitations.size === 0,
+					},
+					{
+						key: "delete",
+						label: "Delete Selected Invitations",
+						disabled: selectedInvitations.size === 0,
+					},
+				]}
+				onBulkAction={handleInvitationBulkAction}
+				sortOptions={[
+					{ key: "date-desc", label: "Newest First" },
+					{ key: "date-asc", label: "Oldest First" },
+					{ key: "email-asc", label: "Email A-Z" },
+					{ key: "email-desc", label: "Email Z-A" },
+				]}
+				currentSort={invitationSort}
+				onSortChange={setInvitationSort}
+				renderItem={(inv, { isSelected, onSelect }) => (
+					<ListItem
+						key={inv.id}
+						id={inv.id}
+						isSelected={isSelected}
+						onSelect={onSelect}
+						actions={[
+							{
+								label: "Resend",
+								handler: () => handleResendInvitation(inv.id),
+							},
+							{
+								label: "Delete",
+								handler: () => handleSingleInvitationDelete(inv.id),
+							},
+						]}
+						renderContent={() => (
+							<UserListItem
+								user={{
+									name: inv.inviteeEmail,
+									email: `Invited: ${new Date(inv.createdAt).toLocaleString()} · Expires: ${new Date(inv.expiresAt).toLocaleString()}`,
+									invitationStatus: inv.invitationStatus,
+								}}
+							/>
+						)}
+					/>
+				)}
+				emptyMessage="No pending invitations."
+				loadingMessage="Loading invitations..."
+				className={styles.adminList}
+			/>
+
+			<BatchInviteTeachers onInviteComplete={loadPendingInvitations} />
 
 			{/* Delete Confirmation Modal */}
 			<AdminDeleteModal

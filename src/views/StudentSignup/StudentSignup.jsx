@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import httpClient from "@/api/httpClient";
 import styles from "./StudentSignup.module.css";
 import { checkEmailExists } from "@/api/user/user";
+import { ROUTES } from "@/routes/routeConfig";
 
 const extractApiMessage = (payload, fallback) => {
 	if (!payload) return fallback;
@@ -75,24 +76,11 @@ const StudentSignup = () => {
 		setLoading(true);
 
 		try {
-			const res = await httpClient.post(`${authBaseUrl}/signup`, form);
-			const successMessage = extractApiMessage(
-				res?.data,
-				"Account created. Please verify your email before signing in.",
-			);
-			const loginInfoMessage =
-				"User created successfully. Please check your email to verify your account.";
-			setMessage(successMessage);
-			setTimeout(
-				() =>
-					navigate("/login", {
-						replace: true,
-						state: {
-							info: loginInfoMessage,
-						},
-					}),
-				1000,
-			);
+			await httpClient.post(`${authBaseUrl}/signup`, form);
+			navigate(ROUTES.CHECK_EMAIL, {
+				replace: true,
+				state: { email: form.email },
+			});
 		} catch (err) {
 			setError(
 				extractApiMessage(
