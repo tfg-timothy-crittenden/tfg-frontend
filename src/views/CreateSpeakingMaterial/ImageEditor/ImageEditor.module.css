@@ -30,6 +30,21 @@
 	justify-content: flex-end;
 }
 
+@keyframes toolbarSlideInFromRight {
+	from {
+		opacity: 0;
+		transform: translateX(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+.toolbar_slide_in {
+	animation: toolbarSlideInFromRight 280ms ease both;
+}
+
 .drawToolbarVertical {
 	display: flex;
 	flex-direction: column;

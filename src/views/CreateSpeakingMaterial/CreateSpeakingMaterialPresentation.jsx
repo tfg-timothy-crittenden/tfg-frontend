@@ -1,5 +1,5 @@
 import { useFieldArray, useForm } from "react-hook-form";
-import { ImageIcon } from "lucide-react";
+import { ImageIcon, RotateCcw, Save } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import SpeakingPart1AudioQuestionFields from "./SpeakingPart1AudioQuestionFields";
@@ -23,6 +23,12 @@ const makeDefaultQuestions = (count) =>
 		audio: [],
 	}));
 
+const hasDirtyLeaf = (value) => {
+	if (value === true) return true;
+	if (!value || typeof value !== "object") return false;
+	return Object.values(value).some((entry) => hasDirtyLeaf(entry));
+};
+
 const extractMaterialId = (payload) => {
 	const value =
 		payload?.materialId ??
@@ -44,6 +50,7 @@ const extractMaterialId = (payload) => {
 
 const CreateSpeakingMaterialPresentation = ({
 	mode = "create",
+	sectionStatus = null,
 	initialValues,
 	initialHighlightDataByQuestion,
 	initialPart2ConfigByQuestion,
@@ -53,6 +60,7 @@ const CreateSpeakingMaterialPresentation = ({
 	onSubmitForm,
 	onDraftSaveForm,
 	onPublish,
+	onReloadFromDb,
 }) => {
 	// Resolve question counts from incoming data so create/edit modes share the
 	// same presentation without hard-coding array sizes into the form setup.
@@ -63,19 +71,41 @@ const CreateSpeakingMaterialPresentation = ({
 
 	// Build stable default values for react-hook-form. Edit mode injects fetched
 	// values here, while create mode falls back to empty question arrays.
-	const resolvedInitialValues = useMemo(
-		() =>
-			initialValues || {
-				materialTitle: "",
-				materialDescription: "",
-				materialId: "",
-				partTitle: "",
-				part2Title: "",
-				questions: makeDefaultQuestions(questionCount),
-				part2Questions: makeDefaultQuestions(part2QuestionCount),
-			},
-		[initialValues, questionCount, part2QuestionCount],
-	);
+	const resolvedInitialValues = useMemo(() => {
+		const baseDefaults = {
+			materialTitle: "",
+			materialDescription: "",
+			materialId: "",
+			partTitle: "",
+			part2Title: "",
+			image: [],
+			removedExistingPartImage: false,
+			questions: makeDefaultQuestions(questionCount),
+			part2Questions: makeDefaultQuestions(part2QuestionCount),
+			highlightDataByQuestion:
+				initialHighlightDataByQuestion || Array(questionCount).fill(null),
+			part2ConfigByQuestion:
+				initialPart2ConfigByQuestion || Array(part2QuestionCount).fill({}),
+		};
+
+		if (!initialValues) return baseDefaults;
+
+		return {
+			...baseDefaults,
+			...initialValues,
+			questions: initialValues.questions || baseDefaults.questions,
+			part2Questions:
+				initialValues.part2Questions || baseDefaults.part2Questions,
+			highlightDataByQuestion: baseDefaults.highlightDataByQuestion,
+			part2ConfigByQuestion: baseDefaults.part2ConfigByQuestion,
+		};
+	}, [
+		initialValues,
+		questionCount,
+		part2QuestionCount,
+		initialHighlightDataByQuestion,
+		initialPart2ConfigByQuestion,
+	]);
 
 	// Form state
 	const {
@@ -86,7 +116,7 @@ const CreateSpeakingMaterialPresentation = ({
 		control,
 		setValue,
 		reset,
-		formState: { errors, isDirty },
+		formState: { errors, isDirty, dirtyFields },
 	} = useForm({
 		shouldUnregister: false,
 		defaultValues: resolvedInitialValues,
@@ -132,9 +162,14 @@ const CreateSpeakingMaterialPresentation = ({
 	const [currentQuestion, setCurrentQuestion] = useState(0);
 	const [currentPart2Question, setCurrentPart2Question] = useState(0);
 	const [step, setStep] = useState(0);
+	const removedExistingPartImage = !!watch("removedExistingPartImage");
 
 	useEffect(() => {
 		setShowImagePicker(!normalizedExistingMedia.partImageUrl);
+		setValue("removedExistingPartImage", false, {
+			shouldDirty: false,
+			shouldTouch: false,
+		});
 	}, [normalizedExistingMedia.partImageUrl]);
 
 	// Media state
@@ -143,6 +178,7 @@ const CreateSpeakingMaterialPresentation = ({
 	const [croppedImageUrl, setCroppedImageUrl] = useState("");
 	const [croppedImageFile, setCroppedImageFile] = useState(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isReverting, setIsReverting] = useState(false);
 
 	// Derived field accessors
 	const paddedFields = Array.from(
@@ -187,10 +223,31 @@ const CreateSpeakingMaterialPresentation = ({
 	};
 
 	const clearImage = () => {
+		if (normalizedExistingMedia.partImageUrl) {
+			setValue("removedExistingPartImage", true, {
+				shouldDirty: true,
+				shouldTouch: true,
+			});
+		}
 		setValue("image", []);
 		setCroppedImageUrl("");
 		setCroppedImageFile(null);
 		setImagePreviewUrl("");
+		setShowImagePicker(true);
+	};
+
+	const resetImageUiToExistingState = () => {
+		setValue("image", [], {
+			shouldDirty: false,
+			shouldTouch: false,
+		});
+		setValue("removedExistingPartImage", false, {
+			shouldDirty: false,
+			shouldTouch: false,
+		});
+		setImagePreviewUrl("");
+		setCroppedImageUrl("");
+		setCroppedImageFile(null);
 		setShowImagePicker(!normalizedExistingMedia.partImageUrl);
 	};
 
@@ -214,7 +271,8 @@ const CreateSpeakingMaterialPresentation = ({
 		return title;
 	};
 
-	const hasExistingPartImage = !!normalizedExistingMedia.partImageUrl;
+	const hasExistingPartImage =
+		!!normalizedExistingMedia.partImageUrl && !removedExistingPartImage;
 	const hasExistingQuestionAudio = (idx) =>
 		!!normalizedExistingMedia.questionAudioUrls[idx];
 	const hasExistingPart2QuestionAudio = (idx) =>
@@ -280,29 +338,96 @@ const CreateSpeakingMaterialPresentation = ({
 		};
 	}, [croppedImageUrl]);
 
-	const [highlightDataByQuestion, setHighlightDataByQuestion] = useState(
-		() => initialHighlightDataByQuestion || Array(questionCount).fill(null),
-	);
-	const [part2ConfigByQuestion] = useState(
-		() => initialPart2ConfigByQuestion || Array(part2QuestionCount).fill({}),
-	);
+	const highlightDataByQuestion =
+		watch("highlightDataByQuestion") || Array(questionCount).fill(null);
+	const part2ConfigByQuestion =
+		watch("part2ConfigByQuestion") || Array(part2QuestionCount).fill({});
 
 	// ── Publish ─────────────────────────────────────────────────────────────────
 	const [isPublishing, setIsPublishing] = useState(false);
+	const isPublishedStatus =
+		String(sectionStatus || "")
+			.trim()
+			.toUpperCase() === "PUBLISHED";
+	const canShowDraftButton = !!onDraftSaveForm && !isPublishedStatus;
+	const canShowHeaderSaveChangesButton =
+		mode === "edit" && isPublishedStatus && !!onSubmitForm;
+	const canShowPublishButton = !!onPublish && !isPublishedStatus;
+	const hasDirtyFields = hasDirtyLeaf(dirtyFields);
+	const hasUnsavedFieldChanges = isDirty && hasDirtyFields;
+	const saveChangesDisabled = mode === "edit" && !hasUnsavedFieldChanges;
+	const currentBreadcrumbKey =
+		activePart === 1
+			? step === 0
+				? "section-details"
+				: step === 1
+					? "part1-image"
+					: "part1-questions"
+			: "part2-questions";
 
-	// Keep per-question highlight state in sync with edit-mode hydration.
-	useEffect(() => {
-		setHighlightDataByQuestion(
-			initialHighlightDataByQuestion || Array(questionCount).fill(null),
-		);
-	}, [initialHighlightDataByQuestion, questionCount]);
+	const breadcrumbItems = [
+		{
+			key: "section-details",
+			label: "section details",
+			onClick: () => {
+				setActivePart(1);
+				goToStage(0);
+			},
+		},
+		{
+			key: "part1-image",
+			label: "part 1 image",
+			onClick: () => {
+				setActivePart(1);
+				goToStage(1);
+			},
+		},
+		{
+			key: "part1-questions",
+			label: "part 1 questions",
+			onClick: () => {
+				setActivePart(1);
+				goToStage(2);
+			},
+		},
+		{
+			key: "part2-questions",
+			label: "part 2 questions",
+			onClick: goToPart2,
+		},
+	];
+
+	const currentBreadcrumbIndex = breadcrumbItems.findIndex(
+		(item) => item.key === currentBreadcrumbKey,
+	);
+	const progressionGates = [
+		materialInfoValid(),
+		hasVisualPrompt,
+		!part1NextDisabled,
+	];
+	const canNavigateToBreadcrumbIndex = (targetIndex) => {
+		if (targetIndex <= currentBreadcrumbIndex) return true;
+		for (
+			let gateIndex = currentBreadcrumbIndex;
+			gateIndex < targetIndex;
+			gateIndex += 1
+		) {
+			if (!progressionGates[gateIndex]) return false;
+		}
+		return true;
+	};
+	const progressPercent =
+		currentBreadcrumbIndex <= 0
+			? 0
+			: (currentBreadcrumbIndex / (breadcrumbItems.length - 1)) * 100;
 
 	// Question drawing/highlight handlers
 	const handleHighlightChange = (idx, data) => {
-		setHighlightDataByQuestion((prev) => {
-			const next = [...prev];
-			next[idx] = data;
-			return next;
+		const next = [...highlightDataByQuestion];
+		next[idx] = data;
+		setValue("highlightDataByQuestion", next, {
+			shouldDirty: true,
+			shouldTouch: true,
 		});
 	};
 
@@ -363,6 +488,7 @@ const CreateSpeakingMaterialPresentation = ({
 
 	const handleDraftSave = async () => {
 		const saveDraft = onDraftSaveForm || onSubmitForm;
+		if (!hasUnsavedFieldChanges) return;
 		if (!saveDraft) return;
 		setIsSubmitting(true);
 		try {
@@ -387,6 +513,33 @@ const CreateSpeakingMaterialPresentation = ({
 		} finally {
 			setIsSubmitting(false);
 		}
+	};
+
+	const handleRevertUnsavedChanges = async () => {
+		if (!hasUnsavedFieldChanges) return;
+
+		if (mode === "edit" && onReloadFromDb) {
+			setIsReverting(true);
+			try {
+				await onReloadFromDb();
+				resetImageUiToExistingState();
+				setActivePart(1);
+				setStep(0);
+				setCurrentQuestion(0);
+				setCurrentPart2Question(0);
+			} catch (e) {
+				alert(
+					"Failed to refresh from server: " +
+						(e?.response?.data?.message || e.message),
+				);
+			} finally {
+				setIsReverting(false);
+			}
+			return;
+		}
+
+		reset(resolvedInitialValues);
+		resetImageUiToExistingState();
 	};
 
 	const handlePublishSubmit = async (data) => {
@@ -419,139 +572,110 @@ const CreateSpeakingMaterialPresentation = ({
 				autoComplete="off"
 			>
 				<nav className={styles.breadcrumb} aria-label="Speaking form stages">
-					<div className={styles.breadcrumb_stack}>
-						<ol className={styles.breadcrumb_parts}>
-							<li
-								className={
-									activePart === 1
-										? styles.breadcrumb_current
-										: styles.breadcrumb_done
-								}
-							>
-								<button
-									type="button"
-									className={styles.breadcrumb_button}
-									onClick={() => {
-										setActivePart(1);
-										goToStage(0);
-									}}
-								>
-									Part 1
-								</button>
-							</li>
-							<li
-								className={
-									activePart === 2
-										? styles.breadcrumb_current
-										: styles.breadcrumb_upcoming
-								}
-							>
-								<button
-									type="button"
-									className={styles.breadcrumb_button}
-									onClick={goToPart2}
-								>
-									Part 2
-								</button>
-							</li>
-						</ol>
-						{activePart === 1 ? (
-							<ol className={styles.breadcrumb_steps}>
-								<li
-									className={
-										step === 0
-											? styles.breadcrumb_current
-											: step > 0
-												? styles.breadcrumb_done
-												: undefined
-									}
-									aria-current={step === 0 ? "step" : undefined}
-								>
-									<button
-										type="button"
-										className={styles.breadcrumb_button}
-										onClick={() => goToStage(0)}
-									>
-										Material Info
-									</button>
-								</li>
-								<li
-									className={
-										step === 1
-											? styles.breadcrumb_current
-											: step > 1
-												? styles.breadcrumb_done
-												: undefined
-									}
-									aria-current={step === 1 ? "step" : undefined}
-								>
-									<button
-										type="button"
-										className={styles.breadcrumb_button}
-										onClick={() => goToStage(1)}
-									>
-										Select Image
-									</button>
-								</li>
-								<li
-									className={step === 2 ? styles.breadcrumb_current : undefined}
-									aria-current={step === 2 ? "step" : undefined}
-								>
-									<button
-										type="button"
-										className={styles.breadcrumb_button}
-										onClick={() => goToStage(2)}
-									>
-										Questions
-									</button>
-								</li>
-							</ol>
-						) : (
-							<ol className={styles.breadcrumb_steps}>
-								<li className={styles.breadcrumb_current} aria-current="step">
-									<button type="button" className={styles.breadcrumb_button}>
-										Part 2 Questions
-									</button>
-								</li>
-								<li className={styles.breadcrumb_upcoming}>
-									<button
-										type="button"
-										className={styles.breadcrumb_button}
-										onClick={goBackToPart1Questions}
-									>
-										Back to Part 1
-									</button>
-								</li>
-							</ol>
-						)}
+					<div className={styles.progress_track} aria-hidden="true">
+						<div
+							className={styles.progress_fill}
+							style={{ width: `${progressPercent}%` }}
+						/>
 					</div>
+					<ol className={styles.breadcrumb_flow}>
+						{breadcrumbItems.map((item, index) => {
+							const canNavigate = canNavigateToBreadcrumbIndex(index);
+							const stateClass =
+								index === currentBreadcrumbIndex
+									? styles.breadcrumb_current
+									: index < currentBreadcrumbIndex
+										? styles.breadcrumb_done
+										: styles.breadcrumb_upcoming;
+
+							return (
+								<li
+									key={item.key}
+									className={stateClass}
+									aria-current={
+										index === currentBreadcrumbIndex ? "step" : undefined
+									}
+								>
+									<button
+										type="button"
+										className={`${styles.breadcrumb_button} ${!canNavigate ? styles.breadcrumb_button_disabled : ""}`}
+										onClick={canNavigate ? item.onClick : undefined}
+										disabled={!canNavigate}
+									>
+										{item.label}
+									</button>
+								</li>
+							);
+						})}
+					</ol>
 				</nav>
-				<fieldset className={styles.listen_repeat_container}>
-					<legend className={styles.legend}>
-						<span>
-							{mode === "edit"
-								? "Edit TOEFL Speaking Material"
-								: "Create TOEFL Speaking Material"}
-						</span>
-						{onDraftSaveForm && (
-							<button
-								type="button"
-								className={`${styles.submit_button} ${styles.step_action_button}`}
-								onClick={handleDraftSave}
-								disabled={!isDirty || isSubmitting}
-							>
-								{isSubmitting ? "Saving..." : "Save Draft"}
-							</button>
-						)}
-					</legend>
+				<div className={styles.listen_repeat_container}>
+					<div className={styles.form_header}>
+						{mode === "edit" ? (
+							<h1 className={styles.form_title}>
+								Edit TOEFL Speaking Material
+							</h1>
+						) : null}
+						<div className={styles.form_header_actions}>
+							{mode === "edit" && (
+								<button
+									type="button"
+									className={`${styles.revert_button} ${styles.step_action_button}`}
+									onClick={
+										hasUnsavedFieldChanges
+											? handleRevertUnsavedChanges
+											: undefined
+									}
+									disabled={
+										!hasUnsavedFieldChanges ||
+										isSubmitting ||
+										isPublishing ||
+										isReverting
+									}
+								>
+									<RotateCcw size={16} className={styles.draft_button_icon} />
+									{isReverting ? "Discarding..." : "Discard Changes"}
+								</button>
+							)}
+							{canShowDraftButton && (
+								<button
+									type="button"
+									className={`${styles.draft_button} ${styles.step_action_button}`}
+									onClick={hasUnsavedFieldChanges ? handleDraftSave : undefined}
+									disabled={
+										!hasUnsavedFieldChanges || isSubmitting || isReverting
+									}
+								>
+									<Save size={16} className={styles.draft_button_icon} />
+									{isSubmitting ? "Saving..." : "Save Draft"}
+								</button>
+							)}
+							{canShowHeaderSaveChangesButton && (
+								<button
+									type="button"
+									className={`${styles.draft_button} ${styles.step_action_button}`}
+									onClick={
+										hasUnsavedFieldChanges
+											? handleSubmit(handleFormSubmit)
+											: undefined
+									}
+									disabled={
+										!hasUnsavedFieldChanges || isSubmitting || isReverting
+									}
+								>
+									<Save size={16} className={styles.draft_button_icon} />
+									{isSubmitting ? "Saving..." : "Save Changes"}
+								</button>
+							)}
+						</div>
+					</div>
 					{activePart === 1 && step === 0 && (
 						<div className={styles.section}>
-							<SectionHeader
-								badge="1"
-								title="Step 1: Material Info"
+							{/* <SectionHeader
+								title="Material Info"
 								subtitle="Enter a clear title and optional description for this test part. Material ID is assigned automatically."
 								styles={styles}
-							/>
+							/> */}
 							<div className={styles.step3_fields_card}>
 								<div className={styles.fields_inner}>
 									<label htmlFor="materialTitle" className={styles.label}>
@@ -576,6 +700,10 @@ const CreateSpeakingMaterialPresentation = ({
 											className={styles.text_input}
 										/>
 									</label>
+									<input
+										type="hidden"
+										{...register("removedExistingPartImage")}
+									/>
 									<input type="hidden" {...register("materialId")} />
 								</div>
 							</div>
@@ -593,17 +721,16 @@ const CreateSpeakingMaterialPresentation = ({
 					)}
 					{activePart === 1 && step === 1 && (
 						<div className={styles.section}>
-							<SectionHeader
-								badge="2"
-								title="Step 2: Select & Crop Image"
+							{/* <SectionHeader
+								title="Select & Crop Image"
 								subtitle="Give this part a title, upload an image, and crop it to the area students should see."
 								styles={styles}
-							/>
+							/> */}
 
 							<div className={styles.step3_fields_card}>
 								<div className={styles.fields_inner}>
 									<label htmlFor="partTitle" className={styles.label}>
-										Part Title
+										Part 1 Location
 										<input
 											{...register("partTitle", { required: true })}
 											id="partTitle"
@@ -675,7 +802,13 @@ const CreateSpeakingMaterialPresentation = ({
 											<button
 												type="button"
 												className={styles.back_button}
-												onClick={() => setShowImagePicker(true)}
+												onClick={() => {
+													setValue("removedExistingPartImage", true, {
+														shouldDirty: true,
+														shouldTouch: true,
+													});
+													setShowImagePicker(true);
+												}}
 											>
 												Replace Image
 											</button>
@@ -711,12 +844,11 @@ const CreateSpeakingMaterialPresentation = ({
 					)}
 					{activePart === 1 && step === 2 && (
 						<div className={styles.section}>
-							<SectionHeader
-								badge="3"
-								title="Step 3: Questions"
+							{/* <SectionHeader
+								title="Questions"
 								subtitle="Draw highlights on the image and add audio and transcript for each question."
 								styles={styles}
-							/>
+							/> */}
 
 							<QuestionTabsNavigator
 								totalQuestions={questionCount}
@@ -735,25 +867,25 @@ const CreateSpeakingMaterialPresentation = ({
 									<ImageIcon size={16} strokeWidth={2} />
 									<span>Visual Prompt</span>
 								</div>
-								<div key={currentQuestion} className={styles.image_slide_in}>
-									<DrawEditor
-										croppedImageUrl={activeVisualPromptUrl}
-										highlightData={highlightDataByQuestion[currentQuestion]}
-										onHighlightChange={(data) =>
-											handleHighlightChange(currentQuestion, data)
-										}
-										onClearDrawing={() => {
-											setHighlightDataByQuestion((prev) => {
-												const next = [...prev];
-												next[currentQuestion] = {
-													viewBox: [400, 400],
-													ds: [],
-												};
-												return next;
-											});
-										}}
-									/>
-								</div>
+								<DrawEditor
+									croppedImageUrl={activeVisualPromptUrl}
+									highlightData={highlightDataByQuestion[currentQuestion]}
+									onHighlightChange={(data) =>
+										handleHighlightChange(currentQuestion, data)
+									}
+									onClearDrawing={() => {
+										const next = [...highlightDataByQuestion];
+										next[currentQuestion] = {
+											viewBox: [400, 400],
+											ds: [],
+										};
+										setValue("highlightDataByQuestion", next, {
+											shouldDirty: true,
+											shouldTouch: true,
+										});
+									}}
+									toolbarSlideKey={currentQuestion}
+								/>
 							</div>
 
 							<QuestionPanels
@@ -787,12 +919,11 @@ const CreateSpeakingMaterialPresentation = ({
 						</div>
 					)}
 					<div className={styles.section} hidden={activePart !== 2}>
-						<SectionHeader
-							badge="4"
-							title="Part 2: Questions"
+						{/* <SectionHeader
+							title="Part 2 Questions"
 							subtitle="Add 4 audio questions and matching transcripts."
 							styles={styles}
-						/>
+						/> */}
 
 						<div className={styles.step3_fields_card}>
 							<div className={styles.fields_inner}>
@@ -859,18 +990,22 @@ const CreateSpeakingMaterialPresentation = ({
 									<button
 										type="submit"
 										className={`${styles.submit_button} ${styles.step_action_button}`}
-										disabled={submitDisabled || isSubmitting}
+										disabled={
+											submitDisabled || isSubmitting || saveChangesDisabled
+										}
 									>
 										{isSubmitting ? "Saving..." : submitLabel}
 									</button>
-									<button
-										type="button"
-										className={`${styles.publish_button} ${styles.step_action_button}`}
-										disabled={submitDisabled || isPublishing || isSubmitting}
-										onClick={handleSubmit(handlePublishSubmit)}
-									>
-										{isPublishing ? "Publishing…" : "Publish"}
-									</button>
+									{canShowPublishButton && (
+										<button
+											type="button"
+											className={`${styles.publish_button} ${styles.step_action_button}`}
+											disabled={submitDisabled || isPublishing || isSubmitting}
+											onClick={handleSubmit(handlePublishSubmit)}
+										>
+											{isPublishing ? "Publishing…" : "Publish"}
+										</button>
+									)}
 								</div>
 							</div>
 						) : (
@@ -879,12 +1014,14 @@ const CreateSpeakingMaterialPresentation = ({
 								leftOnClick={goBackToPart1Questions}
 								rightLabel={isSubmitting ? "Saving..." : submitLabel}
 								rightType="submit"
-								rightDisabled={submitDisabled || isSubmitting}
+								rightDisabled={
+									submitDisabled || isSubmitting || saveChangesDisabled
+								}
 								styles={styles}
 							/>
 						)}
 					</div>
-				</fieldset>
+				</div>
 				{fields.map((field, idx) => (
 					<div key={field.id}>
 						{errors?.questions?.[idx]?.audio && (

@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import styles from "./AdminDashboard.module.css";
 
-// ⬇️ prefetch helpers from your lazyRoutes file
+// prefetch helpers from lazyRoutes file
 import {
 	prefetchAdminAll,
 	_importAdminTeachers,

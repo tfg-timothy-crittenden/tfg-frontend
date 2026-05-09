@@ -5,7 +5,11 @@
 	align-items: center;
 	justify-content: center;
 	gap: 0.5rem;
-	min-height: 160px;
+	width: 400px;
+	height: 400px;
+	max-width: min(400px, 100%);
+	margin-left: auto;
+	margin-right: auto;
 	padding: 1.5rem 1rem 1.2rem;
 	border: 2px dashed var(--actionable_text_active);
 	border-radius: 14px;

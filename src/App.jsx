@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import Header from "@/components/Header/Header";
 import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
 import RoleRoute from "@/components/RoleRoute/RoleRoute";
-import AuthCallback from "@/views/AuthCallback/AuthCallback";
 import { ROUTES, ADMIN_SEGMENTS, ROUTE_SEGMENTS } from "@/routes/routeConfig";
 
 import {
@@ -38,7 +37,6 @@ function App() {
 				<Routes>
 					{/* Public routes */}
 					<Route path={ROUTES.LOGIN} element={<OAuthLogin />} />
-					<Route path={ROUTES.AUTH_CALLBACK} element={<AuthCallback />} />
 					<Route path={ROUTES.UNAUTHORISED} element={<Unauthorised />} />
 					<Route path={ROUTES.SIGNUP} element={<StudentSignup />} />
 					<Route path={ROUTES.SIGNUP_WITH_CODE} element={<StudentSignup />} />

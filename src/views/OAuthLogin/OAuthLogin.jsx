@@ -3,6 +3,34 @@ import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./OAuthLogin.module.css";
 import { login } from "../../store/auth/authSlice";
+import { ROUTES } from "@/routes/routeConfig";
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const getLoginErrorMessage = (error) => {
+	if (typeof error === "string") return error;
+	if (typeof error?.message === "string") return error.message;
+	if (typeof error?.error === "string") return error.error;
+	return "Login failed";
+};
+
+const shouldRedirectToCheckEmail = (error, fallbackIdentifier) => {
+	if (error?.shouldConfirmEmail) {
+		const email =
+			typeof error?.email === "string" && EMAIL_PATTERN.test(error.email)
+				? error.email
+				: EMAIL_PATTERN.test(fallbackIdentifier || "")
+					? fallbackIdentifier
+					: "";
+
+		return {
+			redirect: true,
+			email,
+		};
+	}
+
+	return { redirect: false, email: "" };
+};
 
 export default function OAuthLogin() {
 	const [credentials, setCredentials] = useState({
@@ -24,7 +52,7 @@ export default function OAuthLogin() {
 	}, [location.pathname, location.state, navigate]);
 
 	const handlePasswordResetClick = () => {
-		navigate("/password-reset");
+		navigate(ROUTES.RESET_PASSWORD);
 	};
 
 	const handleCredentialLogin = async (e) => {
@@ -42,9 +70,22 @@ export default function OAuthLogin() {
 				}),
 			).unwrap();
 
-			navigate("/my/classrooms");
+			navigate(ROUTES.CLASSROOMS);
 		} catch (err) {
-			setError(typeof err === "string" ? err : err?.error || "Login failed");
+			const { redirect, email } = shouldRedirectToCheckEmail(
+				err,
+				credentials.username,
+			);
+
+			if (redirect) {
+				navigate(ROUTES.CHECK_EMAIL, {
+					replace: true,
+					state: { email },
+				});
+				return;
+			}
+
+			setError(getLoginErrorMessage(err));
 		} finally {
 			setIsLoading(false);
 		}

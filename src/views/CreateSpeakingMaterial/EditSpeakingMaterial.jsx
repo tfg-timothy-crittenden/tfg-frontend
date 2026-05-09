@@ -2,239 +2,31 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
 	getPresignedUrl,
-	getMaterialNodeAssets,
 	getSpeakingSectionByMaterialId,
-	getToeflSpeakingMaterialQuestion,
 	updateSpeakingSection,
 	publishSpeakingMaterial,
 } from "@/api/material/materialAPI";
 import CreateSpeakingMaterialPresentation from "./CreateSpeakingMaterialPresentation";
 import {
 	buildPatchSpeakingSectionFormData,
-	extractSectionMediaRefs,
 	normalizeSectionToFormState,
 } from "./speakingSectionFormUtils";
 
 const QUESTION_COUNT = 7;
 const PART2_QUESTION_COUNT = 4;
 
-const getPart1Questions = (section) =>
-	section?.questions ||
-	section?.part1Questions ||
-	section?.part1?.questions ||
-	[];
-
-const toMediaRefFromAsset = (asset) => {
-	if (!asset) return null;
-	const objectKey =
-		asset.objectKey ||
-		asset.storageKey ||
-		asset.key ||
-		asset.object_key ||
-		asset.storage_key ||
-		null;
-	const url =
-		asset.signedUrl || asset.url || asset.assetUrl || asset.previewUrl || null;
-	if (!url && !objectKey) return null;
-	return {
-		url,
-		objectKey,
-		bucket: asset.bucket || null,
-	};
-};
-
-const toMediaRefFromQuestionNode = (questionNode) => {
-	if (!questionNode) return null;
-
-	const questionAssets =
-		questionNode?.assets || questionNode?.materialAssets || [];
-	const audioAsset = pickAudioAsset(questionAssets);
-
-	const directUrl =
-		questionNode?.audioUrl ||
-		questionNode?.audio_url ||
-		questionNode?.audioSignedUrl ||
-		questionNode?.audioAssetUrl ||
-		questionNode?.audioPreviewUrl ||
-		questionNode?.audio?.url ||
-		questionNode?.audio?.signedUrl ||
-		questionNode?.audio?.assetUrl ||
-		audioAsset?.signedUrl ||
-		audioAsset?.url ||
-		audioAsset?.assetUrl ||
-		audioAsset?.previewUrl ||
-		null;
-
-	const objectKey =
-		questionNode?.audioObjectKey ||
-		questionNode?.audioStorageKey ||
-		questionNode?.audioKey ||
-		questionNode?.audio_object_key ||
-		questionNode?.audio_storage_key ||
-		questionNode?.audio_key ||
-		questionNode?.audio?.objectKey ||
-		questionNode?.audio?.storageKey ||
-		questionNode?.audio?.key ||
-		questionNode?.audio?.object_key ||
-		questionNode?.audio?.storage_key ||
-		audioAsset?.objectKey ||
-		audioAsset?.storageKey ||
-		audioAsset?.key ||
-		audioAsset?.object_key ||
-		audioAsset?.storage_key ||
-		null;
-
-	if (!directUrl && !objectKey) return null;
-
-	return {
-		url: directUrl || null,
-		objectKey,
-		bucket: questionNode?.audio?.bucket || audioAsset?.bucket || null,
-	};
-};
-
-const pickAudioAsset = (assets = []) =>
-	assets.find((asset) => asset?.type === "AUDIO" || asset?.kind === "AUDIO") ||
-	assets[0] ||
-	null;
-
-const findPartNodeId = (section) => {
-	const part1Questions = getPart1Questions(section);
-	const questionWithParent = part1Questions.find(
-		(question) => question?.parentNodeId || question?.parentId,
-	);
-
-	return (
-		section?.part1?.id ||
-		section?.part1Id ||
-		section?.partNodeId ||
-		section?.part1?.nodeId ||
-		questionWithParent?.parentNodeId ||
-		questionWithParent?.parentId ||
-		null
-	);
-};
-
-const looksLikeProtectedUrl = (url) => {
-	if (!url) return false;
-	const normalized = String(url).toLowerCase();
-	return (
-		normalized.includes("/storage/") ||
-		normalized.includes("/protected/") ||
-		normalized.includes("/material-nodes/") ||
-		normalized.includes("objectkey=")
-	);
-};
-
-const extractObjectKeyFromUrl = (url) => {
-	if (!url) return null;
+const resolveStorageKeyToUrl = async (storageKey) => {
+	if (!storageKey) return null;
 
 	try {
-		const parsed = new URL(url, window.location.origin);
-		const queryObjectKey =
-			parsed.searchParams.get("objectKey") ||
-			parsed.searchParams.get("object_key") ||
-			parsed.searchParams.get("key");
-		if (queryObjectKey) {
-			return decodeURIComponent(queryObjectKey);
-		}
-
-		const path = decodeURIComponent(parsed.pathname || "");
-		const storagePrefix = path.match(/\/(?:storage|protected)\/(.+)$/i);
-		if (storagePrefix?.[1]) {
-			return storagePrefix[1].replace(/^\/+/, "");
-		}
-
-		if (path.startsWith("/")) {
-			return path.slice(1);
-		}
-
-		return path || null;
+		return await getPresignedUrl({
+			bucket: "toefl",
+			objectKey: storageKey,
+			expirationSeconds: 3600,
+		});
 	} catch {
 		return null;
 	}
-};
-
-const resolveMediaRefToUrl = async (mediaRef) => {
-	if (!mediaRef) return null;
-
-	const directUrl = mediaRef.url || null;
-	const objectKey =
-		mediaRef.objectKey ||
-		(looksLikeProtectedUrl(directUrl)
-			? extractObjectKeyFromUrl(directUrl)
-			: null);
-	if (!objectKey) {
-		return directUrl;
-	}
-
-	try {
-		const signedUrlResponse = await getPresignedUrl({
-			bucket: mediaRef.bucket || "toefl",
-			objectKey,
-			expirationSeconds: 3600,
-		});
-
-		if (typeof signedUrlResponse === "string") {
-			return signedUrlResponse;
-		}
-
-		return (
-			signedUrlResponse?.signedUrl ||
-			signedUrlResponse?.url ||
-			signedUrlResponse?.presignedUrl ||
-			directUrl ||
-			null
-		);
-	} catch {
-		return directUrl;
-	}
-};
-
-const resolvePartImageFromPartNode = async (partNodeId) => {
-	if (!partNodeId) return null;
-
-	const partAssetsData = await getMaterialNodeAssets(partNodeId);
-	const partAssets = Array.isArray(partAssetsData)
-		? partAssetsData
-		: partAssetsData?.assets || [];
-	const imageAsset =
-		partAssets.find(
-			(asset) => asset?.type === "IMAGE" || asset?.kind === "IMAGE",
-		) || partAssets[0];
-
-	return resolveMediaRefToUrl(toMediaRefFromAsset(imageAsset));
-};
-
-const resolvePartImageFromQuestionEndpoint = async (materialId) => {
-	if (!materialId) return null;
-
-	const firstQuestion = await getToeflSpeakingMaterialQuestion(
-		materialId,
-		1,
-		1,
-	);
-	const partNodeId =
-		firstQuestion?.parentNodeId || firstQuestion?.parentId || null;
-	if (!partNodeId) return null;
-
-	return resolvePartImageFromPartNode(partNodeId);
-};
-
-const resolveQuestionAudioFromQuestionEndpoint = async ({
-	materialId,
-	partNumber,
-	questionNumber,
-}) => {
-	if (!materialId || !partNumber || !questionNumber) return null;
-
-	const questionNode = await getToeflSpeakingMaterialQuestion(
-		materialId,
-		partNumber,
-		questionNumber,
-	);
-
-	return resolveMediaRefToUrl(toMediaRefFromQuestionNode(questionNode));
 };
 
 const EditSpeakingMaterial = () => {
@@ -248,21 +40,18 @@ const EditSpeakingMaterial = () => {
 		useState(Array(PART2_QUESTION_COUNT).fill({}));
 	const [existingMedia, setExistingMedia] = useState(null);
 
-	useEffect(() => {
-		if (!id) {
-			setIsLoading(false);
-			return;
-		}
+	const loadSection = useCallback(
+		async (cancelRef) => {
+			if (!id) {
+				setIsLoading(false);
+				return;
+			}
 
-		let isCancelled = false;
-		const loadSection = async () => {
 			setIsLoading(true);
 			try {
 				const section = await getSpeakingSectionByMaterialId(id);
-				if (isCancelled) return;
-				setSectionStatus(
-					section?.status ? String(section.status).toLowerCase() : null,
-				);
+				if (cancelRef?.current) return;
+				setSectionStatus(section?.status ? String(section.status) : null);
 
 				const normalized = normalizeSectionToFormState(
 					section,
@@ -273,112 +62,51 @@ const EditSpeakingMaterial = () => {
 				setInitialValues(normalized.values);
 				setInitialHighlightDataByQuestion(normalized.highlightDataByQuestion);
 				setInitialPart2ConfigByQuestion(normalized.part2ConfigByQuestion);
-
-				const mediaRefs = extractSectionMediaRefs(
-					section,
-					QUESTION_COUNT,
-					PART2_QUESTION_COUNT,
-				);
-
 				const [partImageUrl, questionAudioUrls, part2QuestionAudioUrls] =
 					await Promise.all([
-						resolveMediaRefToUrl(mediaRefs.partImage),
+						resolveStorageKeyToUrl(section.partImageStorageKey),
 						Promise.all(
-							mediaRefs.questionAudio.map((mediaRef) =>
-								resolveMediaRefToUrl(mediaRef),
+							(section.questions || []).map((question) =>
+								resolveStorageKeyToUrl(question.audioStorageKey),
 							),
 						),
 						Promise.all(
-							mediaRefs.part2QuestionAudio.map((mediaRef) =>
-								resolveMediaRefToUrl(mediaRef),
+							(section.part2Questions || []).map((question) =>
+								resolveStorageKeyToUrl(question.audioStorageKey),
 							),
 						),
 					]);
 
-				if (isCancelled) return;
-
-				const resolvedQuestionAudioUrls = await Promise.all(
-					questionAudioUrls.map(async (audioUrl, idx) => {
-						if (audioUrl) return audioUrl;
-						try {
-							return await resolveQuestionAudioFromQuestionEndpoint({
-								materialId: id,
-								partNumber: 1,
-								questionNumber: idx + 1,
-							});
-						} catch {
-							return null;
-						}
-					}),
-				);
-
-				if (isCancelled) return;
-
-				const resolvedPart2QuestionAudioUrls = await Promise.all(
-					part2QuestionAudioUrls.map(async (audioUrl, idx) => {
-						if (audioUrl) return audioUrl;
-						try {
-							return await resolveQuestionAudioFromQuestionEndpoint({
-								materialId: id,
-								partNumber: 2,
-								questionNumber: idx + 1,
-							});
-						} catch {
-							return null;
-						}
-					}),
-				);
-
-				if (isCancelled) return;
-
-				let resolvedPartImageUrl = partImageUrl;
-				if (!resolvedPartImageUrl) {
-					const partNodeId = findPartNodeId(section);
-					if (partNodeId) {
-						try {
-							resolvedPartImageUrl =
-								await resolvePartImageFromPartNode(partNodeId);
-							if (isCancelled) return;
-						} catch {
-							// Keep null when fallback asset lookup fails.
-						}
-					}
-
-					if (!resolvedPartImageUrl) {
-						try {
-							resolvedPartImageUrl =
-								await resolvePartImageFromQuestionEndpoint(id);
-							if (isCancelled) return;
-						} catch {
-							// Keep null when question endpoint fallback fails.
-						}
-					}
-				}
+				if (cancelRef?.current) return;
 
 				setExistingMedia({
-					partImageUrl: resolvedPartImageUrl,
-					questionAudioUrls: resolvedQuestionAudioUrls,
-					part2QuestionAudioUrls: resolvedPart2QuestionAudioUrls,
+					partImageUrl,
+					questionAudioUrls,
+					part2QuestionAudioUrls,
 				});
 			} catch (error) {
-				if (!isCancelled) {
+				if (!cancelRef?.current) {
 					alert(
 						"Failed to load existing section: " +
 							(error?.response?.data?.message || error.message),
 					);
 				}
 			} finally {
-				if (!isCancelled) {
+				if (!cancelRef?.current) {
 					setIsLoading(false);
 				}
 			}
-		};
+		},
+		[id],
+	);
 
-		loadSection();
+	useEffect(() => {
+		const cancelRef = { current: false };
+		loadSection(cancelRef);
 		return () => {
-			isCancelled = true;
+			cancelRef.current = true;
 		};
-	}, [id]);
+	}, [loadSection]);
 
 	const persistSectionChanges = useCallback(
 		async ({
@@ -455,11 +183,15 @@ const EditSpeakingMaterial = () => {
 		[id, persistSectionChanges],
 	);
 
-	const canSaveDraft = sectionStatus !== "published";
+	const canSaveDraft =
+		String(sectionStatus || "")
+			.trim()
+			.toUpperCase() !== "PUBLISHED";
 
 	return (
 		<CreateSpeakingMaterialPresentation
 			mode="edit"
+			sectionStatus={sectionStatus}
 			isLoading={isLoading}
 			initialValues={initialValues}
 			initialHighlightDataByQuestion={initialHighlightDataByQuestion}
@@ -469,6 +201,7 @@ const EditSpeakingMaterial = () => {
 			onDraftSaveForm={canSaveDraft ? handleDraftSaveForm : undefined}
 			submitLabel="Save Changes"
 			onPublish={handlePublish}
+			onReloadFromDb={loadSection}
 		/>
 	);
 };

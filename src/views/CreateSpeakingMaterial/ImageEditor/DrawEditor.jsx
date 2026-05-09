@@ -15,6 +15,7 @@ const DrawEditor = ({
 	onHighlightChange,
 	onClearDrawing,
 	drawingOverlayKey,
+	toolbarSlideKey,
 }) => {
 	const [shapeType, setShapeType] = useState("line");
 	const [imageFocused, setImageFocused] = useState(false);
@@ -48,51 +49,53 @@ const DrawEditor = ({
 		<div ref={editorRef}>
 			<div className={styles.drawEditorLayout}>
 				<div className={styles.drawCanvasDock}>
-					<div className={styles.drawToolbarVertical}>
-						<button
-							type="button"
-							className={
-								styles.toolbar_icon_button +
-								(shapeType === "line" ? " " + styles.active : "")
-							}
-							onClick={() => selectShape("line")}
-							title="Line"
-						>
-							<Lucide.PenLine size={18} />
-						</button>
-						<button
-							type="button"
-							className={
-								styles.toolbar_icon_button +
-								(shapeType === "rect" ? " " + styles.active : "")
-							}
-							onClick={() => selectShape("rect")}
-							title="Rectangle"
-						>
-							<Lucide.Square size={18} />
-						</button>
-						<button
-							type="button"
-							className={
-								styles.toolbar_icon_button +
-								(shapeType === "circle" ? " " + styles.active : "")
-							}
-							onClick={() => selectShape("circle")}
-							title="Circle"
-						>
-							<Lucide.Circle size={18} />
-						</button>
-						<button
-							type="button"
-							className={styles.toolbar_icon_button}
-							onClick={() => {
-								setImageFocused(true);
-								if (onClearDrawing) onClearDrawing();
-							}}
-							title="Clear Drawing"
-						>
-							<Lucide.Eraser size={18} />
-						</button>
+					<div key={toolbarSlideKey} className={styles.toolbar_slide_in}>
+						<div className={styles.drawToolbarVertical}>
+							<button
+								type="button"
+								className={
+									styles.toolbar_icon_button +
+									(shapeType === "line" ? " " + styles.active : "")
+								}
+								onClick={() => selectShape("line")}
+								title="Line"
+							>
+								<Lucide.PenLine size={18} />
+							</button>
+							<button
+								type="button"
+								className={
+									styles.toolbar_icon_button +
+									(shapeType === "rect" ? " " + styles.active : "")
+								}
+								onClick={() => selectShape("rect")}
+								title="Rectangle"
+							>
+								<Lucide.Square size={18} />
+							</button>
+							<button
+								type="button"
+								className={
+									styles.toolbar_icon_button +
+									(shapeType === "circle" ? " " + styles.active : "")
+								}
+								onClick={() => selectShape("circle")}
+								title="Circle"
+							>
+								<Lucide.Circle size={18} />
+							</button>
+							<button
+								type="button"
+								className={styles.toolbar_icon_button}
+								onClick={() => {
+									setImageFocused(true);
+									if (onClearDrawing) onClearDrawing();
+								}}
+								title="Clear Drawing"
+							>
+								<Lucide.Eraser size={18} />
+							</button>
+						</div>
 					</div>
 					<div className={styles.image_cropper_container}>
 						<DrawingOverlay
