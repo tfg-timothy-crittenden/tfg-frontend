@@ -85,8 +85,11 @@
 
 .breadcrumb {
 	max-width: 1040px;
-	margin: 0 auto 0.95rem;
-	padding: 0.35rem 0.25rem 0.05rem;
+	margin-bottom: 0.95rem;
+	padding: 1.5rem;
+	background: var(--background_light);
+	border: 1px solid var(--card_border_mid);
+	/* border-radius: 12px;*/
 }
 
 .progress_track {
@@ -103,10 +106,10 @@
 	border-radius: inherit;
 	background: linear-gradient(
 		90deg,
-		#b7e4c7 0%,
-		#74c69d 38%,
-		#40916c 72%,
-		#1b5e20 100%
+		#b7cce4 0%,
+		#74b8c6 38%,
+		#405d91 72%,
+		#86b0cf 100%
 	);
 	transition: width 220ms ease;
 }
@@ -131,7 +134,8 @@
 	justify-content: space-between;
 	gap: 1rem;
 	flex-wrap: wrap;
-	margin-bottom: 0.35rem;
+	padding: 1rem 1.5rem;
+	background-color: var(--background_light);
 }
 
 .form_header_actions {
@@ -384,6 +388,15 @@
 	padding: 0.35rem 0.4rem;
 }
 
+.questions_mobile_row {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	gap: 0.75rem;
+	padding: 0.35rem 0.4rem;
+	width: 100%;
+}
+
 .questions_nav {
 	display: flex;
 	gap: 0.35rem;
@@ -401,11 +414,11 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	gap: 0.28rem;
-	padding: 0.1rem 0.2rem;
-	border: none;
-	border-radius: 0;
-	background: transparent;
+	gap: 0.5rem;
+	padding: 0.5rem 1.3rem;
+	border: 1px solid var(--card_border_mid);
+	border-radius: 12px;
+	background: var(--background_light);
 	color: var(--card_border_dark);
 	font-size: 0.8rem;
 	font-weight: 600;
@@ -459,7 +472,7 @@
 
 .active_tab .question_tab_label {
 	color: var(--card_border);
-	/* font-weight: 800; */
+
 	letter-spacing: 0.01em;
 	background: transparent;
 	box-shadow: none;
@@ -565,6 +578,14 @@
 .questions_chevrons_label {
 	font-weight: 500;
 	font-size: 16px;
+}
+
+.questions_mobile_counter {
+	font-weight: 600;
+	font-size: 0.98rem;
+	color: var(--text_dark);
+	text-align: center;
+	white-space: nowrap;
 }
 
 .next_button {
@@ -709,11 +730,7 @@
 }
 
 .step3_tabs_card {
-	background: var(--background_light);
-	border: 1px solid var(--card_border_mid);
-	border-radius: 12px;
 	padding: 0.25rem 0.5rem;
-	margin-bottom: 0.75rem;
 }
 
 .step3_image_card {
@@ -744,11 +761,10 @@
 .listen_repeat_container {
 	display: flex;
 	flex-direction: column;
-	gap: 1.2rem;
-	padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+
 	border: 1.5px solid var(--card_border_mid);
 	border-radius: 18px;
-	background: var(--background_light);
+
 	margin-bottom: 1.2rem;
 	box-shadow: var(--shadow-lg);
 	max-width: 1040px;
@@ -758,9 +774,72 @@
 	overflow-y: auto;
 }
 
-@media (max-width: 700px) {
+@media (--mobile-only) {
 	.breadcrumb {
-		padding: 0.2rem 0.1rem 0;
+		padding: 0.8rem 1rem;
+	}
+
+	.step_navigation_container {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.6rem;
+	}
+
+	.step_title_container {
+		width: 100%;
+	}
+
+	.step_title {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 100%;
+	}
+
+	.questions_selector_row {
+		display: flex;
+		gap: 0.1rem;
+		padding: 0.2rem 0.05rem;
+		justify-content: space-between;
+	}
+
+	.questions_nav {
+		gap: 0.08rem;
+		padding: 0;
+		align-items: center;
+		overflow-x: hidden;
+		flex: 1;
+		min-width: 0;
+		flex-wrap: nowrap;
+	}
+
+	.question_tab {
+		padding: 0;
+		gap: 0;
+		border-radius: 999px;
+		border: none;
+		background: transparent;
+		min-width: 0;
+		width: 18px;
+		height: 18px;
+		flex: 0 0 auto;
+	}
+
+	.question_tab_label {
+		display: none;
+	}
+
+	.question_tab_circle {
+		width: 8px;
+		height: 8px;
+		border-width: 1px;
+	}
+
+	.chevron_button_left,
+	.chevron_button_right {
+		min-width: 30px;
+		padding: 0 0.22rem;
+		flex-shrink: 0;
 	}
 
 	.progress_track {
@@ -798,6 +877,16 @@
 
 	.breadcrumb_button {
 		font-size: 0.9rem;
+		/* Leave visibile to screen readers */
+		visibility: hidden;
+	}
+
+	.step3_tabs_card {
+		width: 100%;
+	}
+
+	.step_question_counter {
+		text-align: center;
 	}
 }
 
@@ -927,6 +1016,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0;
+	padding: 0 1.5rem;
 }
 
 .section[hidden] {
@@ -986,4 +1076,27 @@
 	gap: 0.6rem;
 	justify-content: center;
 	margin-top: 0.75rem;
+}
+
+.step_navigation_container {
+	display: flex;
+
+	justify-content: space-between;
+}
+
+.step_title_container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	color: var(--text_light);
+}
+
+.step_title {
+	font-size: 1.2rem;
+	color: var(--text_dark);
+	margin: 3px;
+}
+
+.step_question_counter {
+	margin-left: 3px;
 }

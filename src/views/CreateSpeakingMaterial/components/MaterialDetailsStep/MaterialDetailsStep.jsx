@@ -1,6 +1,6 @@
 import { Type } from "lucide-react";
 
-import styles from "../../styles/CreateSpeakingMaterial.module.css";
+import styles from "@/views/CreateSpeakingMaterial/styles/CreateSpeakingMaterial.module.css";
 
 const MaterialDetailsStep = ({ form, navigation }) => {
 	const { register, errors, materialInfoValid } = form;

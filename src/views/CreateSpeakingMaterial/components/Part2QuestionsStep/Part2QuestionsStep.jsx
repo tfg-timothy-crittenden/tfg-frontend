@@ -1,11 +1,11 @@
 import { MessageSquare } from "lucide-react";
 
-import SpeakingPart1AudioQuestionFields from "../SpeakingPart1AudioQuestionFields/SpeakingPart1AudioQuestionFields";
-import QuestionTabsNavigator from "../QuestionTabsNavigator/QuestionTabsNavigator";
-import QuestionPanels from "../QuestionPanels/QuestionPanels";
-import StepActionsRow from "../StepActionsRow/StepActionsRow";
+import SpeakingPart1AudioQuestionFields from "@/views/CreateSpeakingMaterial/components/SpeakingPart1AudioQuestionFields/SpeakingPart1AudioQuestionFields";
+import QuestionTabsNavigator from "@/views/CreateSpeakingMaterial/components/QuestionTabsNavigator/QuestionTabsNavigator";
+import QuestionPanels from "@/views/CreateSpeakingMaterial/components/QuestionPanels/QuestionPanels";
+import StepActionsRow from "@/views/CreateSpeakingMaterial/components/StepActionsRow/StepActionsRow";
 
-import styles from "../../styles/CreateSpeakingMaterial.module.css";
+import styles from "@/views/CreateSpeakingMaterial/styles/CreateSpeakingMaterial.module.css";
 
 const Part2QuestionsStep = ({
 	form,

@@ -1,10 +1,10 @@
 import { MapPin } from "lucide-react";
 
-import CropEditor from "../ImageEditor/CropEditor";
-import ImageDropzone from "../ImageDropzone/ImageDropzone";
-import StepActionsRow from "../StepActionsRow/StepActionsRow";
+import CropEditor from "@/views/CreateSpeakingMaterial/components/ImageEditor/CropEditor";
+import ImageDropzone from "@/views/CreateSpeakingMaterial/components/ImageDropzone/ImageDropzone";
+import StepActionsRow from "@/views/CreateSpeakingMaterial/components/StepActionsRow/StepActionsRow";
 
-import styles from "../../styles/CreateSpeakingMaterial.module.css";
+import styles from "@/views/CreateSpeakingMaterial/styles/CreateSpeakingMaterial.module.css";
 
 const Part1ImageStep = ({ form, image, navigation }) => {
 	const { register, errors, normalizedExistingMedia } = form;

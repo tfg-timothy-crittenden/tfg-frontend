@@ -1,6 +1,6 @@
 import { RotateCcw, Save } from "lucide-react";
 
-import styles from "../../styles/CreateSpeakingMaterial.module.css";
+import styles from "@/views/CreateSpeakingMaterial/styles/CreateSpeakingMaterial.module.css";
 
 const HeaderActions = ({ form }) => {
 	const {

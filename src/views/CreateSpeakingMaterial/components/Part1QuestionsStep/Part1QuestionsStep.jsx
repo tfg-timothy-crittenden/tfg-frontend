@@ -1,13 +1,13 @@
 import { ImageIcon } from "lucide-react";
 
-import SpeakingPart1AudioQuestionFields from "../SpeakingPart1AudioQuestionFields/SpeakingPart1AudioQuestionFields";
-import QuestionTabsNavigator from "../QuestionTabsNavigator/QuestionTabsNavigator";
-import QuestionPanels from "../QuestionPanels/QuestionPanels";
-import StepActionsRow from "../StepActionsRow/StepActionsRow";
+import SpeakingPart1AudioQuestionFields from "@/views/CreateSpeakingMaterial/components/SpeakingPart1AudioQuestionFields/SpeakingPart1AudioQuestionFields";
+import QuestionTabsNavigator from "@/views/CreateSpeakingMaterial/components/QuestionTabsNavigator/QuestionTabsNavigator";
+import QuestionPanels from "@/views/CreateSpeakingMaterial/components/QuestionPanels/QuestionPanels";
+import StepActionsRow from "@/views/CreateSpeakingMaterial/components/StepActionsRow/StepActionsRow";
 
-import DrawEditor from "../ImageEditor/DrawEditor";
+import DrawEditor from "@/views/CreateSpeakingMaterial/components/ImageEditor/DrawEditor";
 
-import styles from "../../styles/CreateSpeakingMaterial.module.css";
+import styles from "@/views/CreateSpeakingMaterial/styles/CreateSpeakingMaterial.module.css";
 
 const Part1QuestionsStep = ({
 	form,
@@ -37,17 +37,26 @@ const Part1QuestionsStep = ({
 
 	return (
 		<div className={styles.section}>
-			<QuestionTabsNavigator
-				totalQuestions={questionCount}
-				currentIndex={currentQuestion}
-				onPrev={goPrev}
-				onNext={goNext}
-				onSelect={setCurrentQuestion}
-				completion={questionCompletion}
-				navAriaLabel="Questions"
-				questionAriaLabelPrefix="question"
-				styles={styles}
-			/>
+			<div className={styles.step_navigation_container}>
+				<div className={styles.step_title_container}>
+					<h2 className={styles.step_title}>Part 1 Questions</h2>
+					<span className={styles.step_question_counter}>
+						{/* Account for zero index on questions */}
+						Question {currentQuestion + 1} of {questionCount}
+					</span>
+				</div>
+				<QuestionTabsNavigator
+					totalQuestions={questionCount}
+					currentIndex={currentQuestion}
+					onPrev={goPrev}
+					onNext={goNext}
+					onSelect={setCurrentQuestion}
+					completion={questionCompletion}
+					navAriaLabel="Questions"
+					questionAriaLabelPrefix="question"
+					styles={styles}
+				/>
+			</div>
 
 			<div className={styles.step3_image_card}>
 				<div className={styles.step3_image_card_header}>

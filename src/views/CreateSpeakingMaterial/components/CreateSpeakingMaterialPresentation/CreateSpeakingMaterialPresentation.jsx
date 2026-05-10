@@ -1,15 +1,15 @@
-import HeaderActions from "../HeaderActions/HeaderActions";
-import MaterialDetailsStep from "../MaterialDetailsStep/MaterialDetailsStep";
-import Part1ImageStep from "../Part1ImageStep/Part1ImageStep";
-import Part1QuestionsStep from "../Part1QuestionsStep/Part1QuestionsStep";
-import Part2QuestionsStep from "../Part2QuestionsStep/Part2QuestionsStep";
-import SpeakingMaterialBreadcrumb from "../SpeakingMaterialBreadcrumb/SpeakingMaterialBreadcrumb";
-import useSpeakingMaterialActions from "../../hooks/useSpeakingMaterialActions";
-import useSpeakingMaterialNavigation from "../../hooks/useSpeakingMaterialNavigation";
-import useSpeakingMaterialForm from "../../hooks/useSpeakingMaterialForm";
-import useSpeakingMaterialImageState from "../../hooks/useSpeakingMaterialImageState";
+import HeaderActions from "@/views/CreateSpeakingMaterial/components/HeaderActions/HeaderActions";
+import MaterialDetailsStep from "@/views/CreateSpeakingMaterial/components/MaterialDetailsStep/MaterialDetailsStep";
+import Part1ImageStep from "@/views/CreateSpeakingMaterial/components/Part1ImageStep/Part1ImageStep";
+import Part1QuestionsStep from "@/views/CreateSpeakingMaterial/components/Part1QuestionsStep/Part1QuestionsStep";
+import Part2QuestionsStep from "@/views/CreateSpeakingMaterial/components/Part2QuestionsStep/Part2QuestionsStep";
+import SpeakingMaterialBreadcrumb from "@/views/CreateSpeakingMaterial/components/SpeakingMaterialBreadcrumb/SpeakingMaterialBreadcrumb";
+import useSpeakingMaterialActions from "@/views/CreateSpeakingMaterial/hooks/useSpeakingMaterialActions";
+import useSpeakingMaterialNavigation from "@/views/CreateSpeakingMaterial/hooks/useSpeakingMaterialNavigation";
+import useSpeakingMaterialForm from "@/views/CreateSpeakingMaterial/hooks/useSpeakingMaterialForm";
+import useSpeakingMaterialImageState from "@/views/CreateSpeakingMaterial/hooks/useSpeakingMaterialImageState";
 
-import styles from "../../styles/CreateSpeakingMaterial.module.css";
+import styles from "@/views/CreateSpeakingMaterial/styles/CreateSpeakingMaterial.module.css";
 
 const CreateSpeakingMaterialPresentation = ({
 	mode = "create",
@@ -170,12 +170,6 @@ const CreateSpeakingMaterialPresentation = ({
 				className={styles.form}
 				autoComplete="off"
 			>
-				<SpeakingMaterialBreadcrumb
-					navigation={navigation}
-					materialInfoValid={materialInfoValid}
-					hasVisualPrompt={hasVisualPrompt}
-					part1NextDisabled={part1NextDisabled}
-				/>
 				<div className={styles.listen_repeat_container}>
 					<div className={styles.form_header}>
 						<div className={styles.form_header_title_group}>
@@ -192,6 +186,12 @@ const CreateSpeakingMaterialPresentation = ({
 						</div>
 						<HeaderActions form={formView} />
 					</div>
+					<SpeakingMaterialBreadcrumb
+						navigation={navigation}
+						materialInfoValid={materialInfoValid}
+						hasVisualPrompt={hasVisualPrompt}
+						part1NextDisabled={part1NextDisabled}
+					/>
 					{isMaterialDetails && (
 						<MaterialDetailsStep form={form} navigation={navigation} />
 					)}

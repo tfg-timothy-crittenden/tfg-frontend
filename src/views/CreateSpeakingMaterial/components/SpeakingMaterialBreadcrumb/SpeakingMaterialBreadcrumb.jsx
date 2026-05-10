@@ -1,4 +1,4 @@
-import styles from "../../styles/CreateSpeakingMaterial.module.css";
+import styles from "@/views/CreateSpeakingMaterial/styles/CreateSpeakingMaterial.module.css";
 
 const SpeakingMaterialBreadcrumb = ({
 	navigation,

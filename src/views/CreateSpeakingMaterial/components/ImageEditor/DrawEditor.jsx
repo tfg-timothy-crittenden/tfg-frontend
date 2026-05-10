@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import DrawingOverlay from "../../../../components/DrawingOverlay";
-import Lucide from "../../../../components/LucideIcons";
+import DrawingOverlay from "@/components/DrawingOverlay";
+import Lucide from "@/components/LucideIcons";
 import styles from "./ImageEditor.module.css";
 
 // Props:
