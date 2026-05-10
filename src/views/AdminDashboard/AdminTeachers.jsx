@@ -72,8 +72,6 @@ const AdminTeachers = () => {
 		setDeleteConfirmText,
 		modalRef,
 		isDeleteModalOpen,
-		refreshItems: loadAllTeachers,
-		bulkActions,
 	} = adminList;
 
 	// Sort options for teachers
@@ -167,14 +165,14 @@ const AdminTeachers = () => {
 	];
 
 	// Handle bulk action selection
-	const handleBulkActionSelect = (actionKey, selectedItems) => {
+	const handleBulkActionSelect = (actionKey, _selectedItems) => {
 		if (actionKey === "delete") {
 			confirmBulkDelete();
 		}
 	};
 
 	// Get teachers to be deleted for display in modal
-	const getTeachersToDelete = () => {
+	const _getTeachersToDelete = () => {
 		if (bulkDelete) {
 			return allTeachers.filter((teacher) => selectedTeachers.has(teacher.id));
 		} else if (teacherToDelete) {

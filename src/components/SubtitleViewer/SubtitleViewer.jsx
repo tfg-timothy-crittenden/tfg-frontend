@@ -31,7 +31,7 @@ const toArrayOfObjects = (val) => {
 		const trimmed = val.trim();
 
 		// If it *looks* like JSON, try to parse
-		if (/^[\[{]/.test(trimmed)) {
+		if (/^[[{]/.test(trimmed)) {
 			try {
 				const parsed = JSON.parse(trimmed);
 				return toArrayOfObjects(parsed);

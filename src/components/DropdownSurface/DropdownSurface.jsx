@@ -2,12 +2,7 @@ import { useImperativeHandle, useState, useRef, useEffect } from "react";
 
 import styles from "./DropdownSurface.module.css";
 
-const dropdownSurface = ({
-	children,
-	buttonLabel = "",
-	onToggleExpanded = () => {},
-	ref,
-}) => {
+const DropdownSurface = ({ children, buttonLabel = "", ref }) => {
 	const [expanded, setExpanded] = useState(false);
 
 	const surfaceRef = useRef(null);
@@ -69,4 +64,4 @@ const dropdownSurface = ({
 	);
 };
 
-export default dropdownSurface;
+export default DropdownSurface;

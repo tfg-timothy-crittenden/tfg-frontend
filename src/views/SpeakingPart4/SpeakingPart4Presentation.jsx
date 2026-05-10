@@ -7,11 +7,11 @@ import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 const SpeakingPart4Presentation = ({
 	mode,
-	setMode,
+	setMode: _setMode,
 	modeEnum,
 	testData,
 	time,
-	setTime,
+	setTime: _setTime,
 	modeTimeEnum,
 }) => {
 	const renderContent = () => {

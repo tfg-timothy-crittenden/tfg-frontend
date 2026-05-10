@@ -3,7 +3,6 @@ import ClassSignupQR from "@/components/ClassSignupQR/ClassSignupQR";
 import styles from "./ClassInvite.module.css";
 
 const ClassInvite = ({
-	className,
 	classCode, // e.g. "ef011db2"
 }) => {
 	return (

@@ -28,7 +28,7 @@ const QuestionToggleSwitch = () => {
 						<NavLink
 							key={question}
 							to={to}
-							className={({ isActive }) => {
+							className={() => {
 								const isQuestionActive =
 									partNumber === targetPart &&
 									questionNumber === String(targetQuestion);

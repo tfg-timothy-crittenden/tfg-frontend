@@ -21,8 +21,8 @@ export default function DrawingOverlay({
 	highlightData,
 	onChange,
 	shapeType = "line",
-	setShapeType,
-	clearSignal,
+	setShapeType: _setShapeType,
+	clearSignal: _clearSignal,
 	onInteract,
 }) {
 	const svgRef = useRef(null);

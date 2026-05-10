@@ -23,7 +23,7 @@ const PasswordResetConfirm = () => {
 			try {
 				const result = await validateResetToken(token);
 				setTokenValid(result.valid);
-			} catch (err) {
+			} catch {
 				setTokenValid(false);
 				setError("Invalid or expired reset link.");
 			} finally {
@@ -58,13 +58,13 @@ const PasswordResetConfirm = () => {
 		setIsLoading(true);
 
 		try {
-			const result = await confirmPasswordReset(token, password);
+			await confirmPasswordReset(token, password);
 			setSuccess("Password reset successfully! Redirecting to login...");
 			setTimeout(() => navigate("/login"), 2000);
 		} catch (err) {
 			setError(
 				err.response?.data?.error ||
-					"Failed to reset password. Please try again."
+					"Failed to reset password. Please try again.",
 			);
 		} finally {
 			setIsLoading(false);

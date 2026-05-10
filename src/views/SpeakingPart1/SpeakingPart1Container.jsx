@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { routeMatchers, buildRoute } from "@/routes/routeConfig";
+import { routeMatchers } from "@/routes/routeConfig";
 import SpeakingPart1Presentation from "./SpeakingPart1Presentation";
 import {
 	getRandomSpeakingTaskOneByTopic,
@@ -9,7 +9,7 @@ import {
 
 const SpeakingPart1Container = () => {
 	const location = useLocation();
-	const { id: classroomId, sectionId } = useParams();
+	const { id: _classroomId, sectionId: _sectionId } = useParams();
 
 	const modeEnum = Object.freeze({
 		INSTRUCTIONS: "INSTRUCTIONS",

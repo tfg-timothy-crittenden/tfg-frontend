@@ -26,7 +26,7 @@ const AudioDropzone = ({
 	const selectedAudio = selectedFile?.[0] || null;
 	const fileName = selectedAudio?.name || "";
 	const [audioUrl, setAudioUrl] = useState("");
-	const hasSelectedAudio = !!selectedAudio;
+	const _hasSelectedAudio = !!selectedAudio;
 	// Only show existing audio if the user hasn't explicitly cleared it
 	const displayAudioUrl = audioUrl || (hasUserCleared ? "" : existingAudioUrl);
 
@@ -171,7 +171,7 @@ const AudioDropzone = ({
 
 			recorder.start();
 			setIsRecording(true);
-		} catch (error) {
+		} catch (_error) {
 			setRecordingError("Microphone access was denied or unavailable.");
 			mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
 			mediaStreamRef.current = null;

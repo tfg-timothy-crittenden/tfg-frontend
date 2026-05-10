@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./RouteLoadingOverlay.module.css";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
@@ -65,6 +65,6 @@ export default function RouteLoadingOverlay({
 			<LoadingSpinner />
 			<span className={styles.sr_only}>{label}</span>
 		</div>,
-		document.body
+		document.body,
 	);
 }
