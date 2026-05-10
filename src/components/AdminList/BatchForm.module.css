@@ -1,6 +1,7 @@
 /* BatchForm component styles */
 .batchForm {
 	margin-top: 2rem;
+	margin-bottom: 2rem;
 	padding: 1.5rem;
 	background: var(--card_background_mid);
 	border-radius: 10px;

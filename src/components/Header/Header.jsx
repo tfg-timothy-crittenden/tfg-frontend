@@ -42,7 +42,7 @@ const Header = () => {
 
 	const handleProfile = () => {
 		setShowUserMenu(false);
-		alert("Go to profile");
+		navigate("/profile");
 	};
 
 	const handleNavigateTo = (path) => {

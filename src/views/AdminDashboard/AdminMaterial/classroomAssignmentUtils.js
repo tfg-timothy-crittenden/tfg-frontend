@@ -42,9 +42,14 @@ const getAssignmentMaterial = (materialId, libraryMaterialsMap) => {
 	const resolvedMaterialId =
 		material?.id ?? material?.materialId ?? material?.material_id ?? materialId;
 	const materialName =
-		material?.name || material?.title || `Material ${materialId}`;
+		material?.sectionTitle ||
+		material?.name ||
+		material?.title ||
+		`Material ${materialId}`;
 	const materialDescription =
 		material?.description || material?.name || material?.title || materialName;
+	const part1Title = material?.part1Title ?? null;
+	const part2Title = material?.part2Title ?? null;
 
 	return {
 		materialId: Number.isNaN(Number(resolvedMaterialId))
@@ -52,6 +57,8 @@ const getAssignmentMaterial = (materialId, libraryMaterialsMap) => {
 			: Number(resolvedMaterialId),
 		name: materialName,
 		description: materialDescription,
+		part1Title,
+		part2Title,
 	};
 };
 

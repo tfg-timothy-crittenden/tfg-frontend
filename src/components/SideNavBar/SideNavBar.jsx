@@ -106,21 +106,13 @@ export default function SideNavBar({
 		? sectionId
 		: Number(sectionId);
 
-	const buildTaskTitleList = useCallback((tasks = []) => {
-		if (!Array.isArray(tasks)) return [];
-		return tasks.map((task) => ({
-			testId: task.id ?? task.materialId,
-			title: task.name || task.description,
-		}));
-	}, []);
-
 	const teacherItems = useMemo(
-		() => buildTaskTitleList(teacherTaskSummaries),
-		[buildTaskTitleList, teacherTaskSummaries],
+		() => teacherTaskSummaries,
+		[teacherTaskSummaries],
 	);
 	const studentItems = useMemo(
-		() => buildTaskTitleList(studentTaskSummaries),
-		[buildTaskTitleList, studentTaskSummaries],
+		() => studentTaskSummaries,
+		[studentTaskSummaries],
 	);
 
 	const selectedSection = useMemo(() => {

@@ -254,3 +254,25 @@
 		height: 40px;
 	}
 }
+
+.sectionHeading {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: var(--text_dark);
+	margin: 1.5rem 0 0.5rem;
+	text-align: left;
+	border-bottom: 1px solid var(--card_border_mid);
+	padding-bottom: 0.5rem;
+}
+
+.teachersHeading {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.invitationsHeading {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}

@@ -1,6 +1,23 @@
 import { useEffect, useState } from "react";
 import { getClassroomMaterialListByRole } from "@/api/classes/classesAPI";
 
+const normalizeTaskSummary = (task = {}) => {
+	const testId = task.id ?? task.materialId;
+
+	return {
+		...task,
+		testId,
+		sectionTitle: task.sectionTitle || task.name || "Untitled section",
+		part1Title: task.part1Title || "",
+		part2Title: task.part2Title || "",
+	};
+};
+
+const normalizeTaskSummaryList = (tasks) => {
+	if (!Array.isArray(tasks)) return [];
+	return tasks.map(normalizeTaskSummary);
+};
+
 export function useTaskSummaries(classroomId, hasTeacherRole) {
 	const [student, setStudent] = useState([]);
 	const [teacher, setTeacher] = useState([]);
@@ -22,7 +39,7 @@ export function useTaskSummaries(classroomId, hasTeacherRole) {
 					classroomId,
 					"student",
 				);
-				if (!cancelled) setStudent(data || []);
+				if (!cancelled) setStudent(normalizeTaskSummaryList(data));
 			} catch (e) {
 				console.error("Failed to load student summaries:", e);
 			}
@@ -38,7 +55,7 @@ export function useTaskSummaries(classroomId, hasTeacherRole) {
 					classroomId,
 					"teacher",
 				);
-				if (!cancelled) setTeacher(data || []);
+				if (!cancelled) setTeacher(normalizeTaskSummaryList(data));
 			} catch (e) {
 				console.error("Failed to load teacher summaries:", e);
 			}

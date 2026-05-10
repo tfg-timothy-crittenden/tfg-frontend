@@ -1,6 +1,12 @@
 import { useState } from "react";
 import styles from "./TransferList.module.css";
 
+const getItemId = (item) => {
+	const value =
+		item?.id ?? item?.materialId ?? item?.material_id ?? item?.testId ?? null;
+	return value === null || value === undefined ? null : String(value);
+};
+
 const TransferList = ({
 	leftItems = [],
 	rightItems = [],
@@ -29,16 +35,29 @@ const TransferList = ({
 		setFromItems,
 		setToItems,
 		checkedSet,
-		setCheckedSet
+		setCheckedSet,
 	) => {
 		const idsToMove = Array.from(checkedSet);
 		const idSet = new Set(idsToMove);
 
-		const toMove = fromItems.filter((item) => idSet.has(item.id));
-		const remaining = fromItems.filter((item) => !idSet.has(item.id));
+		const toMove = fromItems.filter((item) => {
+			const itemId = getItemId(item);
+			return itemId !== null && idSet.has(itemId);
+		});
+		const remaining = fromItems.filter((item) => {
+			const itemId = getItemId(item);
+			return itemId === null || !idSet.has(itemId);
+		});
 
 		const deduped = Array.from(
-			new Map([...toItems, ...toMove].map((item) => [item.id, item])).values()
+			new Map(
+				[...toItems, ...toMove]
+					.map((item) => {
+						const itemId = getItemId(item);
+						return itemId === null ? null : [itemId, item];
+					})
+					.filter(Boolean),
+			).values(),
 		);
 
 		setToItems(deduped);
@@ -48,14 +67,19 @@ const TransferList = ({
 
 	const renderList = (items, checkedSet, setCheckedSet) => (
 		<ul className={`${styles.list} scrollable_inner`}>
-			{items.map((item) => (
-				<ItemComponent
-					key={item.id}
-					item={item}
-					isChecked={checkedSet.has(item.id)}
-					onToggle={() => toggle(item.id, checkedSet, setCheckedSet)}
-				/>
-			))}
+			{items.map((item, index) => {
+				const itemId = getItemId(item);
+				if (itemId === null) return null;
+
+				return (
+					<ItemComponent
+						key={itemId || index}
+						item={item}
+						isChecked={checkedSet.has(itemId)}
+						onToggle={() => toggle(itemId, checkedSet, setCheckedSet)}
+					/>
+				);
+			})}
 		</ul>
 	);
 
@@ -79,7 +103,7 @@ const TransferList = ({
 							setRightItems,
 							setLeftItems,
 							checkedRight,
-							setCheckedRight
+							setCheckedRight,
 						)
 					}
 				>
@@ -95,7 +119,7 @@ const TransferList = ({
 							setLeftItems,
 							setRightItems,
 							checkedLeft,
-							setCheckedLeft
+							setCheckedLeft,
 						)
 					}
 				>

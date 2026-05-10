@@ -1,48 +1,19 @@
 import httpClient from "@/api/httpClient";
 
-const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === "true";
+const USERS_API_BASE = import.meta.env.VITE_USERS_API_URL;
 
-const mockUserClassrooms = [
-	{
-		id: 1001,
-		name: "TOEFL Morning A",
-		subject: "Speaking",
-		code: "TMORNA",
-		teachers: ["Aina Ferrer"],
-	},
-	{
-		id: 1002,
-		name: "TOEFL Evening B",
-		subject: "Speaking",
-		code: "TEVBNG",
-		teachers: ["Roger Costa"],
-	},
-	{
-		id: 1003,
-		name: "Independent Practice",
-		subject: "Self-study",
-		code: "INDPRC",
-		teachers: [],
-	},
-];
-
-//get user classrooms based on current user
-export const getUserClassrooms = async () => {
-	if (USE_MOCK_API) {
-		return [...mockUserClassrooms];
-	}
-
-	const response = await httpClient.get("/me/classrooms");
-	if (response.status !== 200) {
-		throw new Error("Failed to fetch user classrooms");
-	}
-	return response.data; // Assuming the API returns an array of classrooms
+export const getAllTeachers = async () => {
+	const { data } = await httpClient.get(`${USERS_API_BASE}/teachers`);
+	return Array.isArray(data) ? data : [];
 };
 
-export const checkEmailExists = async (email) => {
-	if (!email) return false;
-	const res = await httpClient.get(
-		`/student/check-email?email=${encodeURIComponent(email)}`,
+export const removeTeacherRole = async (userId) => {
+	if (!userId && userId !== 0) {
+		throw new Error("userId is required to remove TEACHER role");
+	}
+
+	const { data } = await httpClient.delete(
+		`${USERS_API_BASE}/${userId}/roles/TEACHER`,
 	);
-	return res.data.exists;
+	return data;
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { ChevronUp, ChevronDown, File } from "lucide-react";
 import styles from "./AccordionList.module.css";
+import TransferListTestRepresentation from "@/components/TransferList/TransferListTestRepresentation";
 
 // Displays a collapsable list of items
 // Highlights the currently selected list
@@ -50,23 +51,23 @@ const AccordionList = ({
 		>
 			<ul className={styles.test_list}>
 				{items.map((item) => {
+					const isActive = activeItemId === item.testId;
+
 					return (
 						<li
 							key={item.testId}
-							className={`${styles.list_item} ${
-								activeItemId === item.testId ? styles.active : ""
-							}`}
+							className={`${styles.list_item} ${isActive ? styles.active : ""}`}
 							onClick={() => onItemClick(item)}
 						>
 							<span className={styles.item_main}>
-								<File size={18} className={styles.item_icon} />
+								{/* <File size={18} className={styles.item_icon} /> */}
 								<span className={styles.item_text}>
-									<span className={styles.test_title}>{item.title}</span>
-									{/* {item.readingTitle && (
-										<span className={styles.reading_title}>
-											{item.readingTitle}
-										</span>
-									)} */}
+									<TransferListTestRepresentation
+										sectionTitle={item.sectionTitle}
+										part1Title={item.part1Title}
+										part2Title={item.part2Title}
+										isActive={isActive}
+									/>
 								</span>
 							</span>
 						</li>

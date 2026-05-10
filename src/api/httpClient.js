@@ -1,11 +1,7 @@
 import axios from "axios";
 
-// Create Axios instance
-const baseURL = import.meta.env.VITE_API_URL || "/users/api";
-
-const httpClient = axios.create({
-	baseURL: baseURL,
-});
+// Create Axios instance without a default baseURL
+const httpClient = axios.create();
 
 // Set Content-Type to application/json only for JSON requests
 httpClient.interceptors.request.use((config) => {

@@ -1,0 +1,145 @@
+.page {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	padding: 64px 16px;
+	min-height: 100%;
+	background: var(--card_background_mid);
+}
+
+.card {
+	background: var(--background_light);
+	border-radius: 12px;
+	box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+	padding: 2.5rem 2rem;
+	max-width: 460px;
+	width: 100%;
+	text-align: center;
+}
+
+/* Steps */
+.steps {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0;
+	margin-bottom: 2.5rem;
+}
+
+.step {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.stepNumber {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.85rem;
+	font-weight: 700;
+	background: var(--card_border_mid);
+	color: var(--text_light);
+	flex-shrink: 0;
+}
+
+.stepActive {
+	background: var(--actionable_text_active);
+	color: #fff;
+}
+
+.stepLabel {
+	font-size: 0.95rem;
+	font-weight: 500;
+	color: var(--text_light);
+}
+
+.stepLabelActive {
+	color: var(--actionable_text_active);
+	font-weight: 600;
+}
+
+.stepConnector {
+	width: 60px;
+	height: 1px;
+	background: var(--card_border_mid);
+	margin: 0 0.75rem;
+	flex-shrink: 0;
+}
+
+/* Icon */
+.iconWrapper {
+	color: var(--actionable_text_active);
+	margin-bottom: 1.25rem;
+	display: flex;
+	justify-content: center;
+}
+
+/* Text */
+.heading {
+	font-size: 2rem;
+	font-weight: 700;
+	color: var(--text_dark);
+	margin-bottom: 0.75rem;
+	text-align: center;
+}
+
+.description {
+	font-size: 1rem;
+	color: var(--text_dark);
+	margin-bottom: 1.5rem;
+	line-height: 1.5;
+}
+
+/* Resend */
+.resendRow {
+	font-size: 0.95rem;
+	color: var(--text_light);
+	margin-bottom: 0.5rem;
+}
+
+.resendButton {
+	background: none;
+	border: none;
+	padding: 0;
+	font-size: inherit;
+	color: var(--actionable_text_active);
+	text-decoration: underline;
+	cursor: pointer;
+	font-weight: 500;
+}
+
+.resendButton:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.resendConfirm {
+	color: var(--button_background_confirm);
+	font-weight: 500;
+}
+
+.resendError {
+	font-size: 0.875rem;
+	color: #dc3545;
+	margin-bottom: 0.5rem;
+}
+
+/* Back to login */
+.loginLink {
+	margin-top: 1.5rem;
+	display: inline-block;
+	background: none;
+	border: none;
+	font-size: 0.9rem;
+	color: var(--text_light);
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.loginLink:hover {
+	color: var(--text_dark);
+}

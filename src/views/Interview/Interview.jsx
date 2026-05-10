@@ -1,6 +1,7 @@
 import useListenSpeakTask from "@/hooks/useListenSpeakTask";
 import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
 import TaskResponseControls from "@/components/TaskResponseControls/TaskResponseControls";
+import TopLoadingBar from "@/components/TopLoadingBar/TopLoadingBar";
 import styles from "./interview.module.css";
 
 const Interview = () => {
@@ -11,6 +12,7 @@ const Interview = () => {
 
 	return (
 		<div className={styles.interview_page}>
+			<TopLoadingBar loading={loading} />
 			<h1 className={styles.page_title}>Answer the Interviewer's question</h1>
 			<ToggleSwitch mode={mode} modeEnum={modeEnum} />
 			<div className={styles.content_container}>

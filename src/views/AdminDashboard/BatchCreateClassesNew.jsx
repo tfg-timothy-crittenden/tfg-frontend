@@ -1,4 +1,4 @@
-import { createClass } from "@/api/admin/admin";
+import { createClassroom } from "@/api/classes/classesAPI";
 import { BatchForm } from "@/components/AdminList";
 
 const BatchCreateClasses = ({ onClassCreated }) => {
@@ -20,7 +20,7 @@ const BatchCreateClasses = ({ onClassCreated }) => {
 			}
 
 			try {
-				await createClass({
+				await createClassroom({
 					name: cls.name.trim(),
 					subject: cls.subject?.trim() || "",
 				});

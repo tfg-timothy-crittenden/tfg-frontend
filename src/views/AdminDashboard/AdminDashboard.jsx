@@ -1,13 +1,20 @@
 import { Outlet, NavLink } from "react-router-dom";
-import { Settings, GraduationCap, Users, NotebookTabs } from "lucide-react";
+import {
+	Settings,
+	GraduationCap,
+	Users,
+	NotebookTabs,
+	Library,
+} from "lucide-react";
 import styles from "./AdminDashboard.module.css";
 
-// ⬇️ prefetch helpers from your lazyRoutes file
+// prefetch helpers from lazyRoutes file
 import {
 	prefetchAdminAll,
 	_importAdminTeachers,
 	_importAdminClasses,
 	_importAdminMaterial,
+	_importAdminMaterialLibrary,
 } from "@/routes/lazyRoutes";
 
 const AdminDashboard = () => {
@@ -67,6 +74,21 @@ const AdminDashboard = () => {
 						>
 							<NotebookTabs size={24} strokeWidth={2} />
 							<span>Materials</span>
+						</NavLink>
+					</li>
+
+					<li>
+						<NavLink
+							to="material-library"
+							className={({ isActive }) =>
+								isActive ? styles.activeLink : styles.inactiveLink
+							}
+							onMouseEnter={_importAdminMaterialLibrary}
+							onFocus={_importAdminMaterialLibrary}
+							onTouchStart={_importAdminMaterialLibrary}
+						>
+							<Library size={24} strokeWidth={2} />
+							<span>Material Library</span>
 						</NavLink>
 					</li>
 				</ul>

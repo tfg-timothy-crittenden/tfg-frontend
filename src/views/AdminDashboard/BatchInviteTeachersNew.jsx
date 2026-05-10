@@ -1,4 +1,4 @@
-import { inviteTeacher } from "@/api/admin/admin";
+import { inviteTeacherToPlatform } from "@/api/auth/authAPI";
 import { BatchForm } from "@/components/AdminList";
 
 const BatchInviteTeachers = ({ onInviteComplete }) => {
@@ -10,48 +10,34 @@ const BatchInviteTeachers = ({ onInviteComplete }) => {
 			const teacher = teachers[i];
 
 			// Validation
-			if (
-				!teacher.firstName?.trim() ||
-				!teacher.surname?.trim() ||
-				!teacher.email?.trim()
-			) {
+			if (!teacher.email?.trim()) {
 				results.push({
 					email: teacher.email || "(blank)",
 					status: "error",
-					message: "First name, surname and email are required.",
-				});
-				failedIndexes.push(i);
-				continue;
-			}
-
-			if (!teacher.email.endsWith("@fundaciocic.org")) {
-				results.push({
-					email: teacher.email,
-					status: "error",
-					message: "Email must end with @fundaciocic.org",
+					message: "Email is required.",
 				});
 				failedIndexes.push(i);
 				continue;
 			}
 
 			try {
-				const teacherData = {
-					name: `${teacher.firstName.trim()} ${teacher.surname.trim()}`,
-					email: teacher.email,
-				};
-				await inviteTeacher(teacherData);
+				await inviteTeacherToPlatform(teacher.email.trim());
 				results.push({
-					email: teacher.email,
+					email: teacher.email.trim(),
 					status: "success",
 					message: "Invitation sent successfully.",
 				});
 			} catch (err) {
 				console.error("Failed to invite teacher:", err);
 
-				// Extract the actual error message from the API response
+				const errorPayload = err?.response?.data;
+
+				// Prioritize backend message from error payload shape.
 				const errorMessage =
-					err.response?.data?.error ||
-					err.response?.data?.message ||
+					errorPayload?.message ||
+					(errorPayload?.status && errorPayload?.error
+						? `${errorPayload.status} ${errorPayload.error}`
+						: null) ||
 					err.message ||
 					"Failed to send invitation.";
 
@@ -78,23 +64,9 @@ const BatchInviteTeachers = ({ onInviteComplete }) => {
 
 	const fields = [
 		{
-			name: "firstName",
-			label: "First Name",
-			placeholder: "First name",
-			type: "text",
-			required: true,
-		},
-		{
-			name: "surname",
-			label: "Surname",
-			placeholder: "Surname",
-			type: "text",
-			required: true,
-		},
-		{
 			name: "email",
 			label: "Email",
-			placeholder: "Email (must end with @fundaciocic.org)",
+			placeholder: "Email",
 			type: "email",
 			required: true,
 		},
@@ -106,7 +78,7 @@ const BatchInviteTeachers = ({ onInviteComplete }) => {
 			fields={fields}
 			onSubmit={handleSubmit}
 			maxItems={5}
-			initialItem={{ firstName: "", surname: "", email: "" }}
+			initialItem={{ email: "" }}
 			submitLabel="Send Invitations"
 			addLabel="Add Teacher"
 		/>

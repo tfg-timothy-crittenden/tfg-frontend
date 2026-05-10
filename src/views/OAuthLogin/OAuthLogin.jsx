@@ -1,98 +1,91 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./OAuthLogin.module.css";
 import { login } from "../../store/auth/authSlice";
+import { ROUTES } from "@/routes/routeConfig";
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const getLoginErrorMessage = (error) => {
+	if (typeof error === "string") return error;
+	if (typeof error?.message === "string") return error.message;
+	if (typeof error?.error === "string") return error.error;
+	return "Login failed";
+};
+
+const shouldRedirectToCheckEmail = (error, fallbackIdentifier) => {
+	if (error?.shouldConfirmEmail) {
+		const email =
+			typeof error?.email === "string" && EMAIL_PATTERN.test(error.email)
+				? error.email
+				: EMAIL_PATTERN.test(fallbackIdentifier || "")
+					? fallbackIdentifier
+					: "";
+
+		return {
+			redirect: true,
+			email,
+		};
+	}
+
+	return { redirect: false, email: "" };
+};
 
 export default function OAuthLogin() {
-	const [loginType, setLoginType] = useState("teacher");
 	const [credentials, setCredentials] = useState({
 		username: "",
 		password: "",
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
+	const [info, setInfo] = useState("");
 
-	const [searchParams] = useSearchParams();
 	const dispatch = useDispatch();
-	// const navigate = useNavigate();
+	const location = useLocation();
 	const navigate = useNavigate();
-	const hasProcessedOAuthError = useRef(false); // Add this
 
-	// Check for OAuth errors in URL parameters when component loads
 	useEffect(() => {
-		const errorParam = searchParams.get("error");
-		const errorDescription = searchParams.get("error_description");
-		const reasonParam = searchParams.get("reason");
-
-		// Handle OAuth errors from URL
-		if (errorParam || reasonParam) {
-			hasProcessedOAuthError.current = true; // Mark as processed
-			let errorMessage = "Authentication failed";
-
-			if (reasonParam) {
-				errorMessage = decodeURIComponent(reasonParam);
-			} else if (errorDescription) {
-				errorMessage = errorDescription;
-			} else if (errorParam === "access_denied") {
-				errorMessage =
-					"Access denied. You may not be invited to use this system.";
-			} else if (errorParam === "unauthorized") {
-				errorMessage =
-					"You are not authorized to access this system. Please contact coordination.";
-			} else if (errorParam === "user_not_found") {
-				errorMessage =
-					"Teacher account not found. You must be invited by coordination before logging in.";
-			}
-
-			setError(errorMessage);
-
-			// Clear the error parameters from URL without page reload
-			const newSearchParams = new URLSearchParams(searchParams);
-			newSearchParams.delete("error");
-			newSearchParams.delete("error_description");
-			newSearchParams.delete("reason");
-			navigate({ search: newSearchParams.toString() }, { replace: true });
-		}
-	}, [searchParams, navigate]);
-
-	// Clear error when switching login types (but not if we just processed OAuth error)
-	useEffect(() => {
-		if (!hasProcessedOAuthError.current) {
-			setError("");
-		}
-		hasProcessedOAuthError.current = false; // Reset for next time
-	}, [loginType]);
-
-	const handleMicrosoftLogin = () => {
-		// Clear any existing errors
-		setError("");
-
-		const apiBase = import.meta.env.VITE_API_URL || "/users/api";
-		window.location.href = `${apiBase}/oauth/teacher/microsoft`;
-	};
+		if (!location.state?.info) return;
+		setInfo(location.state.info);
+		navigate(location.pathname, { replace: true, state: {} });
+	}, [location.pathname, location.state, navigate]);
 
 	const handlePasswordResetClick = () => {
-		navigate("/password-reset");
+		navigate(ROUTES.RESET_PASSWORD);
 	};
 
 	const handleCredentialLogin = async (e) => {
 		e.preventDefault();
 		setIsLoading(true);
 		setError("");
+		setInfo("");
 
 		try {
-			const result = await dispatch(
+			await dispatch(
 				login({
 					username: credentials.username,
 					password: credentials.password,
-					userType: loginType,
+					userType: "student",
 				}),
 			).unwrap();
 
-			navigate("/my/classrooms");
+			navigate(ROUTES.CLASSROOMS);
 		} catch (err) {
-			setError(err || "Login failed");
+			const { redirect, email } = shouldRedirectToCheckEmail(
+				err,
+				credentials.username,
+			);
+
+			if (redirect) {
+				navigate(ROUTES.CHECK_EMAIL, {
+					replace: true,
+					state: { email },
+				});
+				return;
+			}
+
+			setError(getLoginErrorMessage(err));
 		} finally {
 			setIsLoading(false);
 		}
@@ -114,124 +107,67 @@ export default function OAuthLogin() {
 					</div> */}
 
 					<h1 className={styles.login_title}>Welcome Back</h1>
-					<p className={styles.login_subtitle}>Sign in to your account</p>
-
-					<div className={styles.login_type_selector}>
-						<button
-							className={`${styles.type_button} ${
-								loginType === "teacher" ? styles.active : ""
-							}`}
-							onClick={() => setLoginType("teacher")}
-						>
-							Teacher
-						</button>
-						<button
-							className={`${styles.type_button} ${
-								loginType === "student" ? styles.active : ""
-							}`}
-							onClick={() => setLoginType("student")}
-						>
-							Student
-						</button>
-					</div>
+					<p className={styles.login_subtitle}>Sign in to continue</p>
 
 					{/* Display error message for all login types */}
+					{info && <div className={styles.info_message}>{info}</div>}
 					{error && <div className={styles.error_message}>{error}</div>}
 
-					{/* Teacher OAuth Login */}
-					{loginType === "teacher" && (
-						<div className={styles.teacher_login}>
-							<span className={styles.teacher_message}>
-								Teachers must previously have been invited by coordination.
-							</span>
-							<button
-								onClick={handleMicrosoftLogin}
-								className={styles.microsoft_button}
-							>
-								<svg
-									className={styles.microsoft_icon}
-									viewBox="0 0 21 21"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<rect x="1" y="1" width="9" height="9" fill="#F25022" />
-									<rect x="12" y="1" width="9" height="9" fill="#7FBA00" />
-									<rect x="1" y="12" width="9" height="9" fill="#00A4EF" />
-									<rect x="12" y="12" width="9" height="9" fill="#FFB900" />
-								</svg>
-								Log in with @fundaciocic.org
-							</button>
+					<form
+						onSubmit={handleCredentialLogin}
+						className={styles.credential_form}
+					>
+						<div className={styles.form_group}>
+							<label htmlFor="username">Username</label>
+							<input
+								type="text"
+								id="username"
+								name="username"
+								value={credentials.username}
+								onChange={handleInputChange}
+								placeholder="Enter your username"
+								required
+							/>
 						</div>
-					)}
 
-					{/* Username/Password Login for students and admins only */}
-					{loginType !== "teacher" && (
-						<form
-							onSubmit={handleCredentialLogin}
-							className={styles.credential_form}
+						<div className={styles.form_group}>
+							<label htmlFor="password">Password</label>
+							<input
+								type="password"
+								id="password"
+								name="password"
+								value={credentials.password}
+								onChange={handleInputChange}
+								placeholder="Enter your password"
+								required
+							/>
+						</div>
+						<div className={styles.options_row}>
+							<span></span>
+							<a
+								type="button"
+								onClick={handlePasswordResetClick}
+								className={styles.forgot_password}
+							>
+								Forgotten password?
+							</a>
+						</div>
+
+						<button
+							type="submit"
+							className={styles.login_button}
+							disabled={isLoading}
 						>
-							<div className={styles.form_group}>
-								<label htmlFor="username">
-									{loginType === "teacher" ? "Email" : "Username"}
-								</label>
-								<input
-									type={loginType === "teacher" ? "email" : "text"}
-									id="username"
-									name="username"
-									value={credentials.username}
-									onChange={handleInputChange}
-									placeholder={
-										loginType === "teacher"
-											? "teacher@fundaciocic.org"
-											: `Enter your username`
-									}
-									required
-								/>
-							</div>
+							{isLoading ? "Logging in..." : "Sign in"}
+						</button>
+					</form>
 
-							<div className={styles.form_group}>
-								<label htmlFor="password">Password</label>
-								<input
-									type="password"
-									id="password"
-									name="password"
-									value={credentials.password}
-									onChange={handleInputChange}
-									placeholder="Enter your password"
-									required
-								/>
-							</div>
-							<div className={styles.options_row}>
-								<span></span>
-								<a
-									type="button"
-									onClick={handlePasswordResetClick}
-									className={styles.forgot_password}
-								>
-									Forgotten password?
-								</a>
-							</div>
-
-							<button
-								type="submit"
-								className={styles.login_button}
-								disabled={isLoading}
-							>
-								{isLoading ? "Logging in..." : `Log in as ${loginType}`}
-							</button>
-						</form>
-					)}
-
-					{loginType === "student" && (
-						<div className={styles.login_info}>
-							Don't have an account? Contact your teacher for registration.
-						</div>
-					)}
-					{loginType === "teacher" && (
-						<div className={styles.login_info}>
-							Can't log in? Contact coordination.
-						</div>
-					)}
+					<div className={styles.login_info}>
+						Don't have an account?{" "}
+						<Link to="/signup" className={styles.signup_link}>
+							Sign up
+						</Link>
+					</div>
 				</div>
 			</div>
 		</div>

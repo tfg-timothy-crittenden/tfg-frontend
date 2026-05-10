@@ -16,6 +16,9 @@ function ImageCropper({
 	aspect = 3 / 2,
 	zoom = 1,
 	setZoom,
+	maxSize = 620,
+	focused = false,
+	onInteract,
 	onCropComplete,
 }) {
 	const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -46,12 +49,35 @@ function ImageCropper({
 	);
 
 	return (
-		<div style={{ width: 400, height: 400, position: "relative" }}>
+		<div
+			onMouseDown={onInteract}
+			onTouchStart={onInteract}
+			style={{
+				width: "100%",
+				maxWidth: maxSize,
+				aspectRatio: "1 / 1",
+				position: "relative",
+			}}
+		>
 			<Cropper
 				image={imageUrl}
 				crop={crop}
 				zoom={zoom}
 				aspect={1}
+				style={{
+					containerStyle: {
+						cursor: "crosshair",
+					},
+					mediaStyle: focused
+						? {
+								boxShadow: "0 0 0 3px rgba(74, 123, 160, 0.45)",
+								borderRadius: "8px",
+								cursor: "crosshair",
+							}
+						: {
+								cursor: "crosshair",
+							},
+				}}
 				onCropChange={setCrop}
 				onZoomChange={setZoom}
 				onCropComplete={onCropCompleteCb}

@@ -34,27 +34,17 @@
 	font-weight: normal;
 }
 
-/* Invited user status styles */
-
-.invitedIcon {
-	color: var(--text_light);
-}
-
-.invitedName {
-	color: var(--text_light);
-}
-
-.invitedEmail {
-	color: var(--text_light);
-}
-
-.invitedStatus {
-	margin-left: 0.5rem;
-	font-size: 0.8rem;
+.userStatus {
+	display: inline-flex;
+	align-self: flex-start;
+	margin-top: 0.1rem;
+	padding: 0.18rem 0.5rem;
+	border-radius: 999px;
+	background: var(--card_background_mid);
+	border: 1px solid var(--card_border_mid);
 	color: var(--text_dark);
-	font-style: italic;
-	background-color: var(--card_background_mid);
-	padding: 0.2rem 0.5rem;
-	border-radius: 12px;
-	text-transform: lowercase;
+	font-size: 0.72rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
 }

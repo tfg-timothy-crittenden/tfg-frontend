@@ -1,21 +1,25 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
+
 import {
 	getClassroomTeachers,
 	getClassroomStudents,
 	removeStudentsFromClass,
 } from "@/api/classes/classesAPI";
+
 import { Users, GraduationCap } from "lucide-react";
+
 import useAdminList from "@/hooks/useAdminList";
 import { AdminList, ListItem } from "@/components/AdminList";
 import { UserListItem } from "@/components/UserListItem";
+import AdminDeleteModal from "@/components/AdminDeleteModal";
+
 import {
 	personSortOptions,
 	sortPeople,
 } from "@/components/AdminList/adminUtils";
+
 import styles from "./ViewClassMembers.module.css";
-import sharedStyles from "@/styles/speakingPartLayout.module.css";
-import AdminDeleteModal from "@/components/AdminDeleteModal";
 
 const ViewClassMembers = ({ classroomId: propId }) => {
 	const params = useParams();
@@ -25,8 +29,6 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 	const [err, setErr] = useState("");
 	const [teachers, setTeachers] = useState([]);
 	const [studentSort, setStudentSort] = useState("name-asc");
-	// (Optional local cache if you want immediate student list before hook refresh)
-	const [initialStudents, setInitialStudents] = useState([]);
 
 	useEffect(() => {
 		let mounted = true;
@@ -38,12 +40,13 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 			getClassroomStudents(classroomId),
 		])
 			.then(([teachersRes, studentsRes]) => {
+				console.log("teachers:", teachersRes);
 				if (!mounted) return;
 				setTeachers(teachersRes || []);
 				setInitialStudents(studentsRes || []);
 			})
 			.catch((e) =>
-				setErr(e?.response?.data?.error || "Failed to load members")
+				setErr(e?.response?.data?.error || "Failed to load members"),
 			)
 			.finally(() => mounted && setLoading(false));
 
@@ -55,11 +58,7 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 	// Memoize API loaders so useAdminList doesn't see a new function each render
 	const loadStudents = useCallback(
 		async () => await getClassroomStudents(classroomId),
-		[classroomId]
-	);
-	const loadTeachers = useCallback(
-		async () => await getClassroomTeachers(classroomId),
-		[classroomId]
+		[classroomId],
 	);
 
 	// Single delete wraps API expecting array
@@ -69,7 +68,7 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 			if (!id) return;
 			await removeStudentsFromClass(classroomId, [id]);
 		},
-		[classroomId]
+		[classroomId],
 	);
 
 	const deleteManyStudents = useCallback(
@@ -78,7 +77,7 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 			if (!valid.length) return;
 			await removeStudentsFromClass(classroomId, valid);
 		},
-		[classroomId]
+		[classroomId],
 	);
 
 	const studentAdmin = useAdminList({
@@ -113,7 +112,7 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 		refreshStudentItems();
 	}, [classroomId, refreshStudentItems]);
 
-	//Usememo prevents rerender when items are selected, which would trigger fade_in effect. 
+	//Usememo prevents rerender when items are selected, which would trigger fade_in effect.
 	const GroupHeader = React.useMemo(
 		() =>
 			function GroupHeader({ icon, title, count }) {
@@ -127,36 +126,48 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 					</div>
 				);
 			},
-		[classroomId]
+		[classroomId],
 	);
 
-	const renderTeacher = (teacher, { isSelected, onSelect }) => (
-		<div className={styles.dumb_list_item}>
-			<UserListItem user={teacher} />
-		</div>
-	);
+	// Ensure each teacher has a unique 'id' property for AdminList
+	const teacherList = (teachers || []).map((teacher) => ({
+		...teacher,
+		name: `${teacher.name} ${teacher.surname}`,
+		id: teacher.userId,
+	}));
 
-	const renderStudentItem = (student, { isSelected, onSelect }) => (
-		<ListItem
-			key={student.id}
-			id={student.id}
-			isSelected={isSelected}
-			onSelect={onSelect}
-			actions={[
-				{
-					label: "Remove",
-					handler: () => confirmDeleteStudent(student),
-				},
-			]}
-			renderContent={() => <UserListItem user={student} key={student.id} />}
-		/>
-	);
+	const renderTeacher = (teacher, { isSelected, onSelect }) => {
+		return (
+			<div className={styles.dumb_list_item}>
+				<UserListItem user={teacher} />
+			</div>
+		);
+	};
 
-	// Fallback to initialStudents during the very first hook load after a classroom switch
-	const effectiveStudentItems =
-		studentItems.length === 0 && studentsLoading && initialStudents.length
-			? initialStudents
-			: studentItems;
+	// Ensure each student has a unique 'id' property for AdminList
+	const studentList = (studentItems || []).map((student) => ({
+		...student,
+		name: `${student.name} ${student.surname}`,
+		id: student.userId,
+	}));
+
+	const renderStudentItem = (student, { isSelected, onSelect }) => {
+		// student already has a unique id and formatted name
+		return (
+			<ListItem
+				id={student.id}
+				isSelected={isSelected}
+				onSelect={onSelect}
+				actions={[
+					{
+						label: "Remove",
+						handler: () => confirmDeleteStudent(student),
+					},
+				]}
+				renderContent={() => <UserListItem user={student} />}
+			/>
+		);
+	};
 
 	return (
 		<div className="full-height-mobile-content">
@@ -168,7 +179,7 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 						count={teachers.length}
 					/>
 					<AdminList
-						items={sortPeople(teachers, "name-asc")}
+						items={sortPeople(teacherList, "name-asc")}
 						loading={loading}
 						selectedItems={new Set()}
 						onSelectionChange={() => {}}
@@ -185,10 +196,10 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 					<GroupHeader
 						icon={<Users size={18} />}
 						title="Students"
-						count={effectiveStudentItems.length}
+						count={studentList.length}
 					/>
 					<AdminList
-						items={sortPeople(effectiveStudentItems, studentSort)}
+						items={sortPeople(studentList, studentSort)}
 						loading={studentsLoading}
 						selectedItems={selectedStudents}
 						onSelectionChange={handleStudentSelectionChange}
@@ -214,7 +225,7 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 						itemNamePlural="students"
 						itemToDelete={studentToDelete}
 						bulkDelete={studentBulkDelete}
-						selectedCount={selectedStudents ? selectedStudents.size : 0} // guard
+						selectedCount={selectedStudents ? selectedStudents.size : 0}
 						confirmText={studentDeleteConfirmText}
 						onConfirmTextChange={setStudentDeleteConfirmText}
 						requiresTypeDelete={true}

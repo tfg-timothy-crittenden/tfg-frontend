@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useId } from "react";
 import { EllipsisVertical } from "lucide-react";
 import styles from "./ListItem.module.css"; // Use dedicated ListItem styles
 
@@ -14,6 +14,7 @@ const ListItem = ({
 	className = "",
 	children,
 }) => {
+	const reactId = useId();
 	const [showKebabMenu, setShowKebabMenu] = useState(false);
 	const kebabRef = useRef(null);
 
@@ -33,7 +34,7 @@ const ListItem = ({
 	}, [showKebabMenu]);
 
 	return (
-		<div className={`${styles.itemRow} ${className}`}>
+		<div className={`${styles.itemRow} ${className}`} key={id}>
 			{/* Checkbox */}
 			<div className={styles.checkbox_container}>
 				<input type="checkbox" checked={isSelected} onChange={onSelect} />
@@ -55,9 +56,9 @@ const ListItem = ({
 
 					{showKebabMenu && (
 						<div className={styles.kebabDropdown}>
-							{actions.map((action, index) => (
+							{actions.map((action) => (
 								<button
-									key={index}
+									key={reactId + "-" + (action.key || action.label)}
 									onClick={() => {
 										action.handler(id);
 										setShowKebabMenu(false);

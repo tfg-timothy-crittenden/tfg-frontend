@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import Header from "@/components/Header/Header";
 import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
 import RoleRoute from "@/components/RoleRoute/RoleRoute";
-import AuthCallback from "@/views/AuthCallback/AuthCallback";
 import { ROUTES, ADMIN_SEGMENTS, ROUTE_SEGMENTS } from "@/routes/routeConfig";
 
 import {
@@ -16,12 +15,17 @@ import {
 	AdminTeachers,
 	AdminClasses,
 	AdminMaterial,
+	AdminMaterialLibrary,
+	AcceptInvite,
 	StudentSignup,
 	EmailVerification,
+	CheckEmail,
 	PasswordResetRequest,
 	PasswordResetConfirm,
+	Profile,
 } from "@/routes/lazyRoutes";
 import CreateSpeakingMaterial from "./views/CreateSpeakingMaterial/CreateSpeakingMaterial";
+import EditSpeakingMaterial from "./views/CreateSpeakingMaterial/EditSpeakingMaterial";
 
 const Fallback = () => <div style={{ padding: 24 }}>Loading…</div>;
 
@@ -33,20 +37,22 @@ function App() {
 				<Routes>
 					{/* Public routes */}
 					<Route path={ROUTES.LOGIN} element={<OAuthLogin />} />
-					<Route path={ROUTES.AUTH_CALLBACK} element={<AuthCallback />} />
 					<Route path={ROUTES.UNAUTHORISED} element={<Unauthorised />} />
 					<Route path={ROUTES.SIGNUP} element={<StudentSignup />} />
 					<Route path={ROUTES.SIGNUP_WITH_CODE} element={<StudentSignup />} />
 					<Route
-						path={ROUTES.VERIFY_EMAIL_WITH_TOKEN}
-						element={<EmailVerification />}
+						path={ROUTES.SIGNUP_WITH_INVITATION}
+						element={<AcceptInvite />}
 					/>
 					<Route path={ROUTES.VERIFY_EMAIL} element={<EmailVerification />} />
+					<Route path={ROUTES.CHECK_EMAIL} element={<CheckEmail />} />
 					<Route path="/password-reset" element={<PasswordResetRequest />} />
 					<Route path="/reset-password" element={<PasswordResetConfirm />} />
 
 					{/* Private routes */}
 					<Route element={<PrivateRoute />}>
+						{" "}
+						<Route path={ROUTES.PROFILE} element={<Profile />} />{" "}
 						<Route path={ROUTES.CLASSROOMS} element={<UserClassrooms />}>
 							{/* Welcome route - no test selected */}
 							<Route path=":id" element={<Classroom />} />
@@ -102,6 +108,10 @@ function App() {
 							path={ROUTES.CREATE_SPEAKING_MATERIAL}
 							element={<CreateSpeakingMaterial />}
 						/>
+						<Route
+							path={ROUTES.EDIT_SPEAKING_MATERIAL}
+							element={<EditSpeakingMaterial />}
+						/>
 						<Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />}>
 							<Route
 								path={ADMIN_SEGMENTS.TEACHERS}
@@ -111,6 +121,10 @@ function App() {
 							<Route
 								path={ADMIN_SEGMENTS.MATERIALS}
 								element={<AdminMaterial />}
+							/>
+							<Route
+								path={ADMIN_SEGMENTS.MATERIAL_LIBRARY}
+								element={<AdminMaterialLibrary />}
 							/>
 						</Route>
 					</Route>

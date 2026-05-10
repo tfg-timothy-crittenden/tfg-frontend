@@ -1,6 +1,4 @@
 import styles from "./Listen.module.css";
-import TestWrapper from "@/components/TestWrapper/TestWrapper";
-import TimerWrapper from "@/components/TimerWrapper/TimerWrapper";
 import SubtitleViewer from "../SubtitleViewer/SubtitleViewer";
 import AudioWrapper from "@/components/AudioWrapper/AudioWrapper";
 

@@ -249,6 +249,29 @@
 	font-family: "Inter", sans-serif;
 }
 
+.signup_link {
+	color: var(--actionable_text_active);
+	font-weight: 600;
+	text-decoration: underline;
+}
+
+.signup_link:hover {
+	color: var(--text_dark);
+}
+
+.info_message {
+	background: var(--actionable_background);
+	color: var(--button_background_confirm);
+	padding: 12px 16px;
+	border-radius: 12px;
+	margin-bottom: 20px;
+	font-weight: 500;
+	border: 1px solid var(--actionable_background);
+	font-family: "Inter", sans-serif;
+	font-size: 0.9rem;
+	text-align: left;
+}
+
 .error_message {
 	background: rgba(220, 53, 69, 0.1);
 	color: #dc3545;
