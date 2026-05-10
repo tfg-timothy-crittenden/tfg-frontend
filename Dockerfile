@@ -1,21 +1,9 @@
-# Build stage
-FROM node:20-alpine AS build
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci
-
-COPY . .
-RUN npm run build
-
-# Serve stage
 FROM nginx:alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
 
-# default (works in  local docker-compose network)
+# default (works in your local docker-compose network)
 ENV API_UPSTREAM=http://gateway:8080
 
 EXPOSE 80
