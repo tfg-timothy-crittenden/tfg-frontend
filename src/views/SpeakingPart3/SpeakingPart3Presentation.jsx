@@ -6,15 +6,13 @@ import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import image from "@/assets/male_professor.png";
 import sharedStyles from "@/styles/speakingPartLayout.module.css";
-import styles from "./SpeakingPart3.module.css";
-
 const SpeakingPart3Presentation = ({
 	mode,
-	setMode,
+	setMode: _setMode,
 	modeEnum,
 	testData,
 	time,
-	setTime,
+	setTime: _setTime,
 	modeTimeEnum,
 }) => {
 	const renderContent = () => {

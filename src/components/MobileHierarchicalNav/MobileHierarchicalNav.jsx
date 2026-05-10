@@ -15,7 +15,7 @@ const MobileHierarchicalNav = () => {
 	const navigate = useNavigate();
 	const { modalRef, isOpen, openModal, closeModal } = useModal();
 
-	const [isExpanded, setIsExpanded] = useState(false);
+	const [, setIsExpanded] = useState(false);
 	const [sections, setSections] = useState([]);
 
 	// Load sections

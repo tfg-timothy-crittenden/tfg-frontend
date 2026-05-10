@@ -129,7 +129,7 @@ const AdminClasses = () => {
 				const code = await getClassroomJoinCode(cls.id);
 				console.log("code", code);
 				setJoinCode(code);
-			} catch (e) {
+			} catch (_e) {
 				setJoinCode("");
 			}
 			setJoinCodeLoading(false);

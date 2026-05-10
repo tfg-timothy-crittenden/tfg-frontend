@@ -43,6 +43,13 @@ const MobileBottomNav = () => {
 		navigate(buildRoute.sectionPart(classroomId, section.id, part));
 	};
 
+	const activePart = partNumber ? "part" + partNumber : null;
+	const studentCurrentList = sections;
+	const teacherCurrentList = sections;
+	const teacherTestsPart1 = sections.filter(
+		(s) => s.partNumber === 1 || !s.partNumber,
+	);
+	const hasTeacherRole = false;
 	return (
 		<>
 			<nav className={styles.bottom_nav}>
@@ -90,15 +97,20 @@ const MobileBottomNav = () => {
 									<p>Contact your teacher to assign materials.</p>
 								</div>
 							)}
-
 						{/* Part 1: Teacher Section */}
-						{activePart === "part1" &&
-									modalTitle="Select Section"
-							teacherTestsPart1.length > 0 && (
-									<TestSelectionModalBody
-										sections={sections}
-										partNumber={partNumber}
-										sectionId={sectionId}
-										onSectionSelect={handleSectionSelect}
-									/>
-			}
+						{activePart === "part1" && teacherTestsPart1.length > 0 && (
+							<TestSelectionModalBody
+								sections={sections}
+								partNumber={partNumber}
+								sectionId={sectionId}
+								onSectionSelect={handleSectionSelect}
+							/>
+						)}{" "}
+					</div>
+				</Modal>
+			)}
+		</>
+	);
+};
+
+export default MobileBottomNav;

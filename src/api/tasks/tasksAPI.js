@@ -120,6 +120,8 @@ export const getAllSpeakingTests = async () => {
 export const getTestsByClassId = async (classroomId) => {
 	try {
 		if (USE_MOCK_API) {
+			const getTestsFromIds = (ids) =>
+				mockSpeakingTests.filter((t) => ids.includes(t.id));
 			const key = String(classroomId);
 			const assignment = mockClassAssignments[key] || {
 				teacher: [],

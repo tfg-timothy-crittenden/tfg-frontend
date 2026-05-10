@@ -32,13 +32,13 @@ const MobileTaskModeSwitch = ({
 
 	// Get available modes for current test type
 	const availableModes = Object.entries(modeEnum).filter(
-		([key, value]) => modeConfig[value]
+		([, value]) => modeConfig[value],
 	);
 
 	return (
 		<div className={styles.mobile_mode_switch}>
 			<div className={styles.mode_container}>
-				{availableModes.map(([key, value]) => {
+				{availableModes.map(([, value]) => {
 					const config = modeConfig[value];
 					const isActive = mode === value;
 

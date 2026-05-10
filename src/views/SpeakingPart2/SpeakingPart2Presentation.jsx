@@ -6,7 +6,6 @@ import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
 import image from "@/assets/question_two_1.png";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import sharedStyles from "@/styles/speakingPartLayout.module.css";
-import styles from "./SpeakingPart2.module.css";
 
 const SpeakingPart2Presentation = ({
 	testData,

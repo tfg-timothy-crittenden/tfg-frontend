@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import styles from "./ClassroomTeacherMenu.module.css";
 import { ChevronUp, ChevronDown, Library, UsersRound } from "lucide-react";
@@ -10,17 +10,13 @@ import { buildRoute, routeMatchers } from "@/routes/routeConfig"; // <-- added
 
 const ClassroomTeacherMenu = ({
 	classrooms = [],
-	onClassroomChange,
 	setShowMaterial,
-	showMaterial,
 	showButtonText,
 }) => {
 	const { id: classroomId, sectionId, partNumber } = useParams();
 	const navigate = useNavigate();
 	const location = useLocation(); // <-- added
-	const { modalRef, isOpen, openModal, closeModal } = useModal();
-
-	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const { modalRef, isOpen, closeModal } = useModal();
 
 	const selectedClassroom = useMemo(
 		() => classrooms.find((c) => String(c.id) === String(classroomId)),

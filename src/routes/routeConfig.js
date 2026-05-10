@@ -136,9 +136,6 @@ export const buildRoute = {
 	sectionInstructions: (classroomId, sectionId) =>
 		buildRoute.testInstructions(classroomId, sectionId),
 
-	testInstructions: (classroomId, sectionId) =>
-		`/${ROUTE_SEGMENTS.MY}/${ROUTE_SEGMENTS.CLASSROOMS}/${classroomId}/${ROUTE_SEGMENTS.SECTION}/${sectionId}/${MODE_SEGMENTS.INSTRUCTIONS}`,
-
 	editSpeakingMaterial: (materialId) =>
 		`/${ROUTE_SEGMENTS.CREATE_SPEAKING_MATERIAL}/${materialId}/edit`,
 };

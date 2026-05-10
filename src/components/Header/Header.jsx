@@ -71,9 +71,6 @@ const Header = () => {
 		"/create-speaking-material",
 	);
 
-	// Get display name for mobile (first name or username)
-	const mobileDisplayName = username?.split(" ")[0] || username || "User";
-
 	return (
 		<header className={styles.header}>
 			<div className={styles.header_inner}>

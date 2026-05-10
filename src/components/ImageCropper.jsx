@@ -13,7 +13,7 @@ import "react-easy-crop/react-easy-crop.css";
  */
 function ImageCropper({
 	imageUrl,
-	aspect = 3 / 2,
+	_aspect = 3 / 2,
 	zoom = 1,
 	setZoom,
 	maxSize = 620,
@@ -22,8 +22,8 @@ function ImageCropper({
 	onCropComplete,
 }) {
 	const [crop, setCrop] = useState({ x: 0, y: 0 });
-	const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-	const [imageInfo, setImageInfo] = useState(null);
+	const [, setCroppedAreaPixels] = useState(null);
+	const [, setImageInfo] = useState(null);
 
 	// When imageUrl changes, load image and set crop/zoom if square
 	useEffect(() => {

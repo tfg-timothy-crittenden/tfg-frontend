@@ -29,7 +29,7 @@ const RoleMaterialTransfer = ({
 	allAssignedItemIds = new Set(),
 	setAssignedItemsIds,
 	isAssignedListVisible,
-	ListItem,
+	ListItem: _ListItem,
 	isLibraryOpen,
 	setIsLibraryOpen,
 }) => {

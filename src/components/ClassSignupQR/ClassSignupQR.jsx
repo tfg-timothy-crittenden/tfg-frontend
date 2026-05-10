@@ -18,7 +18,7 @@ const ClassSignupQR = ({
 	size = 256,
 }) => {
 	const [svg, setSvg] = useState("");
-	const [pngUrl, setPngUrl] = useState("");
+	const [, setPngUrl] = useState("");
 	const signupUrl = useMemo(() => {
 		if (!classCode) return "";
 		return mode === "query"
@@ -56,23 +56,6 @@ const ClassSignupQR = ({
 			cancelled = true;
 		};
 	}, [signupUrl]);
-
-	const downloadSVG = () => {
-		const blob = new Blob([svg], { type: "image/svg+xml" });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = `signup-${classCode}.svg`;
-		a.click();
-		URL.revokeObjectURL(url);
-	};
-
-	const downloadPNG = () => {
-		const a = document.createElement("a");
-		a.href = pngUrl;
-		a.download = `signup-${classCode}.png`;
-		a.click();
-	};
 
 	const copyLink = async () => {
 		try {

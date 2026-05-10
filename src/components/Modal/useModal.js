@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const useModal = () => {
 	const [isOpen, setIsOpen] = useState(false);

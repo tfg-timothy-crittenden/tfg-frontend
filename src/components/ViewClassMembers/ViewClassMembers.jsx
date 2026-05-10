@@ -26,7 +26,7 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 	const classroomId = propId ?? params.id;
 
 	const [loading, setLoading] = useState(true);
-	const [err, setErr] = useState("");
+	const [, setErr] = useState("");
 	const [teachers, setTeachers] = useState([]);
 	const [studentSort, setStudentSort] = useState("name-asc");
 
@@ -35,15 +35,11 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 		setLoading(true);
 		setErr("");
 
-		Promise.all([
-			getClassroomTeachers(classroomId),
-			getClassroomStudents(classroomId),
-		])
-			.then(([teachersRes, studentsRes]) => {
+		Promise.all([getClassroomTeachers(classroomId)])
+			.then(([teachersRes]) => {
 				console.log("teachers:", teachersRes);
 				if (!mounted) return;
 				setTeachers(teachersRes || []);
-				setInitialStudents(studentsRes || []);
 			})
 			.catch((e) =>
 				setErr(e?.response?.data?.error || "Failed to load members"),
@@ -136,7 +132,7 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 		id: teacher.userId,
 	}));
 
-	const renderTeacher = (teacher, { isSelected, onSelect }) => {
+	const renderTeacher = (teacher) => {
 		return (
 			<div className={styles.dumb_list_item}>
 				<UserListItem user={teacher} />
