@@ -5,7 +5,8 @@ import styles from "./OAuthLogin.module.css";
 import { login } from "../../store/auth/authSlice";
 import { ROUTES } from "@/routes/routeConfig";
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Updated to a safe, efficient email regex to prevent ReDoS
+const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const getLoginErrorMessage = (error) => {
 	if (typeof error === "string") return error;
