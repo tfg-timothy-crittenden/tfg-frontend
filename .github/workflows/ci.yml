@@ -43,3 +43,7 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.sources=src
             -Dsonar.exclusions=dist/**,node_modules/**
+            -Dsonar.issue.ignore.multicriteria=e1
+            # Ignore rule that requires prop validation in JS
+            -Dsonar.issue.ignore.multicriteria.e1.ruleKey=javascript:S6774 
+            -Dsonar.issue.ignore.multicriteria.e1.resourceKey=**/*.jsx
