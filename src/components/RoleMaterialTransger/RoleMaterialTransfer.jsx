@@ -29,7 +29,7 @@ const RoleMaterialTransfer = ({
 	allAssignedItemIds = new Set(),
 	setAssignedItemsIds,
 	isAssignedListVisible,
-	ListItem,
+	ListItem: MaterialListItem,
 	isLibraryOpen,
 	setIsLibraryOpen,
 }) => {
@@ -48,29 +48,30 @@ const RoleMaterialTransfer = ({
 		const itemId = getItemId(item);
 		return itemId !== null && assignedItemsIds.has(itemId);
 	});
+
 	const assignedItemsToRender = Array.isArray(assignedItems)
 		? assignedItems
 		: inferredAssignedItems;
+
 	const libraryItems = allMaterials;
 
 	return (
 		<div className={styles.role_container}>
 			<div className={styles.lists_wrapper}>
-				{/* Assigned on the left */}
 				<div className={styles.list_column}>
 					<h3 className={styles.list_heading}>Assigned</h3>
 					{isAssignedListVisible ? (
 						assignedItemsToRender.length > 0 ? (
 							<ul className={`scrollable_inner ${styles.scrollable_list}`}>
-								{assignedItemsToRender.map((item, index) => (
-									<ListItem
-										key={`${getItemId(item) || item.name}-${index}`}
-										item={item}
-										isChecked={true}
-										onToggle={handleToggle}
-										disabled={!isLibraryOpen}
-									/>
-								))}
+								{assignedItemsToRender.map((item, index) =>
+									React.createElement(MaterialListItem, {
+										key: `${getItemId(item) || item.name}-${index}`,
+										item,
+										isChecked: true,
+										onToggle: handleToggle,
+										disabled: !isLibraryOpen,
+									}),
+								)}
 							</ul>
 						) : (
 							<div
@@ -101,7 +102,6 @@ const RoleMaterialTransfer = ({
 					)}
 				</div>
 
-				{/* Library on the right — always rendered */}
 				<div className={`${styles.list_column} ${styles.library_column}`}>
 					<div className={styles.library_header}>
 						<h3 className={styles.list_heading}>Test Library</h3>
@@ -115,15 +115,13 @@ const RoleMaterialTransfer = ({
 									allAssignedItemIds?.has(id),
 								);
 
-								return (
-									<ListItem
-										key={`${itemId || item.name}-${index}`}
-										item={item}
-										isChecked={false}
-										onToggle={handleToggle}
-										disabled={isAssignedAnywhere}
-									/>
-								);
+								return React.createElement(MaterialListItem, {
+									key: `${itemId || item.name}-${index}`,
+									item,
+									isChecked: false,
+									onToggle: handleToggle,
+									disabled: isAssignedAnywhere,
+								});
 							})}
 						</ul>
 					) : (
@@ -134,7 +132,7 @@ const RoleMaterialTransfer = ({
 								className={styles.empty_icon}
 							/>
 							<button
-								className={"action_button"}
+								className="action_button"
 								onClick={() => setIsLibraryOpen(true)}
 								disabled={!isAssignedListVisible}
 							>
