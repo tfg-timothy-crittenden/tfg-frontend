@@ -322,6 +322,74 @@ const useSpeakingMaterialContainer = (
 			.trim()
 			.toUpperCase() !== "PUBLISHED";
 
+	// Dedicated publish handler for create mode
+	const handleCreateAndPublish = useCallback(
+		async ({ data, highlightDataByQuestion, part2ConfigByQuestion }) => {
+			// 1. Save draft (upload all files)
+			const formData = buildCreateSpeakingSectionFormData({
+				data,
+				highlightDataByQuestion,
+				part2ConfigByQuestion,
+			});
+			const matId = data?.materialId?.trim();
+			let saveResponse;
+			if (matId) {
+				try {
+					saveResponse = await updateSpeakingSection(matId, formData);
+				} catch (error) {
+					if (!isMissingQuestionNodeError(error)) {
+						throw error;
+					}
+					saveResponse = await uploadSpeakingSectionDraft(formData);
+				}
+			} else {
+				saveResponse = await uploadSpeakingSectionDraft(formData);
+			}
+			const resolvedMaterialId = extractMaterialId(saveResponse) || matId;
+			if (!resolvedMaterialId) {
+				throw new Error("Material ID was not returned after save.");
+			}
+			// 2. Publish
+			await publishSpeakingMaterial(resolvedMaterialId);
+			// 3. Reload section from backend to update state/UI
+			try {
+				const section =
+					await getSpeakingSectionByMaterialId(resolvedMaterialId);
+				setSectionStatus(section?.status ? String(section.status) : null);
+				const normalized = normalizeSectionToFormState(
+					section,
+					QUESTION_COUNT,
+					PART2_QUESTION_COUNT,
+				);
+				setInitialValues(normalized.values);
+				setInitialHighlightDataByQuestion(normalized.highlightDataByQuestion);
+				setInitialPart2ConfigByQuestion(normalized.part2ConfigByQuestion);
+				const [partImageUrl, questionAudioUrls, part2QuestionAudioUrls] =
+					await Promise.all([
+						resolveStorageKeyToUrl(section.partImageStorageKey),
+						Promise.all(
+							(section.questions || []).map((question) =>
+								resolveStorageKeyToUrl(question.audioStorageKey),
+							),
+						),
+						Promise.all(
+							(section.part2Questions || []).map((question) =>
+								resolveStorageKeyToUrl(question.audioStorageKey),
+							),
+						),
+					]);
+				setExistingMedia({
+					partImageUrl,
+					questionAudioUrls,
+					part2QuestionAudioUrls,
+				});
+			} catch (error) {
+				// Optionally handle reload error
+			}
+		},
+		[],
+	);
+
 	return {
 		mode,
 		isLoading,
@@ -332,7 +400,7 @@ const useSpeakingMaterialContainer = (
 		existingMedia,
 		onSubmitForm: handleSubmitForm,
 		onDraftSaveForm: canSaveDraft ? handleDraftSaveForm : undefined,
-		onPublish: mode === "edit" ? handlePublish : undefined,
+		onPublish: mode === "edit" ? handlePublish : handleCreateAndPublish,
 		onReloadFromDb: mode === "edit" ? loadSection : undefined,
 		submitLabel: mode === "edit" ? "Save Changes" : "Submit",
 	};

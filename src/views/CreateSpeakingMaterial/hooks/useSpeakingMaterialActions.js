@@ -82,6 +82,10 @@ const useSpeakingMaterialActions = ({
 			// Mark current values as the new baseline so save draft disables
 			// until the user makes another change.
 			reset(nextSubmissionData);
+			// After saving, reload section data to update existingMedia (audio URLs)
+			if (typeof onReloadFromDb === "function") {
+				await onReloadFromDb();
+			}
 			alert("Draft saved!");
 		} catch (error) {
 			alert(toAlertErrorMessage("Upload error", error));
@@ -94,8 +98,43 @@ const useSpeakingMaterialActions = ({
 		if (!onPublish) return;
 		setIsPublishing(true);
 		try {
-			const payload = await buildPayload(data);
-			await onPublish(payload);
+			let published = false;
+			// In create mode, always save draft first to persist files, then publish
+			if (mode === "create" && typeof onDraftSaveForm === "function") {
+				const payload = await buildPayload(data);
+				await onDraftSaveForm(payload);
+				// After saving, reload section data to update existingMedia (audio URLs)
+				if (typeof onReloadFromDb === "function") {
+					await onReloadFromDb();
+				}
+				// Always get latest values for publish
+				const latestPayload = await buildPayload(getValues());
+				await onPublish(latestPayload);
+				published = true;
+			} else if (
+				hasUnsavedFieldChanges &&
+				typeof onDraftSaveForm === "function"
+			) {
+				// In edit mode, save draft if there are unsaved changes
+				const payload = await buildPayload(data);
+				await onDraftSaveForm(payload);
+				if (typeof onReloadFromDb === "function") {
+					await onReloadFromDb();
+				}
+				// Always get latest values for publish
+				const latestPayload = await buildPayload(getValues());
+				await onPublish(latestPayload);
+				published = true;
+			} else {
+				// Always get latest values for publish
+				const latestPayload = await buildPayload(getValues());
+				await onPublish(latestPayload);
+				published = true;
+			}
+			// After publishing, reload section and reset form to backend state
+			if (published && typeof onReloadFromDb === "function") {
+				await onReloadFromDb();
+			}
 			alert("Publish successful!");
 		} catch (error) {
 			alert(toAlertErrorMessage("Publish error", error));

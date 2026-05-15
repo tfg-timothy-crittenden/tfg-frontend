@@ -43,16 +43,17 @@ const AudioDropzone = ({
 	};
 
 	// Push dropped or recorded files back through the hidden input so the form
-	// still sees a normal file selection change.
+	// still sees a normal file selection change. Always set as array for RHF.
 	const pushFilesToForm = (files) => {
+		const arr = Array.isArray(files) ? files : files ? [files] : [];
 		onChange({
 			target: {
 				name,
-				value: files,
+				value: arr,
 			},
 			currentTarget: {
 				name,
-				value: files,
+				value: arr,
 			},
 			type: "change",
 		});
@@ -61,7 +62,10 @@ const AudioDropzone = ({
 	const applyFiles = (fileList) => {
 		if (!inputRef.current || !fileList?.length) return;
 		setHasUserCleared(false);
-
+		// Reset the global cleared flag when a new file is added
+		if (typeof window !== "undefined") {
+			window[`audioCleared_${name.replace(/\./g, "_")}`] = false;
+		}
 		const dataTransfer = new DataTransfer();
 		Array.from(fileList).forEach((file) => dataTransfer.items.add(file));
 		inputRef.current.files = dataTransfer.files;
@@ -72,6 +76,10 @@ const AudioDropzone = ({
 		const files = Array.from(event.target.files || []);
 		if (files.length > 0) {
 			setHasUserCleared(false);
+			// Reset the global cleared flag when a new file is added
+			if (typeof window !== "undefined") {
+				window[`audioCleared_${name.replace(/\./g, "_")}`] = false;
+			}
 		}
 		pushFilesToForm(files);
 	};
@@ -185,6 +193,10 @@ const AudioDropzone = ({
 		event.preventDefault();
 		event.stopPropagation();
 		setHasUserCleared(true);
+		// Set a global flag for validation (used by hidden input in field component)
+		if (typeof window !== "undefined") {
+			window[`audioCleared_${name.replace(/\./g, "_")}`] = true;
+		}
 		if (!inputRef.current) return;
 		inputRef.current.files = new DataTransfer().files;
 		pushFilesToForm([]);

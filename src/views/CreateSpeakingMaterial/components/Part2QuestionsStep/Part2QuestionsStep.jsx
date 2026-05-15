@@ -28,6 +28,7 @@ const Part2QuestionsStep = ({
 		selectedPart2AudioFiles,
 		normalizedExistingMedia,
 		hasExistingPart2QuestionAudio,
+		canShowHeaderSaveChangesButton,
 	} = form;
 	const {
 		currentPart2Question,
@@ -92,45 +93,28 @@ const Part2QuestionsStep = ({
 				styles={styles}
 			/>
 
-			{onPublish ? (
-				<div className={styles.step_actions_row}>
-					<button
-						type="button"
-						onClick={goBackToPart1Questions}
-						className={`${styles.back_button} ${styles.step_action_button}`}
-					>
-						Back to Part 1
-					</button>
-					<div className={styles.step_actions_right_group}>
+			{/* Only show navigation/back, not save changes button at bottom */}
+			<div className={styles.step_actions_row}>
+				<button
+					type="button"
+					onClick={goBackToPart1Questions}
+					className={`${styles.back_button} ${styles.step_action_button}`}
+				>
+					Back to Part 1
+				</button>
+				<div className={styles.step_actions_right_group}>
+					{canShowPublishButton && onPublish && (
 						<button
-							type="submit"
-							className={`${styles.submit_button} ${styles.step_action_button}`}
-							disabled={submitDisabled || isSubmitting || saveChangesDisabled}
+							type="button"
+							className={`${styles.publish_button} ${styles.step_action_button}`}
+							disabled={submitDisabled || isPublishing || isSubmitting}
+							onClick={handleSubmit(onHandlePublishSubmit)}
 						>
-							{isSubmitting ? "Saving..." : submitLabel}
+							{isPublishing ? "Publishing…" : "Publish"}
 						</button>
-						{canShowPublishButton && (
-							<button
-								type="button"
-								className={`${styles.publish_button} ${styles.step_action_button}`}
-								disabled={submitDisabled || isPublishing || isSubmitting}
-								onClick={handleSubmit(onHandlePublishSubmit)}
-							>
-								{isPublishing ? "Publishing…" : "Publish"}
-							</button>
-						)}
-					</div>
+					)}
 				</div>
-			) : (
-				<StepActionsRow
-					leftLabel="Back to Part 1"
-					leftOnClick={goBackToPart1Questions}
-					rightLabel={isSubmitting ? "Saving..." : submitLabel}
-					rightType="submit"
-					rightDisabled={submitDisabled || isSubmitting || saveChangesDisabled}
-					styles={styles}
-				/>
-			)}
+			</div>
 		</div>
 	);
 };
