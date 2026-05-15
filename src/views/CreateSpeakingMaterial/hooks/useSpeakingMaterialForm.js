@@ -274,7 +274,10 @@ const useSpeakingMaterialForm = ({
 	let saveChangesDisabled = false;
 	if (mode === "edit") {
 		if (isPublished) {
-			saveChangesDisabled = !hasUnsavedFieldChanges || !allQuestionsComplete;
+			saveChangesDisabled =
+				!hasUnsavedFieldChanges ||
+				!allQuestionsComplete ||
+				!allPart2QuestionsComplete;
 		} else {
 			saveChangesDisabled = !hasUnsavedFieldChanges;
 		}

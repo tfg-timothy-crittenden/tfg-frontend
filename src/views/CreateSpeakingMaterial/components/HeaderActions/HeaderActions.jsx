@@ -54,7 +54,19 @@ const HeaderActions = ({ form }) => {
 					type="button"
 					className={`${styles.draft_button} ${styles.step_action_button}`}
 					onClick={
-						!saveChangesDisabled ? handleSubmit(handleFormSubmit) : undefined
+						!saveChangesDisabled
+							? () => {
+									// Force blur on all inputs before submit to flush state
+									if (typeof document !== "undefined") {
+										document
+											.querySelectorAll("input,textarea,select")
+											.forEach((el) => {
+												if (typeof el.blur === "function") el.blur();
+											});
+									}
+									setTimeout(() => handleSubmit(handleFormSubmit)(), 0);
+								}
+							: undefined
 					}
 					disabled={saveChangesDisabled || isSubmitting || isReverting}
 				>
