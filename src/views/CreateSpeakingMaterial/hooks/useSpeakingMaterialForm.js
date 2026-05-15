@@ -40,6 +40,7 @@ const useSpeakingMaterialForm = ({
 	initialHighlightDataByQuestion,
 	initialPart2ConfigByQuestion,
 	existingMedia,
+	sectionStatus = null,
 }) => {
 	// Derive question counts from initialValues if available, otherwise fall back to
 	// hardcoded defaults. These counts drive array sizing throughout the hook.
@@ -263,8 +264,21 @@ const useSpeakingMaterialForm = ({
 			hasUnsavedFieldChanges,
 		);
 	}
-	// In edit mode the Save/Discard buttons are only enabled when there is something to save.
-	const saveChangesDisabled = mode === "edit" && !hasUnsavedFieldChanges;
+	// In edit mode:
+	// - If published, Save is only enabled if all questions are complete AND there are unsaved changes
+	// - If not published, Save is enabled if there are unsaved changes
+	const isPublished =
+		String(sectionStatus || "")
+			.trim()
+			.toUpperCase() === "PUBLISHED";
+	let saveChangesDisabled = false;
+	if (mode === "edit") {
+		if (isPublished) {
+			saveChangesDisabled = !hasUnsavedFieldChanges || !allQuestionsComplete;
+		} else {
+			saveChangesDisabled = !hasUnsavedFieldChanges;
+		}
+	}
 
 	return {
 		mode,

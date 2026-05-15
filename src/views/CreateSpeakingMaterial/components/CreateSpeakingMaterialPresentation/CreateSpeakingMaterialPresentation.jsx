@@ -32,6 +32,7 @@ const CreateSpeakingMaterialPresentation = ({
 		initialHighlightDataByQuestion,
 		initialPart2ConfigByQuestion,
 		existingMedia,
+		sectionStatus,
 	});
 	const navigation = useSpeakingMaterialNavigation(form);
 	const image = useSpeakingMaterialImageState(form);
@@ -189,6 +190,7 @@ const CreateSpeakingMaterialPresentation = ({
 		handleRevertUnsavedChanges,
 		handleDraftSave,
 		handleFormSubmit,
+		saveChangesDisabled,
 	};
 
 	if (isLoading) {

@@ -15,6 +15,7 @@ const HeaderActions = ({ form }) => {
 		canShowHeaderSaveChangesButton,
 		handleSubmit,
 		handleFormSubmit,
+		saveChangesDisabled,
 	} = form;
 
 	return (
@@ -53,9 +54,9 @@ const HeaderActions = ({ form }) => {
 					type="button"
 					className={`${styles.draft_button} ${styles.step_action_button}`}
 					onClick={
-						hasUnsavedFieldChanges ? handleSubmit(handleFormSubmit) : undefined
+						!saveChangesDisabled ? handleSubmit(handleFormSubmit) : undefined
 					}
-					disabled={!hasUnsavedFieldChanges || isSubmitting || isReverting}
+					disabled={saveChangesDisabled || isSubmitting || isReverting}
 				>
 					<Save size={16} className={styles.draft_button_icon} />
 					{isSubmitting ? "Saving..." : "Save Changes"}
