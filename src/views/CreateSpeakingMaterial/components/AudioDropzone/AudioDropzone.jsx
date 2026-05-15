@@ -13,6 +13,7 @@ const AudioDropzone = ({
 	ariaInvalid = false,
 	showLabel = true,
 }) => {
+	console.log("AudioDropzone rendered");
 	const [isDragging, setIsDragging] = useState(false);
 	const [isRecording, setIsRecording] = useState(false);
 	const [recordingError, setRecordingError] = useState("");
@@ -99,6 +100,10 @@ const AudioDropzone = ({
 	useEffect(() => {
 		if (!selectedAudio) {
 			setAudioUrl("");
+			return;
+		}
+		if (typeof selectedAudio === "string") {
+			setAudioUrl(selectedAudio);
 			return;
 		}
 		const url = URL.createObjectURL(selectedAudio);
@@ -190,6 +195,7 @@ const AudioDropzone = ({
 
 	// Clear the current file and notify react-hook-form of the empty value.
 	const clearFile = (event) => {
+		console.log("AudioDropzone onRemove firing");
 		event.preventDefault();
 		event.stopPropagation();
 		setHasUserCleared(true);
@@ -200,6 +206,10 @@ const AudioDropzone = ({
 		if (!inputRef.current) return;
 		inputRef.current.files = new DataTransfer().files;
 		pushFilesToForm([]);
+		// Call onRemove prop if provided
+		if (typeof onRemove === "function") {
+			onRemove();
+		}
 	};
 
 	// The mic button owns recording; the rest of the dropzone still opens upload.
@@ -259,15 +269,17 @@ const AudioDropzone = ({
 							/>
 							Your browser cannot play this audio file.
 						</audio>
-						<button
-							type="button"
-							className={styles.removeButton}
-							onClick={clearFile}
-							aria-label="Remove audio file"
-						>
-							<X size={13} strokeWidth={2.5} />
-							Remove file
-						</button>
+						{/* Remove file button at end of player row */}
+						{(selectedFile?.length > 0 || existingAudioUrl) && (
+							<button
+								type="button"
+								className={styles.removeButton}
+								onClick={clearFile}
+								aria-label="Remove audio file"
+							>
+								Remove file
+							</button>
+						)}
 					</div>
 					<input
 						id={id}

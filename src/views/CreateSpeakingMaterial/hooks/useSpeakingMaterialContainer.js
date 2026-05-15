@@ -93,6 +93,19 @@ const useSpeakingMaterialContainer = (
 		useState(Array(PART2_QUESTION_COUNT).fill({}));
 	const [existingMedia, setExistingMedia] = useState(null);
 
+	// Remove audio for a specific question index (Part 1)
+	const handleRemoveExistingAudio = useCallback((idx) => {
+		setExistingMedia((prev) => {
+			if (!prev) return prev;
+			const next = { ...prev };
+			if (Array.isArray(next.questionAudioUrls)) {
+				next.questionAudioUrls = [...next.questionAudioUrls];
+				next.questionAudioUrls[idx] = null;
+			}
+			return next;
+		});
+	}, []);
+
 	// ============================================================================
 	// Edit mode: Load section data
 	// ============================================================================
@@ -205,6 +218,7 @@ const useSpeakingMaterialContainer = (
 	// ============================================================================
 	// Submit handlers
 	// ============================================================================
+
 	const handleSubmitForm = useCallback(
 		async ({ data, highlightDataByQuestion, part2ConfigByQuestion }) => {
 			if (mode === "edit") {
@@ -214,6 +228,40 @@ const useSpeakingMaterialContainer = (
 					part2ConfigByQuestion,
 					allowNoChanges: false,
 				});
+				// Refetch from backend to rebase form state
+				try {
+					const section = await getSpeakingSectionByMaterialId(materialId);
+					setSectionStatus(section?.status ? String(section.status) : null);
+					const normalized = normalizeSectionToFormState(
+						section,
+						QUESTION_COUNT,
+						PART2_QUESTION_COUNT,
+					);
+					setInitialValues(normalized.values);
+					setInitialHighlightDataByQuestion(normalized.highlightDataByQuestion);
+					setInitialPart2ConfigByQuestion(normalized.part2ConfigByQuestion);
+					const [partImageUrl, questionAudioUrls, part2QuestionAudioUrls] =
+						await Promise.all([
+							resolveStorageKeyToUrl(section.partImageStorageKey),
+							Promise.all(
+								(section.questions || []).map((question) =>
+									resolveStorageKeyToUrl(question.audioStorageKey),
+								),
+							),
+							Promise.all(
+								(section.part2Questions || []).map((question) =>
+									resolveStorageKeyToUrl(question.audioStorageKey),
+								),
+							),
+						]);
+					setExistingMedia({
+						partImageUrl,
+						questionAudioUrls,
+						part2QuestionAudioUrls,
+					});
+				} catch (error) {
+					// Optionally handle reload error
+				}
 				return;
 			}
 
@@ -247,7 +295,7 @@ const useSpeakingMaterialContainer = (
 
 			await publishSpeakingMaterial(resolvedMaterialId);
 		},
-		[mode, persistSectionChanges],
+		[mode, persistSectionChanges, materialId],
 	);
 
 	const handleDraftSaveForm = useCallback(
@@ -259,6 +307,40 @@ const useSpeakingMaterialContainer = (
 					part2ConfigByQuestion,
 					allowNoChanges: false,
 				});
+				// Refetch from backend to rebase form state
+				try {
+					const section = await getSpeakingSectionByMaterialId(materialId);
+					setSectionStatus(section?.status ? String(section.status) : null);
+					const normalized = normalizeSectionToFormState(
+						section,
+						QUESTION_COUNT,
+						PART2_QUESTION_COUNT,
+					);
+					setInitialValues(normalized.values);
+					setInitialHighlightDataByQuestion(normalized.highlightDataByQuestion);
+					setInitialPart2ConfigByQuestion(normalized.part2ConfigByQuestion);
+					const [partImageUrl, questionAudioUrls, part2QuestionAudioUrls] =
+						await Promise.all([
+							resolveStorageKeyToUrl(section.partImageStorageKey),
+							Promise.all(
+								(section.questions || []).map((question) =>
+									resolveStorageKeyToUrl(question.audioStorageKey),
+								),
+							),
+							Promise.all(
+								(section.part2Questions || []).map((question) =>
+									resolveStorageKeyToUrl(question.audioStorageKey),
+								),
+							),
+						]);
+					setExistingMedia({
+						partImageUrl,
+						questionAudioUrls,
+						part2QuestionAudioUrls,
+					});
+				} catch (error) {
+					// Optionally handle reload error
+				}
 				return;
 			}
 
@@ -294,7 +376,7 @@ const useSpeakingMaterialContainer = (
 
 			return saveResponse;
 		},
-		[mode, onNavigate, persistSectionChanges],
+		[mode, onNavigate, persistSectionChanges, materialId],
 	);
 
 	const handlePublish = useCallback(
@@ -398,6 +480,7 @@ const useSpeakingMaterialContainer = (
 		initialHighlightDataByQuestion,
 		initialPart2ConfigByQuestion,
 		existingMedia,
+		handleRemoveExistingAudio, // <-- expose handler
 		onSubmitForm: handleSubmitForm,
 		onDraftSaveForm: canSaveDraft ? handleDraftSaveForm : undefined,
 		onPublish: mode === "edit" ? handlePublish : handleCreateAndPublish,

@@ -11,7 +11,15 @@ const SpeakingPart1AudioQuestionFields = ({
 	existingAudioUrl,
 	fieldPathPrefix = "questions",
 	requireAudio = true,
+	onRemove,
 }) => {
+	console.log("[FIELDS] onRemove prop received:", typeof onRemove);
+
+	// Wrap onRemove to log when called
+	const handleRemove = () => {
+		console.log("[FIELDS] onRemove called for idx", idx);
+		if (typeof onRemove === "function") onRemove();
+	};
 	const fieldErrors = errors?.[fieldPathPrefix]?.[idx];
 	const transcriptPath = `${fieldPathPrefix}.${idx}.transcriptText`;
 	const audioPath = `${fieldPathPrefix}.${idx}.audio`;

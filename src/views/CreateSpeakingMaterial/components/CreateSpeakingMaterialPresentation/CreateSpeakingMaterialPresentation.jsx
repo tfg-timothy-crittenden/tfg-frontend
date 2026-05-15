@@ -18,6 +18,7 @@ const CreateSpeakingMaterialPresentation = ({
 	initialHighlightDataByQuestion,
 	initialPart2ConfigByQuestion,
 	existingMedia,
+	handleRemoveExistingAudio, // <-- new prop
 	isLoading = false,
 	submitLabel = "Submit",
 	onSubmitForm,
@@ -34,6 +35,11 @@ const CreateSpeakingMaterialPresentation = ({
 	});
 	const navigation = useSpeakingMaterialNavigation(form);
 	const image = useSpeakingMaterialImageState(form);
+
+	// Expose getValues for debugging dirty state after audio removal
+	if (typeof window !== "undefined") {
+		window.__RHF_DEBUG_GETVALUES__ = form.getValues;
+	}
 
 	const {
 		handleSubmit,
@@ -236,6 +242,7 @@ const CreateSpeakingMaterialPresentation = ({
 							navigation={navigation}
 							part1NextDisabled={part1NextDisabled}
 							onHighlightChange={handleHighlightChange}
+							onRemoveExistingAudio={handleRemoveExistingAudio}
 						/>
 					)}
 					<div className={styles.section} hidden={!isPart2Questions}>
