@@ -15,7 +15,7 @@ const Part1QuestionsStep = ({
 	navigation,
 	part1NextDisabled,
 	onHighlightChange,
-	onRemoveExistingAudio,
+	_onRemoveExistingAudio,
 }) => {
 	const {
 		register,

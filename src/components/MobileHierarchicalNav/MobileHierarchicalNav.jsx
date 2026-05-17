@@ -17,8 +17,6 @@ const MobileHierarchicalNav = () => {
 
 	const [, setIsExpanded] = useState(false);
 	const [sections, setSections] = useState([]);
-	const [studentSections, setStudentSections] = useState([]);
-	const [teacherSections, setTeacherSections] = useState([]);
 
 	// Load student and teacher materials using material API
 	useEffect(() => {
@@ -29,8 +27,6 @@ const MobileHierarchicalNav = () => {
 			getClassroomMaterialListByRole(classroomId, "teacher"),
 		])
 			.then(([student, teacher]) => {
-				setStudentSections(Array.isArray(student) ? student : []);
-				setTeacherSections(Array.isArray(teacher) ? teacher : []);
 				const all = [
 					...(Array.isArray(student) ? student : []),
 					...(Array.isArray(teacher) ? teacher : []),
