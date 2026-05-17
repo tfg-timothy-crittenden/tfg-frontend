@@ -207,9 +207,9 @@ const AudioDropzone = ({
 		inputRef.current.files = new DataTransfer().files;
 		pushFilesToForm([]);
 		// Call onRemove prop if provided (commented out to fix linter error)
-			// if (typeof onRemove === "function") {
-			//     onRemove();
-			// }
+		// if (typeof onRemove === "function") {
+		//     onRemove();
+		// }
 	};
 
 	// The mic button owns recording; the rest of the dropzone still opens upload.
