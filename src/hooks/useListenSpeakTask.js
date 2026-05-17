@@ -7,7 +7,6 @@ import {
 } from "@/api/material/materialAPI";
 
 const modeEnum = Object.freeze({
-	INSTRUCTIONS: "INSTRUCTIONS",
 	LISTEN: "LISTEN",
 	SPEAK: "SPEAK",
 });
@@ -18,10 +17,10 @@ const modeTimes = {
 };
 
 const getModeFromPath = (pathname) => {
-	if (pathname.includes("/instructions")) return modeEnum.INSTRUCTIONS;
 	if (pathname.includes("/listen")) return modeEnum.LISTEN;
 	if (pathname.includes("/speak")) return modeEnum.SPEAK;
-	return modeEnum.INSTRUCTIONS;
+	// Default to LISTEN if not specified
+	return modeEnum.LISTEN;
 };
 
 const getResolvedAssetUrl = async (asset) => {

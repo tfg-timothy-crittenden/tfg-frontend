@@ -10,20 +10,9 @@ if (!CLASSROOMS_API_BASE) {
 
 // --- Utility Normalizers ---
 const normalizeRole = (payload) => {
-	if (typeof payload === "string") return payload.toUpperCase();
+	//Guard against roles coming back as lowercase or mixed case strings, or missing entirely
 	if (typeof payload?.role === "string") return payload.role.toUpperCase();
-	if (typeof payload?.memberRole === "string")
-		return payload.memberRole.toUpperCase();
 	return null;
-};
-
-const normalizeMaterialList = (payload) => {
-	if (Array.isArray(payload)) return payload;
-	if (Array.isArray(payload?.materials)) return payload.materials;
-	if (Array.isArray(payload?.items)) return payload.items;
-	if (Array.isArray(payload?.content)) return payload.content;
-	if (Array.isArray(payload?.data)) return payload.data;
-	return [];
 };
 
 // --- Classroom CRUD ---
@@ -115,7 +104,7 @@ export async function getClassroomMaterialListByRole(classroomId, role) {
 	const { data } = await httpClient.get(
 		`${CLASSROOMS_API_BASE}/${classroomId}/materials/role/${normalizedRole}`,
 	);
-	return normalizeMaterialList(data);
+	return data || [];
 }
 
 // --- Teachers & Students ---
