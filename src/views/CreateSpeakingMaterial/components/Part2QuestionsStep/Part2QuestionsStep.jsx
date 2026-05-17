@@ -10,14 +10,14 @@ import styles from "@/views/CreateSpeakingMaterial/styles/CreateSpeakingMaterial
 const Part2QuestionsStep = ({
 	form,
 	navigation,
-	submitLabel,
+	_submitLabel,
 	submitDisabled,
 	isSubmitting,
 	isPublishing,
 	onPublish,
 	canShowPublishButton,
 	onHandlePublishSubmit,
-	saveChangesDisabled,
+	_saveChangesDisabled,
 }) => {
 	const {
 		register,
@@ -28,7 +28,7 @@ const Part2QuestionsStep = ({
 		selectedPart2AudioFiles,
 		normalizedExistingMedia,
 		hasExistingPart2QuestionAudio,
-		canShowHeaderSaveChangesButton,
+		// canShowHeaderSaveChangesButton,
 	} = form;
 	const {
 		currentPart2Question,

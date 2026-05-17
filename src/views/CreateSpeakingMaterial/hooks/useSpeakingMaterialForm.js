@@ -1,14 +1,14 @@
 // Debug: log all transcript values on every render (after useForm is defined)
 // Place this after useForm so getValues is in scope
 // ...existing code...
-if (typeof window !== "undefined" && typeof getValues === "function") {
-	try {
-		const allTranscripts = getValues("questions").map((q) => q.transcriptText);
-		console.log("[RHF DEBUG] All question transcripts:", allTranscripts);
-	} catch (e) {
-		// ignore if getValues fails before form is initialized
-	}
-}
+// if (typeof window !== "undefined" && typeof getValues === "function") {
+//     try {
+//         const allTranscripts = getValues("questions").map((q) => q.transcriptText);
+//         console.log("[RHF DEBUG] All question transcripts:", allTranscripts);
+//     } catch (_e) {
+//         // ignore if getValues fails before form is initialized
+//     }
+// }
 import { useEffect, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { hasDirtyLeaf } from "@/utils/formUtils";

@@ -259,7 +259,7 @@ const useSpeakingMaterialContainer = (
 						questionAudioUrls,
 						part2QuestionAudioUrls,
 					});
-				} catch (error) {
+				} catch (_error) {
 					// Optionally handle reload error
 				}
 				return;
@@ -278,9 +278,9 @@ const useSpeakingMaterialContainer = (
 			if (matId) {
 				try {
 					saveResponse = await updateSpeakingSection(matId, formData);
-				} catch (error) {
-					if (!isMissingQuestionNodeError(error)) {
-						throw error;
+				} catch (_error) {
+					if (!isMissingQuestionNodeError(_error)) {
+						throw _error;
 					}
 					saveResponse = await uploadSpeakingSectionDraft(formData);
 				}
@@ -338,7 +338,7 @@ const useSpeakingMaterialContainer = (
 						questionAudioUrls,
 						part2QuestionAudioUrls,
 					});
-				} catch (error) {
+				} catch (_error) {
 					// Optionally handle reload error
 				}
 				return;
@@ -465,7 +465,7 @@ const useSpeakingMaterialContainer = (
 					questionAudioUrls,
 					part2QuestionAudioUrls,
 				});
-			} catch (error) {
+			} catch (_error) {
 				// Optionally handle reload error
 			}
 		},
