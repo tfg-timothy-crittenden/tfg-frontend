@@ -15,6 +15,7 @@ const Part1QuestionsStep = ({
 	navigation,
 	part1NextDisabled,
 	onHighlightChange,
+	onRemoveExistingAudio,
 }) => {
 	const {
 		register,
@@ -33,6 +34,20 @@ const Part1QuestionsStep = ({
 
 	const goBackToImageStep = () => {
 		navigation.setStep(1);
+	};
+
+	// Move audio remove logic to parent so it always runs, even if child unmounts
+	// Only update the form state, not existingMedia, so RHF can track dirty state
+	const handleAudioRemove = (idx) => {
+		console.log("[PARENT] handleAudioRemove called for idx", idx);
+		const audioPath = `questions.${idx}.audio`;
+		setValue(audioPath, [], { shouldDirty: true, shouldTouch: true });
+		if (typeof window !== "undefined" && window.__RHF_DEBUG_GETVALUES__) {
+			console.log(
+				`[PARENT] Form values after audio remove for idx ${idx}:`,
+				window.__RHF_DEBUG_GETVALUES__(),
+			);
+		}
 	};
 
 	return (
@@ -85,17 +100,34 @@ const Part1QuestionsStep = ({
 			<QuestionPanels
 				totalQuestions={questionCount}
 				currentIndex={currentQuestion}
-				renderPanel={(idx) => (
-					<SpeakingPart1AudioQuestionFields
-						idx={idx}
-						number={idx + 1}
-						register={register}
-						errors={errors}
-						selectedAudioFile={selectedAudioFiles[idx]}
-						existingAudioUrl={normalizedExistingMedia.questionAudioUrls[idx]}
-						requireAudio={!hasExistingQuestionAudio(idx)}
-					/>
-				)}
+				renderPanel={(idx) => {
+					// Always treat selectedAudioFiles[idx] as an array
+					const audioField = selectedAudioFiles[idx] || [];
+					const hasAudio = audioField.length > 0;
+					const existingAudioUrl = hasAudio
+						? ""
+						: normalizedExistingMedia.questionAudioUrls[idx];
+					// Use a key that changes when audio changes to force re-render
+					const questionId = form?.fields?.[idx]?.id || idx;
+					const audioKey = hasAudio
+						? audioField
+								.map((f) => (typeof f === "string" ? f : f?.name || "file"))
+								.join("-")
+						: existingAudioUrl || "noaudio";
+					return (
+						<SpeakingPart1AudioQuestionFields
+							key={`${questionId}-${audioKey}`}
+							idx={idx}
+							number={idx + 1}
+							register={register}
+							errors={errors}
+							selectedAudioFile={audioField}
+							existingAudioUrl={existingAudioUrl}
+							requireAudio={!hasExistingQuestionAudio(idx)}
+							onRemove={() => handleAudioRemove(idx)}
+						/>
+					);
+				}}
 				styles={styles}
 			/>
 

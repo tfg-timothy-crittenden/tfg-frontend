@@ -8,58 +8,6 @@ if (!MATERIALS_BASE_URL) {
 	);
 }
 
-const normalizeMaterialList = (payload) => {
-	if (Array.isArray(payload)) return payload;
-	if (Array.isArray(payload?.materials)) return payload.materials;
-	if (Array.isArray(payload?.items)) return payload.items;
-	if (Array.isArray(payload?.materialNodes)) return payload.materialNodes;
-	if (Array.isArray(payload?.content)) return payload.content;
-	if (Array.isArray(payload?.data)) return payload.data;
-	if (payload && typeof payload === "object") {
-		return Object.values(payload).filter(
-			(value) => value && typeof value === "object",
-		);
-	}
-	return [];
-};
-
-// // API method to fetch immediate child material nodes for a given parentId
-// export const getImmediateChildrenByParentId = async (parentId) => {
-// 	const { data } = await httpClient.get(
-// 		`/material-aggregation/children/${parentId}`,
-// 		{
-// 			baseURL: MATERIALS_BASE_URL,
-// 		},
-// 	);
-// 	return data;
-// };
-
-// //Use this method to fetch the first material_node of a material based on the materialId. This is useful when you want to start traversing a material tree from the root node.
-// export const getFirstMaterialNodeByMaterialId = async (materialId) => {
-// 	const { data } = await httpClient.get(
-// 		`/material-nodes/first-by-material-id/${materialId}`,
-// 		{
-// 			baseURL: MATERIALS_BASE_URL,
-// 		},
-// 	);
-// 	return data;
-// };
-
-// //Use this method when you want a specfic child material node based on the parentId and the display order of the child.
-// export const getMaterialByParentIdAndOrder = async (parentId, displayOrder) => {
-// 	const { data } = await httpClient.get(
-// 		"/material-nodes/by-parent-id-and-display-order",
-// 		{
-// 			baseURL: MATERIALS_BASE_URL,
-// 			params: {
-// 				parentId,
-// 				displayOrder,
-// 			},
-// 		},
-// 	);
-// 	return data;
-// };
-
 export const getToeflSpeakingMaterialQuestion = async (
 	materialId,
 	partNumber,
@@ -72,39 +20,6 @@ export const getToeflSpeakingMaterialQuestion = async (
 		},
 	);
 	return data;
-};
-
-export const getAllMaterial = async () => {
-	const [publishedResult, draftsResult] = await Promise.allSettled([
-		httpClient.get(`/toefl-speaking/sections-summaries`, {
-			baseURL: MATERIALS_BASE_URL,
-		}),
-		httpClient.get(`/toefl-speaking/sections-summaries/drafts`, {
-			baseURL: MATERIALS_BASE_URL,
-		}),
-	]);
-
-	const publishedData =
-		publishedResult.status === "fulfilled" ? publishedResult.value.data : [];
-	const draftsData =
-		draftsResult.status === "fulfilled" ? draftsResult.value.data : [];
-
-	const combined = [
-		...normalizeMaterialList(publishedData),
-		...normalizeMaterialList(draftsData),
-	];
-
-	const uniqueByMaterialId = new Map();
-	for (const item of combined) {
-		const id = item?.materialId ?? item?.material_id ?? item?.id;
-		const key = id === null || id === undefined ? null : String(id);
-		if (!key) continue;
-		if (!uniqueByMaterialId.has(key)) {
-			uniqueByMaterialId.set(key, item);
-		}
-	}
-
-	return Array.from(uniqueByMaterialId.values());
 };
 
 export const getMaterialNodeAssets = async (materialNodeId) => {
@@ -150,36 +65,6 @@ export const getPresignedUrl = async ({
 		expiresAt: Date.now() + (expirationSeconds - 60) * 1000,
 	});
 
-	return data;
-};
-
-export const uploadPart1Speaking = async (formData) => {
-	console.log("FormData entries:");
-	for (let pair of formData.entries()) {
-		console.log(pair[0], pair[1]);
-	}
-	const { data } = await httpClient.post(
-		"/toefl-speaking/material/part1/upload",
-		formData,
-		{
-			baseURL: MATERIALS_BASE_URL,
-		},
-	);
-	return data;
-};
-
-export const uploadSpeakingSection = async (formData) => {
-	console.log("FormData entries:");
-	for (let pair of formData.entries()) {
-		console.log(pair[0], pair[1]);
-	}
-	const { data } = await httpClient.post(
-		"/toefl-speaking/material/section/upload",
-		formData,
-		{
-			baseURL: MATERIALS_BASE_URL,
-		},
-	);
 	return data;
 };
 

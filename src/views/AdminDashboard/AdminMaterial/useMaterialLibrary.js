@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getAllMaterial } from "@/api/material/materialAPI";
+import { getAllSpeakingSectionsSummaries } from "@/api/material/materialAPI";
 
 import { normalizeMaterialForUI } from "./materialUtils";
 
@@ -11,7 +11,7 @@ const useMaterialLibrary = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const materialListResponse = await getAllMaterial();
+				const materialListResponse = await getAllSpeakingSectionsSummaries();
 				const normalizedMaterials = Array.isArray(materialListResponse)
 					? materialListResponse
 							.map((item) => normalizeMaterialForUI(item))

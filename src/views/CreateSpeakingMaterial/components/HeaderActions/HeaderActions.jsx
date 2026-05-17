@@ -15,6 +15,7 @@ const HeaderActions = ({ form }) => {
 		canShowHeaderSaveChangesButton,
 		handleSubmit,
 		handleFormSubmit,
+		saveChangesDisabled,
 	} = form;
 
 	return (
@@ -53,9 +54,21 @@ const HeaderActions = ({ form }) => {
 					type="button"
 					className={`${styles.draft_button} ${styles.step_action_button}`}
 					onClick={
-						hasUnsavedFieldChanges ? handleSubmit(handleFormSubmit) : undefined
+						!saveChangesDisabled
+							? () => {
+									// Force blur on all inputs before submit to flush state
+									if (typeof document !== "undefined") {
+										document
+											.querySelectorAll("input,textarea,select")
+											.forEach((el) => {
+												if (typeof el.blur === "function") el.blur();
+											});
+									}
+									setTimeout(() => handleSubmit(handleFormSubmit)(), 0);
+								}
+							: undefined
 					}
-					disabled={!hasUnsavedFieldChanges || isSubmitting || isReverting}
+					disabled={saveChangesDisabled || isSubmitting || isReverting}
 				>
 					<Save size={16} className={styles.draft_button_icon} />
 					{isSubmitting ? "Saving..." : "Save Changes"}

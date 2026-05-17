@@ -7,7 +7,7 @@ import useModal from "@/components/Modal/useModal";
 import QuestionToggleSwitch from "@/components/QuestionToggleSwitch/QuestionToggleSwitch";
 import TestSelectionModalBody from "@/components/TestSelectionModalBody/TestSelectionModalBody";
 import { buildRoute } from "@/routes/routeConfig";
-import { getClassroomSpeakingSections } from "@/api/tasks/tasksAPI";
+import { getClassroomMaterialListByRole } from "@/api/classes/classesAPI";
 import styles from "./MobileHierarchicalNav.module.css";
 
 const MobileHierarchicalNav = () => {
@@ -17,14 +17,30 @@ const MobileHierarchicalNav = () => {
 
 	const [, setIsExpanded] = useState(false);
 	const [sections, setSections] = useState([]);
+	const [studentSections, setStudentSections] = useState([]);
+	const [teacherSections, setTeacherSections] = useState([]);
 
-	// Load sections
+	// Load student and teacher materials using material API
 	useEffect(() => {
 		if (!classroomId) return;
 
-		getClassroomSpeakingSections(classroomId)
-			.then(setSections)
-			.catch((err) => console.error("Failed to load speaking sections:", err));
+		Promise.all([
+			getClassroomMaterialListByRole(classroomId, "student"),
+			getClassroomMaterialListByRole(classroomId, "teacher"),
+		])
+			.then(([student, teacher]) => {
+				setStudentSections(Array.isArray(student) ? student : []);
+				setTeacherSections(Array.isArray(teacher) ? teacher : []);
+				const all = [
+					...(Array.isArray(student) ? student : []),
+					...(Array.isArray(teacher) ? teacher : []),
+				];
+				const unique = Array.from(
+					new Map(all.map((item) => [String(item.id), item])).values(),
+				);
+				setSections(unique);
+			})
+			.catch((err) => console.error("Failed to load materials:", err));
 	}, [classroomId]);
 
 	// Auto-expand when a test is selected

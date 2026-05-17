@@ -41,6 +41,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	border: 2px solid var(--card_border_mid);
+	border-radius: 8px;
 }
 
 .cropper_buttons_container {

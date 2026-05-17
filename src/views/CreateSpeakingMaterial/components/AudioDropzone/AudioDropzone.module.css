@@ -176,24 +176,29 @@
 .removeButton {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.3rem;
-	padding: 0.3rem 0.75rem;
+	gap: 0.4rem;
+	padding: 0.38rem 1.1rem 0.38rem 1.1rem;
 	border: 1.5px solid var(--card_border_mid);
-	border-radius: 6px;
-	background: transparent;
-	color: var(--text_dark);
-	font-size: 0.82rem;
+	border-radius: 7px;
+	background: var(--card_background_mid, #f5f5f5);
+	color: var(--text_dark, #222);
+	font-size: 0.93rem;
 	font-weight: 600;
 	cursor: pointer;
+	box-shadow: none;
 	transition:
-		background 0.15s ease,
-		border-color 0.15s ease;
+		background 0.15s,
+		border-color 0.15s,
+		color 0.15s,
+		transform 0.13s;
 }
 
 .removeButton:hover,
 .removeButton:focus-visible {
-	background: var(--card_background_mid);
-	border-color: var(--actionable_text_active);
+	background: var(--card_border_mid, #e0e0e0);
+	color: var(--text_dark, #111);
+	border-color: var(--actionable_text_active, #1976d2);
+	transform: translateY(-1px) scale(1.04);
 	outline: none;
 }
 

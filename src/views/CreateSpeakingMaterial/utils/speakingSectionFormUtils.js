@@ -224,17 +224,23 @@ export const normalizeSectionToFormState = (
 	const part1Questions = getPart1Questions(section);
 	const part2Questions = getPart2Questions(section);
 
-	const questions = Array.from({ length: questionCount }, (_, idx) => ({
-		transcriptText: getQuestionTranscript(part1Questions[idx]),
-		audio: [],
-	}));
+	const questions = Array.from({ length: questionCount }, (_, idx) => {
+		const audioUrl = getQuestionAudioUrl(part1Questions[idx]);
+		return {
+			transcriptText: getQuestionTranscript(part1Questions[idx]),
+			audio: audioUrl ? [audioUrl] : [],
+		};
+	});
 
 	const normalizedPart2Questions = Array.from(
 		{ length: part2QuestionCount },
-		(_, idx) => ({
-			transcriptText: getQuestionTranscript(part2Questions[idx]),
-			audio: [],
-		}),
+		(_, idx) => {
+			const audioUrl = getQuestionAudioUrl(part2Questions[idx]);
+			return {
+				transcriptText: getQuestionTranscript(part2Questions[idx]),
+				audio: audioUrl ? [audioUrl] : [],
+			};
+		},
 	);
 
 	const highlightDataByQuestion = Array.from(
@@ -454,8 +460,9 @@ export const buildPatchSpeakingSectionFormData = ({
 			formData.append(`questions[${i}].transcriptText`, nextTranscript);
 		}
 
-		if (data.questions?.[i]?.audio?.[0]) {
-			formData.append(`questions[${i}].audio`, data.questions[i].audio[0]);
+		const audioFile = data.questions?.[i]?.audio?.[0];
+		if (audioFile instanceof File || audioFile instanceof Blob) {
+			formData.append(`questions[${i}].audio`, audioFile);
 		}
 
 		const prevConfig = {
@@ -491,11 +498,9 @@ export const buildPatchSpeakingSectionFormData = ({
 			);
 		}
 
-		if (data.part2Questions?.[i]?.audio?.[0]) {
-			formData.append(
-				`part2Questions[${i}].audio`,
-				data.part2Questions[i].audio[0],
-			);
+		const part2AudioFile = data.part2Questions?.[i]?.audio?.[0];
+		if (part2AudioFile instanceof File || part2AudioFile instanceof Blob) {
+			formData.append(`part2Questions[${i}].audio`, part2AudioFile);
 		}
 	}
 

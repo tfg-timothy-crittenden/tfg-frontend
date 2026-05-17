@@ -1,3 +1,14 @@
+// Debug: log all transcript values on every render (after useForm is defined)
+// Place this after useForm so getValues is in scope
+// ...existing code...
+if (typeof window !== "undefined" && typeof getValues === "function") {
+	try {
+		const allTranscripts = getValues("questions").map((q) => q.transcriptText);
+		console.log("[RHF DEBUG] All question transcripts:", allTranscripts);
+	} catch (e) {
+		// ignore if getValues fails before form is initialized
+	}
+}
 import { useEffect, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { hasDirtyLeaf } from "@/utils/formUtils";
@@ -14,8 +25,6 @@ import { hasDirtyLeaf } from "@/utils/formUtils";
 // objects (e.g. after a reset or programmatic setValue with shouldDirty:false).
 // This guards against false positives when deciding whether to show Save/Discard buttons.
 
-
-
 const FALLBACK_QUESTION_COUNT = 7;
 const FALLBACK_PART2_QUESTION_COUNT = 4;
 
@@ -31,6 +40,7 @@ const useSpeakingMaterialForm = ({
 	initialHighlightDataByQuestion,
 	initialPart2ConfigByQuestion,
 	existingMedia,
+	sectionStatus = null,
 }) => {
 	// Derive question counts from initialValues if available, otherwise fall back to
 	// hardcoded defaults. These counts drive array sizing throughout the hook.
@@ -59,26 +69,51 @@ const useSpeakingMaterialForm = ({
 				initialPart2ConfigByQuestion || Array(part2QuestionCount).fill({}),
 		};
 
-		if (!initialValues) return baseDefaults;
-
-		return {
+		// Start with initialValues or baseDefaults
+		const merged = {
 			...baseDefaults,
 			...initialValues,
-			questions: initialValues.questions || baseDefaults.questions,
+			questions: initialValues?.questions || baseDefaults.questions,
 			part2Questions:
-				initialValues.part2Questions || baseDefaults.part2Questions,
+				initialValues?.part2Questions || baseDefaults.part2Questions,
 			// Always override highlight/config from props, not from initialValues,
-			// to keep them in sync with the container's separate state.
 			highlightDataByQuestion: baseDefaults.highlightDataByQuestion,
 			part2ConfigByQuestion: baseDefaults.part2ConfigByQuestion,
 		};
+
+		// Patch in presigned audio URLs from existingMedia if available
+		if (existingMedia?.questionAudioUrls) {
+			merged.questions = merged.questions.map((q, idx) => ({
+				...q,
+				audio: existingMedia.questionAudioUrls[idx]
+					? [existingMedia.questionAudioUrls[idx]]
+					: [],
+			}));
+		}
+		if (existingMedia?.part2QuestionAudioUrls) {
+			merged.part2Questions = merged.part2Questions.map((q, idx) => ({
+				...q,
+				audio: existingMedia.part2QuestionAudioUrls[idx]
+					? [existingMedia.part2QuestionAudioUrls[idx]]
+					: [],
+			}));
+		}
+		return merged;
 	}, [
 		initialValues,
 		questionCount,
 		part2QuestionCount,
 		initialHighlightDataByQuestion,
 		initialPart2ConfigByQuestion,
+		existingMedia,
 	]);
+
+	// Debug: log the default values RHF is using
+	if (typeof window !== "undefined") {
+		window.__RHF_DEFAULT_VALUES__ = resolvedInitialValues;
+		// eslint-disable-next-line no-console
+		console.log("[RHF DEBUG] defaultValues:", resolvedInitialValues);
+	}
 
 	// Initialize RHF. shouldUnregister:false keeps field values in state even when
 	// the component that registered them is unmounted (e.g. navigating between steps).
@@ -138,8 +173,8 @@ const useSpeakingMaterialForm = ({
 		(_, idx) => fields[idx] || { id: `empty-${idx}` },
 	);
 	// Subscribe to each question's audio field so completion state updates reactively.
-	const selectedAudioFiles = paddedFields.map((_, idx) =>
-		watch(`questions.${idx}.audio`),
+	const selectedAudioFiles = paddedFields.map(
+		(_, idx) => watch(`questions.${idx}.audio`) || [],
 	);
 	const paddedPart2Fields = Array.from(
 		{ length: part2QuestionCount },
@@ -164,15 +199,31 @@ const useSpeakingMaterialForm = ({
 	// (either a newly selected file or an existing backend URL).
 	const questionCompletion = paddedFields.map((_, idx) => {
 		const transcript = watch(`questions.${idx}.transcriptText`);
-		const selectedAudio = selectedAudioFiles[idx]?.[0];
-		const hasAudio = !!selectedAudio || hasExistingQuestionAudio(idx);
+		const audioField = selectedAudioFiles[idx] || [];
+		// Only count backend audio if the field is empty and not cleared
+		const clearedKey = `audioCleared_questions_${idx}_audio`;
+		const backendAudioPresent =
+			!!normalizedExistingMedia.questionAudioUrls[idx];
+		const backendAudioAllowed =
+			backendAudioPresent &&
+			!(typeof window !== "undefined" && window[clearedKey]);
+		const hasAudio =
+			audioField.length > 0 || (audioField.length === 0 && backendAudioAllowed);
 		return !!transcript?.trim() && hasAudio;
 	});
 
 	const part2QuestionCompletion = paddedPart2Fields.map((_, idx) => {
 		const transcript = watch(`part2Questions.${idx}.transcriptText`);
-		const selectedAudio = selectedPart2AudioFiles[idx]?.[0];
-		const hasAudio = !!selectedAudio || hasExistingPart2QuestionAudio(idx);
+		const audioField = selectedPart2AudioFiles[idx] || [];
+		// Only count backend audio if the field is empty and not cleared
+		const clearedKey = `audioCleared_part2Questions_${idx}_audio`;
+		const backendAudioPresent =
+			!!normalizedExistingMedia.part2QuestionAudioUrls[idx];
+		const backendAudioAllowed =
+			backendAudioPresent &&
+			!(typeof window !== "undefined" && window[clearedKey]);
+		const hasAudio =
+			audioField.length > 0 || (audioField.length === 0 && backendAudioAllowed);
 		return !!transcript?.trim() && hasAudio;
 	});
 
@@ -192,8 +243,45 @@ const useSpeakingMaterialForm = ({
 	// (see hasDirtyLeaf comment above), so we combine it with a deep check on dirtyFields.
 	const hasDirtyFields = hasDirtyLeaf(dirtyFields);
 	const hasUnsavedFieldChanges = isDirty && hasDirtyFields;
-	// In edit mode the Save/Discard buttons are only enabled when there is something to save.
-	const saveChangesDisabled = mode === "edit" && !hasUnsavedFieldChanges;
+	// Debug logging for discard changes button activation
+	if (typeof window !== "undefined") {
+		window.__RHF_DEBUG_STATE__ = {
+			isDirty,
+			dirtyFields,
+			hasDirtyFields,
+			hasUnsavedFieldChanges,
+		};
+		// Also log to console for immediate feedback
+		// eslint-disable-next-line no-console
+		console.log(
+			"[RHF DEBUG] isDirty:",
+			isDirty,
+			"dirtyFields:",
+			dirtyFields,
+			"hasDirtyFields:",
+			hasDirtyFields,
+			"hasUnsavedFieldChanges:",
+			hasUnsavedFieldChanges,
+		);
+	}
+	// In edit mode:
+	// - If published, Save is only enabled if all questions are complete AND there are unsaved changes
+	// - If not published, Save is enabled if there are unsaved changes
+	const isPublished =
+		String(sectionStatus || "")
+			.trim()
+			.toUpperCase() === "PUBLISHED";
+	let saveChangesDisabled = false;
+	if (mode === "edit") {
+		if (isPublished) {
+			saveChangesDisabled =
+				!hasUnsavedFieldChanges ||
+				!allQuestionsComplete ||
+				!allPart2QuestionsComplete;
+		} else {
+			saveChangesDisabled = !hasUnsavedFieldChanges;
+		}
+	}
 
 	return {
 		mode,

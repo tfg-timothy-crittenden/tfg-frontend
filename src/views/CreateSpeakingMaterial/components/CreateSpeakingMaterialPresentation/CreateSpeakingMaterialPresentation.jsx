@@ -18,6 +18,7 @@ const CreateSpeakingMaterialPresentation = ({
 	initialHighlightDataByQuestion,
 	initialPart2ConfigByQuestion,
 	existingMedia,
+	handleRemoveExistingAudio, // <-- new prop
 	isLoading = false,
 	submitLabel = "Submit",
 	onSubmitForm,
@@ -31,9 +32,15 @@ const CreateSpeakingMaterialPresentation = ({
 		initialHighlightDataByQuestion,
 		initialPart2ConfigByQuestion,
 		existingMedia,
+		sectionStatus,
 	});
 	const navigation = useSpeakingMaterialNavigation(form);
 	const image = useSpeakingMaterialImageState(form);
+
+	// Expose getValues for debugging dirty state after audio removal
+	if (typeof window !== "undefined") {
+		window.__RHF_DEBUG_GETVALUES__ = form.getValues;
+	}
 
 	const {
 		handleSubmit,
@@ -55,26 +62,41 @@ const CreateSpeakingMaterialPresentation = ({
 		saveChangesDisabled,
 	} = form;
 
-	const isPublishedStatus =
-		String(sectionStatus || "")
-			.trim()
-			.toUpperCase() === "PUBLISHED";
-	const hasBackendStatus =
-		typeof sectionStatus === "string" && sectionStatus.trim().length > 0;
-	const normalizedBackendStatus = hasBackendStatus
-		? sectionStatus.trim().toUpperCase()
-		: "";
+	const normalizedSectionStatus = String(sectionStatus || "")
+		.trim()
+		.toUpperCase();
+	const isPublishedStatus = normalizedSectionStatus === "PUBLISHED";
+	const isDraftStatus = normalizedSectionStatus === "DRAFT";
+	const hasBackendStatus = normalizedSectionStatus.length > 0;
 	const statusLabel = hasBackendStatus
-		? normalizedBackendStatus.charAt(0) +
-			normalizedBackendStatus.slice(1).toLowerCase()
+		? normalizedSectionStatus.charAt(0) +
+			normalizedSectionStatus.slice(1).toLowerCase()
 		: "";
 	const statusClassName = isPublishedStatus
 		? styles.status_published
 		: styles.status_draft;
-	const canShowDraftButton = !!onDraftSaveForm && !isPublishedStatus;
+
+	// Show Save Draft if status is empty (before first save) or draft
+	const canShowDraftButton =
+		!!onDraftSaveForm && (!hasBackendStatus || isDraftStatus);
 	const canShowHeaderSaveChangesButton =
 		mode === "edit" && isPublishedStatus && !!onSubmitForm;
-	const canShowPublishButton = !!onPublish && !isPublishedStatus;
+	// Show Publish if not published (including before first save or in draft)
+
+	// Only allow publish if draft is saved and backend is up-to-date
+	// In create mode, require at least one save (hasBackendStatus) before publish is enabled
+	const canShowPublishButton =
+		!!onPublish && !isPublishedStatus && hasBackendStatus;
+
+	// Dynamically set submitLabel for Part2QuestionsStep and StepActionsRow
+	let effectiveSubmitLabel = submitLabel;
+	if (mode === "edit") {
+		if (!hasBackendStatus || isDraftStatus) {
+			effectiveSubmitLabel = "Save Draft";
+		} else if (isPublishedStatus) {
+			effectiveSubmitLabel = "Save Changes";
+		}
+	}
 
 	const {
 		setActivePart,
@@ -126,15 +148,26 @@ const CreateSpeakingMaterialPresentation = ({
 		croppedImageFile,
 	});
 
+	// In edit mode, if published, require all fields to be filled (no missing audio/transcript)
+	const mustBeFullyComplete = mode === "edit" && isPublishedStatus;
 	const part1NextDisabled =
 		!materialInfoValid ||
 		!partTitle?.trim() ||
 		!hasPartImage ||
 		!hasVisualPrompt ||
-		!allQuestionsComplete;
+		!allQuestionsComplete ||
+		(mustBeFullyComplete && !allQuestionsComplete);
 
+	// Disable publish if not saved yet (in create mode)
+
+	// In edit mode, if published, require all part2 fields to be filled
 	const submitDisabled =
-		part1NextDisabled || !part2Title?.trim() || !allPart2QuestionsComplete;
+		part1NextDisabled ||
+		!part2Title?.trim() ||
+		!allPart2QuestionsComplete ||
+		(!hasBackendStatus && mode === "create") ||
+		(mustBeFullyComplete &&
+			(!allQuestionsComplete || !allPart2QuestionsComplete));
 
 	// Question drawing/highlight handlers
 	const handleHighlightChange = (idx, data) => {
@@ -157,6 +190,7 @@ const CreateSpeakingMaterialPresentation = ({
 		handleRevertUnsavedChanges,
 		handleDraftSave,
 		handleFormSubmit,
+		saveChangesDisabled,
 	};
 
 	if (isLoading) {
@@ -171,6 +205,11 @@ const CreateSpeakingMaterialPresentation = ({
 				autoComplete="off"
 			>
 				<div className={styles.listen_repeat_container}>
+					{mode === "create" && !hasBackendStatus && (
+						<div className={styles.info_message}>
+							Please save your draft before publishing.
+						</div>
+					)}
 					<div className={styles.form_header}>
 						<div className={styles.form_header_title_group}>
 							<h1 className={styles.form_title}>
@@ -205,13 +244,18 @@ const CreateSpeakingMaterialPresentation = ({
 							navigation={navigation}
 							part1NextDisabled={part1NextDisabled}
 							onHighlightChange={handleHighlightChange}
+							onRemoveExistingAudio={handleRemoveExistingAudio}
 						/>
 					)}
 					<div className={styles.section} hidden={!isPart2Questions}>
 						<Part2QuestionsStep
-							form={form}
+							form={{
+								...form,
+								canShowDraftButton,
+								canShowHeaderSaveChangesButton,
+							}}
 							navigation={navigation}
-							submitLabel={submitLabel}
+							submitLabel={effectiveSubmitLabel}
 							submitDisabled={submitDisabled}
 							isSubmitting={isSubmitting}
 							isPublishing={isPublishing}

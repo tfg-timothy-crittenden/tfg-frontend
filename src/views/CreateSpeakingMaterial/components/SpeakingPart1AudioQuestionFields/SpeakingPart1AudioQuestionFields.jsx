@@ -11,10 +11,56 @@ const SpeakingPart1AudioQuestionFields = ({
 	existingAudioUrl,
 	fieldPathPrefix = "questions",
 	requireAudio = true,
+	onRemove,
 }) => {
+	console.log("[FIELDS] onRemove prop received:", typeof onRemove);
+
+	// Wrap onRemove to log when called
+	const handleRemove = () => {
+		console.log("[FIELDS] onRemove called for idx", idx);
+		if (typeof onRemove === "function") onRemove();
+	};
 	const fieldErrors = errors?.[fieldPathPrefix]?.[idx];
 	const transcriptPath = `${fieldPathPrefix}.${idx}.transcriptText`;
 	const audioPath = `${fieldPathPrefix}.${idx}.audio`;
+
+	// Defensive: always ensure audio is an array in RHF
+
+	// Accept either a selected file or an existing backend audio URL for validation
+	// Accept either a selected file or an existing backend audio URL for validation,
+	// but treat as missing if user has cleared the backend audio (via AudioDropzone)
+	const customRegister = (path, options) => {
+		// Use a ref to track if the backend audio has been cleared
+		// (AudioDropzone will set a hidden input if cleared)
+		const clearedKey = `audioCleared_${audioPath.replace(/\./g, "_")}`;
+		const base = register(path, {
+			...options,
+			validate: (value) => {
+				// Check for global cleared flag
+				const cleared = typeof window !== "undefined" && window[clearedKey];
+				if (cleared) return "Audio is required";
+				if ((value && value.length > 0) || existingAudioUrl) return true;
+				if (options && typeof options.validate === "function") {
+					return options.validate(value);
+				}
+				return "Audio is required";
+			},
+		});
+		return {
+			...base,
+			onChange: (e) => {
+				let value = e?.target?.value;
+				if (!Array.isArray(value)) value = value ? [value] : [];
+				base.onChange({
+					...e,
+					target: {
+						...e.target,
+						value,
+					},
+				});
+			},
+		};
+	};
 
 	return (
 		<div className={styles.questionField}>
@@ -48,7 +94,7 @@ const SpeakingPart1AudioQuestionFields = ({
 				<div className={styles.fieldContentCol}>
 					<AudioDropzone
 						id={`${fieldPathPrefix}-question-audio-${idx}`}
-						registration={register(audioPath, {
+						registration={customRegister(audioPath, {
 							required: requireAudio,
 						})}
 						selectedFile={selectedAudioFile}
