@@ -27,11 +27,9 @@ const ToggleSwitch = ({ mode, modeEnum }) => {
 
 		let routePath;
 		const modeMap = {
-			PREPARE: MODE_SEGMENTS.PREPARE,
 			SPEAK: MODE_SEGMENTS.SPEAK,
-			READ: MODE_SEGMENTS.READ,
+
 			LISTEN: MODE_SEGMENTS.LISTEN,
-			INSTRUCTIONS: MODE_SEGMENTS.INSTRUCTIONS,
 		};
 		const routeMode = modeMap[targetMode];
 		if (routeMode) {

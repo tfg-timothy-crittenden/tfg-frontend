@@ -1,6 +1,8 @@
+
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { signupWithInvitation } from "@/api/auth/authAPI";
+import styles from "./AcceptInvite.module.css";
 
 function AcceptInvitePage() {
 	const [searchParams] = useSearchParams();
@@ -90,69 +92,74 @@ function AcceptInvitePage() {
 	if (error) return <p>{error}</p>;
 
 	return (
-		<div style={{ maxWidth: "400px", margin: "0 auto" }}>
-			<h2>Set Up Your Teacher Account</h2>
-			<p>Complete your account setup to accept the invitation.</p>
-
-			<form onSubmit={handleSubmit}>
-				<div>
-					<label>Name</label>
-					<input
-						type="text"
-						value={name}
-						onChange={(e) => setName(e.target.value)}
-						required
-					/>
-				</div>
-
-				<div>
-					<label>Surname</label>
-					<input
-						type="text"
-						value={surname}
-						onChange={(e) => setSurname(e.target.value)}
-						required
-					/>
-				</div>
-
-				<div>
-					<label>Username</label>
-					<input
-						type="text"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-						required
-					/>
-				</div>
-
-				<div>
-					<label>Password</label>
-					<input
-						type="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						required
-					/>
-				</div>
-
-				<div>
-					<label>Confirm Password</label>
-					<input
-						type="password"
-						value={confirmPassword}
-						onChange={(e) => setConfirmPassword(e.target.value)}
-						required
-					/>
-				</div>
-
-				{formError && <p style={{ color: "red" }}>{formError}</p>}
-				{formSuccess && <p style={{ color: "green" }}>{formSuccess}</p>}
-
-				<button type="submit" disabled={submitting}>
-					{submitting ? "Submitting..." : "Finish Setup"}
-				</button>
-			</form>
-		</div>
+		   <div className={styles.invite_signup_outer}>
+			   <div className={styles.invite_signup_card}>
+				   <div className={styles.invite_signup_left}>
+					   <h2 className={styles.invite_signup_title}>Set Up Your Teacher Account</h2>
+					   <p className={styles.invite_signup_subtitle}>Complete your account setup to accept the invitation.</p>
+					   <form className={styles.invite_signup_form} onSubmit={handleSubmit}>
+						   <div className={styles.invite_form_group}>
+							   <label>Name</label>
+							   <input
+								   type="text"
+								   value={name}
+								   onChange={(e) => setName(e.target.value)}
+								   required
+							   />
+						   </div>
+						   <div className={styles.invite_form_group}>
+							   <label>Surname</label>
+							   <input
+								   type="text"
+								   value={surname}
+								   onChange={(e) => setSurname(e.target.value)}
+								   required
+							   />
+						   </div>
+						   <div className={styles.invite_form_group}>
+							   <label>Username</label>
+							   <input
+								   type="text"
+								   value={username}
+								   onChange={(e) => setUsername(e.target.value)}
+								   required
+							   />
+						   </div>
+						   <div className={styles.invite_form_group}>
+							   <label>Password</label>
+							   <input
+								   type="password"
+								   value={password}
+								   onChange={(e) => setPassword(e.target.value)}
+								   required
+							   />
+						   </div>
+						   <div className={styles.invite_form_group}>
+							   <label>Confirm Password</label>
+							   <input
+								   type="password"
+								   value={confirmPassword}
+								   onChange={(e) => setConfirmPassword(e.target.value)}
+								   required
+							   />
+						   </div>
+						   {formError && (
+							   <p className={`${styles.invite_signup_message} ${styles.error}`}>{formError}</p>
+						   )}
+						   {formSuccess && (
+							   <p className={`${styles.invite_signup_message} ${styles.success}`}>{formSuccess}</p>
+						   )}
+						   <button
+							   className={styles.invite_signup_button}
+							   type="submit"
+							   disabled={submitting}
+						   >
+							   {submitting ? "Submitting..." : "Finish Setup"}
+						   </button>
+					   </form>
+				   </div>
+			   </div>
+		   </div>
 	);
 }
 
