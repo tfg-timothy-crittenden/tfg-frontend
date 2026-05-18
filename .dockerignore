@@ -4,9 +4,6 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 
-# Exclude environment files
-.env
-.env.*
 
 # Exclude local config and build output
 *.local
