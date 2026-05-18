@@ -5,7 +5,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-COPY . .
+ # This copies everything, including .env, if present
+COPY . .          
+# If .dockerignore excludes .env, add:
+# COPY .env .env
+
 RUN npm run build
 
 FROM nginx:alpine
