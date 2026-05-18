@@ -71,10 +71,20 @@ export async function joinClassByCode(joinCode) {
 	return data;
 }
 
-export async function removeStudentsFromClass(classroomId, studentIds) {
-	const { data } = await httpClient.post(
-		`${CLASSROOMS_API_BASE}/${classroomId}/remove-students`,
-		{ studentIds },
+export async function removeStudentsFromClass(classroomId, userId) {
+	if (!classroomId || !userId)
+		throw new Error("classroomId and userId are required");
+	const { data } = await httpClient.delete(
+		`${CLASSROOMS_API_BASE}/${classroomId}/members/${userId}`,
+	);
+	return data;
+}
+
+export async function removeStudentFromClass(classroomId, userId) {
+	if (!classroomId || !userId)
+		throw new Error("classroomId and userId are required");
+	const { data } = await httpClient.delete(
+		`${CLASSROOMS_API_BASE}/${classroomId}/members/${userId}`,
 	);
 	return data;
 }

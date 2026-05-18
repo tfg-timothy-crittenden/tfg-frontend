@@ -1,0 +1,131 @@
+.invite_signup_outer {
+	height: calc(100dvh - 56px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	overflow: auto;
+	background: var(--card_background_mid);
+}
+
+.invite_signup_card {
+	min-width: 280px;
+	background: var(--button_background_cancel);
+	border-radius: 20px;
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+	display: flex;
+	flex-direction: column;
+	max-width: 420px;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	border: 1px solid var(--card_border);
+}
+
+.invite_signup_left {
+	padding: 40px 32px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.invite_signup_title {
+	font-size: 1.75rem;
+	font-weight: 700;
+	color: var(--text_dark);
+	font-family: "Montserrat", sans-serif;
+	margin-bottom: 8px;
+}
+
+.invite_signup_subtitle {
+	color: var(--text_dark);
+	margin-bottom: 32px;
+	font-size: 0.95rem;
+	font-family: "Inter", sans-serif;
+}
+
+.invite_signup_form {
+	width: 100%;
+}
+
+.invite_form_group {
+	margin-bottom: 20px;
+	text-align: left;
+}
+
+.invite_form_group label {
+	font-weight: 600;
+	color: var(--text_dark);
+	margin-bottom: 8px;
+	display: block;
+}
+
+.invite_form_group input {
+	width: 100%;
+	padding: 16px;
+	border-radius: 12px;
+	border: 1px solid var(--card_border);
+	background: var(--button_background_cancel);
+	color: var(--text_dark);
+	font-size: 1rem;
+	font-family: "Inter", sans-serif;
+	transition: all 0.3s ease;
+	box-sizing: border-box;
+	margin-top: 4px;
+}
+
+.invite_form_group input:focus {
+	outline: none;
+	border-color: var(--actionable_text_active);
+	background: var(--button_background_cancel);
+	box-shadow: 0 0 0 3px rgba(93, 146, 192, 0.15);
+}
+
+.invite_form_group input::placeholder {
+	color: var(--text_light);
+}
+
+.invite_signup_button {
+	width: 100%;
+	padding: 16px 24px;
+	border-radius: 12px;
+	border: 2px solid var(--actionable_text_active);
+	background: var(--actionable_background);
+	color: var(--button_text_cancel);
+	font-weight: 600;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-family: "Inter", sans-serif;
+	margin-bottom: 20px;
+}
+
+.invite_signup_button:hover:not(:disabled) {
+	background: var(--actionable_text_active);
+	color: var(--button_text_confirm);
+	transform: translateY(-1px);
+	box-shadow: 0 8px 20px rgba(93, 146, 192, 0.25);
+}
+
+.invite_signup_button:disabled {
+	background: var(--card_border_mid);
+	color: var(--text_light);
+	cursor: not-allowed;
+	transform: none;
+	box-shadow: none;
+}
+
+.invite_signup_message {
+	margin: 12px 0 0 0;
+	font-size: 1rem;
+	font-family: "Inter", sans-serif;
+}
+
+.invite_signup_message.error {
+	color: var(--error_text);
+}
+
+.invite_signup_message.success {
+	color: var(--success_text);
+}

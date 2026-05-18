@@ -5,6 +5,7 @@ import {
 	getClassroomTeachers,
 	getClassroomStudents,
 	removeStudentsFromClass,
+	removeStudentFromClass,
 } from "@/api/classes/classesAPI";
 
 import { Users, GraduationCap } from "lucide-react";
@@ -62,7 +63,7 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 		async (student) => {
 			const id = typeof student === "object" ? student?.id : student;
 			if (!id) return;
-			await removeStudentsFromClass(classroomId, [id]);
+			await removeStudentFromClass(classroomId, [id]);
 		},
 		[classroomId],
 	);
