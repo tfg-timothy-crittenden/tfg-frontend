@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { buildRoute } from "@/routes/routeConfig";
 import { getClassroomSummariesByUserId } from "@/api/classes/classesAPI";
-import { joinClassByCode } from "@/api/classes/classesAPI";
+import { joinClassByCode } from "@/features/classrooms/api/classroomApi";
 import { selectUser } from "@/store/auth/authSlice";
 import { Plus, GraduationCap, House, CircleAlert } from "lucide-react";
 
