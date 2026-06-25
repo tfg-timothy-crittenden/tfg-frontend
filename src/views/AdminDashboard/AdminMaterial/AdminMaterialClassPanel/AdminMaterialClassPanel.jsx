@@ -1,6 +1,6 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 
-import { getAllClassroomSummaries } from "@/api/classes/classesAPI";
+import { useAllClassroomsForAdmin } from "@/domain/classrooms/hooks/useAllClassroomsForAdmin";
 
 import SearchableList from "@/components/SearchableList/SearchableList";
 import DropdownSurface from "@/components/DropdownSurface/DropdownSurface";
@@ -16,19 +16,7 @@ const AdminMaterialClassPanel = ({
 }) => {
 	const dropDownHandleRef = useRef(null);
 
-	const [classes, setClasses] = useState([]);
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const result = await getAllClassroomSummaries();
-				setClasses(Array.isArray(result) ? result : []);
-			} catch (err) {
-				console.error("Error fetching classes:", err);
-			}
-		};
-		fetchData();
-	}, []);
+	const { data: classes = [] } = useAllClassroomsForAdmin();
 
 	const onSelectClass = (classItem) => {
 		selectClass(classItem);

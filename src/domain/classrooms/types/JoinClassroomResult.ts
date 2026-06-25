@@ -1,4 +1,4 @@
-export type ClassroomRole = "TEACHER" | "STUDENT";
+import type { ClassroomRole } from "./ClassroomRole";
 
 export type JoinClassroomResult = {
 	classroomId: string;

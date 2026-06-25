@@ -7,7 +7,7 @@ import useModal from "@/components/Modal/useModal";
 import QuestionToggleSwitch from "@/components/QuestionToggleSwitch/QuestionToggleSwitch";
 import TestSelectionModalBody from "@/components/TestSelectionModalBody/TestSelectionModalBody";
 import { buildRoute } from "@/routes/routeConfig";
-import { getClassroomMaterialListByRole } from "@/api/classes/classesAPI";
+import { getClassroomMaterialsByRole } from "@/domain/classrooms/api/classroomApi";
 import styles from "./MobileHierarchicalNav.module.css";
 
 const MobileHierarchicalNav = () => {
@@ -23,8 +23,8 @@ const MobileHierarchicalNav = () => {
 		if (!classroomId) return;
 
 		Promise.all([
-			getClassroomMaterialListByRole(classroomId, "student"),
-			getClassroomMaterialListByRole(classroomId, "teacher"),
+			getClassroomMaterialsByRole(Number(classroomId), "STUDENT"),
+			getClassroomMaterialsByRole(Number(classroomId), "TEACHER"),
 		])
 			.then(([student, teacher]) => {
 				const all = [

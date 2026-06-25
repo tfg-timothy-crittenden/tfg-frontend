@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, fetchMe, selectUserRole } from "@/store/auth/authSlice";
 import { setLogoutHandler, setAuthHeaders } from "@/api/httpClient";
+import { queryClient } from "@/api/queryClient";
 
 function AppWrapper({ children }) {
 	const dispatch = useDispatch();
@@ -12,6 +13,7 @@ function AppWrapper({ children }) {
 	useEffect(() => {
 		// Set up global 401 logout
 		setLogoutHandler(() => {
+			queryClient.clear();
 			dispatch(logout());
 			navigate("/login");
 		});
