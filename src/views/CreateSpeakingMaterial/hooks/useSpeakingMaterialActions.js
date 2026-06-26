@@ -30,6 +30,19 @@ const useSpeakingMaterialActions = ({
 	const [isReverting, setIsReverting] = useState(false);
 	const [isPublishing, setIsPublishing] = useState(false);
 
+	// Clear all window-level "audioCleared_*" flags that AudioDropzone sets when the
+	// user removes an existing audio file.  Must be called whenever the form is
+	// reverted to the server state or after a successful save so that the stale
+	// cleared-flag can no longer block the next round of validation.
+	const clearAllAudioClearedFlags = () => {
+		if (typeof window === "undefined") return;
+		Object.keys(window)
+			.filter((key) => key.startsWith("audioCleared_"))
+			.forEach((key) => {
+				window[key] = false;
+			});
+	};
+
 	const buildPayload = async (data) => {
 		const submissionData = await buildSubmissionData({
 			data,
@@ -56,6 +69,7 @@ const useSpeakingMaterialActions = ({
 				// stay disabled until the user makes another change.
 				reset(payload.data);
 			}
+			clearAllAudioClearedFlags();
 			alert(mode === "edit" ? "Update successful!" : "Upload successful!");
 		} catch (error) {
 			alert(toAlertErrorMessage("Upload error", error));
@@ -86,6 +100,7 @@ const useSpeakingMaterialActions = ({
 			if (typeof onReloadFromDb === "function") {
 				await onReloadFromDb();
 			}
+			clearAllAudioClearedFlags();
 			alert("Draft saved!");
 		} catch (error) {
 			alert(toAlertErrorMessage("Upload error", error));
@@ -150,6 +165,7 @@ const useSpeakingMaterialActions = ({
 			setIsReverting(true);
 			try {
 				await onReloadFromDb();
+				clearAllAudioClearedFlags();
 				resetImageUiToExistingState();
 				setActivePart(1);
 				setStep(0);
@@ -164,6 +180,7 @@ const useSpeakingMaterialActions = ({
 		}
 
 		reset(resolvedInitialValues);
+		clearAllAudioClearedFlags();
 		resetImageUiToExistingState();
 	};
 
