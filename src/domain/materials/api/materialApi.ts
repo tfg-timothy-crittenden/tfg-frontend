@@ -61,7 +61,7 @@ const storage = getStorageController();
 // with the indexed multipart format the backend expects (questions[0].audio, etc.).
 export async function uploadSpeakingSection(
 	formData: FormData,
-): Promise<number> {
+): Promise<{ materialId: number }> {
 	const raw = await customInstance<DraftSaveResponseDto>({
 		url: "/api/toefl-speaking/material/section/upload",
 		method: "POST",
@@ -69,12 +69,12 @@ export async function uploadSpeakingSection(
 		data: formData,
 	});
 	const dto = uploadSpeakingSectionResponse.parse(raw);
-	return dto.materialId;
+	return { materialId: dto.materialId };
 }
 
 export async function saveSpeakingSectionDraft(
 	formData: FormData,
-): Promise<number> {
+): Promise<{ materialId: number }> {
 	const raw = await customInstance<DraftSaveResponseDto>({
 		url: "/api/toefl-speaking/material/section/draft",
 		method: "POST",
@@ -82,7 +82,7 @@ export async function saveSpeakingSectionDraft(
 		data: formData,
 	});
 	const dto = saveSpeakingSectionDraftResponse.parse(raw);
-	return dto.materialId;
+	return { materialId: dto.materialId };
 }
 
 const normalizeString = (v: unknown): string => (v == null ? "" : String(v));
