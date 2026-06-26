@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-	getPresignedUrl,
-	getSpeakingSectionByMaterialId,
-	uploadSpeakingSectionDraft,
+	generatePresignedUrl,
+	getSpeakingSectionForEdit,
+	saveSpeakingSectionDraft,
 	updateSpeakingSection,
-	publishSpeakingMaterial,
-} from "@/api/material/materialAPI";
+	publishSpeakingSection,
+} from "@/domain/materials/api/materialApi";
 import {
 	buildCreateSpeakingSectionDraftFormData,
 	buildCreateSpeakingSectionFormData,
@@ -51,11 +51,7 @@ const resolveStorageKeyToUrl = async (storageKey) => {
 	if (!storageKey) return null;
 
 	try {
-		return await getPresignedUrl({
-			bucket: "toefl",
-			objectKey: storageKey,
-			expirationSeconds: 3600,
-		});
+		return await generatePresignedUrl("toefl", storageKey, 3600);
 	} catch {
 		return null;
 	}
@@ -118,7 +114,7 @@ const useSpeakingMaterialContainer = (
 
 			setIsLoading(true);
 			try {
-				const section = await getSpeakingSectionByMaterialId(materialId);
+				const section = await getSpeakingSectionForEdit(Number(materialId));
 				if (cancelRef?.current) return;
 
 				setSectionStatus(section?.status ? String(section.status) : null);
@@ -204,7 +200,7 @@ const useSpeakingMaterialContainer = (
 				throw new Error("No changes detected.");
 			}
 
-			await updateSpeakingSection(materialId, patchFormData);
+			await updateSpeakingSection(Number(materialId), patchFormData);
 		},
 		[
 			mode,
@@ -230,7 +226,7 @@ const useSpeakingMaterialContainer = (
 				});
 				// Refetch from backend to rebase form state
 				try {
-					const section = await getSpeakingSectionByMaterialId(materialId);
+					const section = await getSpeakingSectionForEdit(Number(materialId));
 					setSectionStatus(section?.status ? String(section.status) : null);
 					const normalized = normalizeSectionToFormState(
 						section,
@@ -277,15 +273,15 @@ const useSpeakingMaterialContainer = (
 
 			if (matId) {
 				try {
-					saveResponse = await updateSpeakingSection(matId, formData);
+					saveResponse = await updateSpeakingSection(Number(matId), formData);
 				} catch (_error) {
 					if (!isMissingQuestionNodeError(_error)) {
 						throw _error;
 					}
-					saveResponse = await uploadSpeakingSectionDraft(formData);
+					saveResponse = await saveSpeakingSectionDraft(formData);
 				}
 			} else {
-				saveResponse = await uploadSpeakingSectionDraft(formData);
+				saveResponse = await saveSpeakingSectionDraft(formData);
 			}
 
 			const resolvedMaterialId = extractMaterialId(saveResponse) || matId;
@@ -293,7 +289,7 @@ const useSpeakingMaterialContainer = (
 				throw new Error("Material ID was not returned after save.");
 			}
 
-			await publishSpeakingMaterial(resolvedMaterialId);
+			await publishSpeakingSection(Number(resolvedMaterialId));
 		},
 		[mode, persistSectionChanges, materialId],
 	);
@@ -309,7 +305,7 @@ const useSpeakingMaterialContainer = (
 				});
 				// Refetch from backend to rebase form state
 				try {
-					const section = await getSpeakingSectionByMaterialId(materialId);
+					const section = await getSpeakingSectionForEdit(Number(materialId));
 					setSectionStatus(section?.status ? String(section.status) : null);
 					const normalized = normalizeSectionToFormState(
 						section,
@@ -356,15 +352,15 @@ const useSpeakingMaterialContainer = (
 
 			if (matId) {
 				try {
-					saveResponse = await updateSpeakingSection(matId, formData);
+					saveResponse = await updateSpeakingSection(Number(matId), formData);
 				} catch (error) {
 					if (!isMissingQuestionNodeError(error)) {
 						throw error;
 					}
-					saveResponse = await uploadSpeakingSectionDraft(formData);
+					saveResponse = await saveSpeakingSectionDraft(formData);
 				}
 			} else {
-				saveResponse = await uploadSpeakingSectionDraft(formData);
+				saveResponse = await saveSpeakingSectionDraft(formData);
 			}
 
 			const resolvedMaterialId = extractMaterialId(saveResponse) || matId;
@@ -390,7 +386,7 @@ const useSpeakingMaterialContainer = (
 				});
 			}
 
-			await publishSpeakingMaterial(materialId);
+			await publishSpeakingSection(Number(materialId));
 		},
 		[mode, materialId, persistSectionChanges],
 	);
@@ -417,26 +413,27 @@ const useSpeakingMaterialContainer = (
 			let saveResponse;
 			if (matId) {
 				try {
-					saveResponse = await updateSpeakingSection(matId, formData);
+					saveResponse = await updateSpeakingSection(Number(matId), formData);
 				} catch (error) {
 					if (!isMissingQuestionNodeError(error)) {
 						throw error;
 					}
-					saveResponse = await uploadSpeakingSectionDraft(formData);
+					saveResponse = await saveSpeakingSectionDraft(formData);
 				}
 			} else {
-				saveResponse = await uploadSpeakingSectionDraft(formData);
+				saveResponse = await saveSpeakingSectionDraft(formData);
 			}
 			const resolvedMaterialId = extractMaterialId(saveResponse) || matId;
 			if (!resolvedMaterialId) {
 				throw new Error("Material ID was not returned after save.");
 			}
 			// 2. Publish
-			await publishSpeakingMaterial(resolvedMaterialId);
+			await publishSpeakingSection(Number(resolvedMaterialId));
 			// 3. Reload section from backend to update state/UI
 			try {
-				const section =
-					await getSpeakingSectionByMaterialId(resolvedMaterialId);
+				const section = await getSpeakingSectionForEdit(
+					Number(resolvedMaterialId),
+				);
 				setSectionStatus(section?.status ? String(section.status) : null);
 				const normalized = normalizeSectionToFormState(
 					section,

@@ -19,9 +19,14 @@ const API_ROUTES = [
 		baseUrl: import.meta.env.VITE_USERS_API_URL,
 	},
 	{
-		prefix: "/materials/api",
-		envName: "VITE_MATERIALS_API_URL",
-		baseUrl: import.meta.env.VITE_MATERIALS_API_URL,
+		prefix: "/api/toefl-speaking",
+		envName: "VITE_TOEFL_SPEAKING_API_URL",
+		baseUrl: import.meta.env.VITE_TOEFL_SPEAKING_API_URL,
+	},
+	{
+		prefix: "/api/storage",
+		envName: "VITE_STORAGE_API_URL",
+		baseUrl: import.meta.env.VITE_STORAGE_API_URL,
 	},
 ] as const;
 

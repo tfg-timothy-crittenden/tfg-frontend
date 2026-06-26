@@ -8,7 +8,9 @@
 		"build": "tsc && vite build",
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"generate:classroom-api": "orval --config orval.config.ts",
+		"generate:classroom-api": "orval --config orval.config.ts --project classroomApi && orval --config orval.config.ts --project classroomApiZod",
+		"generate:material-api": "orval --config orval.config.ts --project materialApi && orval --config orval.config.ts --project materialApiZod",
+		"generate:all": "orval --config orval.config.ts",
 		"test": "vitest",
 		"test:ui": "vitest --ui"
 	},
