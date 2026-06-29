@@ -22,6 +22,7 @@
 		"@prisma/client": "^6.14.0",
 		"@reduxjs/toolkit": "^2.8.2",
 		"@tanstack/react-query": "^5.101.1",
+		"@xstate/react": "^6.1.0",
 		"axios": "^1.10.0",
 		"exceljs": "^4.4.0",
 		"lucide-react": "^0.536.0",
@@ -35,6 +36,7 @@
 		"react-select": "^5.10.2",
 		"react-transition-group": "^4.4.5",
 		"uuid": "^11.1.0",
+		"xstate": "^5.32.2",
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {

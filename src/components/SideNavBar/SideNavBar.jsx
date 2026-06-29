@@ -30,10 +30,11 @@ export default function SideNavBar({
 	const [showStudentList, setShowStudentList] = useState(true);
 	const [showTeacherList, setShowTeacherList] = useState(false);
 	const user = useSelector(selectUser);
+	const userId = user?.id || user?.userId || user?.memberId;
 
 	const { data: memberRole } = useClassroomMemberRole(
 		Number(classroomId) || undefined,
-		user?.userId,
+		userId,
 	);
 	const hasTeacherRoleInClassroom = memberRole === "TEACHER";
 

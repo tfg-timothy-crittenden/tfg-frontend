@@ -17,10 +17,7 @@ const useSpeakingMaterialActions = ({
 	highlightDataByQuestion,
 	part2ConfigByQuestion,
 	hasUnsavedFieldChanges,
-	setActivePart,
-	setCurrentQuestion,
-	setCurrentPart2Question,
-	setStep,
+	resetNavigation,
 	resetImageUiToExistingState,
 	selectedImage,
 	croppedImageUrl,
@@ -166,11 +163,8 @@ const useSpeakingMaterialActions = ({
 			try {
 				await onReloadFromDb();
 				clearAllAudioClearedFlags();
+				resetNavigation();
 				resetImageUiToExistingState();
-				setActivePart(1);
-				setStep(0);
-				setCurrentQuestion(0);
-				setCurrentPart2Question(0);
 			} catch (error) {
 				alert(toAlertErrorMessage("Failed to refresh from server", error));
 			} finally {

@@ -111,15 +111,15 @@ export const getAllSpeakingSectionsSummaries = async () => {
 	return data;
 };
 
-export const getDraftSpeakingSectionsSummaries = async () => {
-	const { data } = await httpClient.get(
-		`/toefl-speaking/sections-summaries/drafts`,
-		{
-			baseURL: MATERIALS_BASE_URL,
-		},
-	);
-	return data;
-};
+// export const getDraftSpeakingSectionsSummaries = async () => {
+// 	const { data } = await httpClient.get(
+// 		`/toefl-speaking/sections-summaries/drafts`,
+// 		{
+// 			baseURL: MATERIALS_BASE_URL,
+// 		},
+// 	);
+// 	return data;
+// };
 
 export const publishSpeakingMaterial = async (materialId) => {
 	const { data } = await httpClient.patch(
@@ -130,10 +130,10 @@ export const publishSpeakingMaterial = async (materialId) => {
 	return data;
 };
 
-export const deleteSpeakingMaterial = async (materialId) => {
-	const { data } = await httpClient.delete(
-		`/toefl-speaking/material/${materialId}`,
-		{ baseURL: MATERIALS_BASE_URL },
-	);
-	return data;
-};
+// export const deleteSpeakingMaterial = async (materialId) => {
+// 	const { data } = await httpClient.delete(
+// 		`/toefl-speaking/material/${materialId}`,
+// 		{ baseURL: MATERIALS_BASE_URL },
+// 	);
+// 	return data;
+// };
