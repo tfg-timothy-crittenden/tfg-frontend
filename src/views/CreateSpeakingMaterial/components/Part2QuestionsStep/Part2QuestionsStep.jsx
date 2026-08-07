@@ -1,42 +1,48 @@
 import { MessageSquare } from "lucide-react";
 
-import SpeakingPart1AudioQuestionFields from "@/views/CreateSpeakingMaterial/components/SpeakingPart1AudioQuestionFields/SpeakingPart1AudioQuestionFields";
+import AudioDropzone from "@/views/CreateSpeakingMaterial/components/AudioDropzone/AudioDropzone";
 import QuestionTabsNavigator from "@/views/CreateSpeakingMaterial/components/QuestionTabsNavigator/QuestionTabsNavigator";
 import QuestionPanels from "@/views/CreateSpeakingMaterial/components/QuestionPanels/QuestionPanels";
-import StepActionsRow from "@/views/CreateSpeakingMaterial/components/StepActionsRow/StepActionsRow";
+import { AlertCircle, AlignLeft, Mic } from "@/components/LucideMinimal";
 
 import styles from "@/views/CreateSpeakingMaterial/styles/CreateSpeakingMaterial.module.css";
+import fieldStyles from "@/views/CreateSpeakingMaterial/components/SpeakingPart1AudioQuestionFields/SpeakingPart1AudioQuestionFields.module.css";
 
-const Part2QuestionsStep = ({
-	form,
-	navigation,
-	_submitLabel,
-	submitDisabled,
-	isSubmitting,
-	isPublishing,
-	onPublish,
-	canShowPublishButton,
-	onHandlePublishSubmit,
-	_saveChangesDisabled,
-}) => {
+const PART2_QUESTION_COUNT = 4;
+
+const Part2QuestionsStep = ({ controller }) => {
+	const { form, context } = controller;
 	const {
 		register,
-		errors,
-		handleSubmit,
-		part2QuestionCount,
-		part2QuestionCompletion,
-		selectedPart2AudioFiles,
-		normalizedExistingMedia,
-		hasExistingPart2QuestionAudio,
-		// canShowHeaderSaveChangesButton,
+		setValue,
+		watch,
+		formState: { errors },
 	} = form;
-	const {
-		currentPart2Question,
-		setCurrentPart2Question,
-		goPart2Prev,
-		goPart2Next,
-		goBackToPart1Questions,
-	} = navigation;
+	const part2Questions = watch("part2Questions");
+	const currentPart2Question = context.currentPart2Question;
+
+	const questionCompletion = part2Questions.map(
+		(question) =>
+			question.transcript.trim().length > 0 && question.audio != null,
+	);
+
+	const createAudioRegistration = (idx) => {
+		const name = `part2Questions.${idx}.audio`;
+
+		return {
+			name,
+			ref: () => {},
+			onBlur: () => {},
+			onChange: (event) => {
+				const files = event?.target?.value || [];
+				setValue(name, files[0] ?? null, {
+					shouldDirty: true,
+					shouldTouch: true,
+					shouldValidate: true,
+				});
+			},
+		};
+	};
 
 	return (
 		<div className={styles.section}>
@@ -62,58 +68,99 @@ const Part2QuestionsStep = ({
 			</div>
 
 			<QuestionTabsNavigator
-				totalQuestions={part2QuestionCount}
+				totalQuestions={PART2_QUESTION_COUNT}
 				currentIndex={currentPart2Question}
-				onPrev={goPart2Prev}
-				onNext={goPart2Next}
-				onSelect={setCurrentPart2Question}
-				completion={part2QuestionCompletion}
+				onPrev={controller.previousPart2Question}
+				onNext={controller.nextPart2Question}
+				onSelect={controller.setCurrentPart2Question}
+				completion={questionCompletion}
 				navAriaLabel="Part 2 Questions"
 				questionAriaLabelPrefix="part 2 question"
 				styles={styles}
 			/>
 
 			<QuestionPanels
-				totalQuestions={part2QuestionCount}
+				totalQuestions={PART2_QUESTION_COUNT}
 				currentIndex={currentPart2Question}
-				renderPanel={(idx) => (
-					<SpeakingPart1AudioQuestionFields
-						idx={idx}
-						number={idx + 1}
-						register={register}
-						errors={errors}
-						selectedAudioFile={selectedPart2AudioFiles[idx]}
-						existingAudioUrl={
-							normalizedExistingMedia.part2QuestionAudioUrls[idx]
-						}
-						fieldPathPrefix="part2Questions"
-						requireAudio={!hasExistingPart2QuestionAudio(idx)}
-					/>
-				)}
+				renderPanel={(idx) => {
+					const question = part2Questions[idx];
+					const selectedAudioFile =
+						question.audio instanceof File ? [question.audio] : [];
+					const existingAudioUrl =
+						typeof question.audio === "string" ? question.audio : "";
+					const fieldErrors = errors?.part2Questions?.[idx];
+
+					return (
+						<div className={fieldStyles.questionField}>
+							<div className={fieldStyles.fieldRow}>
+								<div className={fieldStyles.fieldLabelCol}>
+									<AlignLeft
+										size={18}
+										strokeWidth={2}
+										className={fieldStyles.fieldIcon}
+									/>
+									<span className={fieldStyles.fieldLabel}>
+										Transcript Text
+									</span>
+								</div>
+								<div className={fieldStyles.fieldContentCol}>
+									<textarea
+										id={`part2-question-transcript-${idx}`}
+										className={fieldStyles.textArea}
+										placeholder="Enter the transcript for this question..."
+										{...register(`part2Questions.${idx}.transcript`, {
+											required: true,
+										})}
+									/>
+									{fieldErrors?.transcript && (
+										<span className={fieldStyles.error}>
+											<AlertCircle size={14} strokeWidth={2.2} /> Transcript is
+											required
+										</span>
+									)}
+								</div>
+							</div>
+							<div className={fieldStyles.fieldDivider} />
+							<div className={fieldStyles.fieldRow}>
+								<div className={fieldStyles.fieldLabelCol}>
+									<Mic
+										size={18}
+										strokeWidth={2}
+										className={fieldStyles.fieldIcon}
+									/>
+									<span className={fieldStyles.fieldLabel}>Audio</span>
+								</div>
+								<div className={fieldStyles.fieldContentCol}>
+									<AudioDropzone
+										id={`part2-question-audio-${idx}`}
+										registration={createAudioRegistration(idx)}
+										selectedFile={selectedAudioFile}
+										existingAudioUrl={existingAudioUrl}
+										ariaInvalid={!!fieldErrors?.audio}
+										showLabel={false}
+									/>
+									{fieldErrors?.audio && (
+										<span className={fieldStyles.error}>
+											<AlertCircle size={14} strokeWidth={2.2} /> Audio{" "}
+											{idx + 1} is required
+										</span>
+									)}
+								</div>
+							</div>
+						</div>
+					);
+				}}
 				styles={styles}
 			/>
 
-			{/* Only show navigation/back, not save changes button at bottom */}
 			<div className={styles.step_actions_row}>
 				<button
 					type="button"
-					onClick={goBackToPart1Questions}
+					onClick={controller.previousStep}
 					className={`${styles.back_button} ${styles.step_action_button}`}
 				>
 					Back to Part 1
 				</button>
-				<div className={styles.step_actions_right_group}>
-					{canShowPublishButton && onPublish && (
-						<button
-							type="button"
-							className={`${styles.publish_button} ${styles.step_action_button}`}
-							disabled={submitDisabled || isPublishing || isSubmitting}
-							onClick={handleSubmit(onHandlePublishSubmit)}
-						>
-							{isPublishing ? "Publishing…" : "Publish"}
-						</button>
-					)}
-				</div>
 			</div>
 		</div>
 	);

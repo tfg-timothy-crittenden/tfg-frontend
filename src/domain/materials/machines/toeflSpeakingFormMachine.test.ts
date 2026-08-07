@@ -28,8 +28,10 @@ function setAllComplete(actor: ReturnType<typeof createFormActor>) {
 	actor.send({
 		type: "FORM_COMPLETION_CHANGED",
 		materialInfoValid: true,
+		part1TitleValid: true,
 		hasPart1Image: true,
 		part1QuestionsValid: true,
+		part2TitleValid: true,
 		part2QuestionsValid: true,
 	});
 }
@@ -38,8 +40,10 @@ function setMaterialInfoValid(actor: ReturnType<typeof createFormActor>) {
 	actor.send({
 		type: "FORM_COMPLETION_CHANGED",
 		materialInfoValid: true,
+		part1TitleValid: false,
 		hasPart1Image: false,
 		part1QuestionsValid: false,
+		part2TitleValid: false,
 		part2QuestionsValid: false,
 	});
 }
@@ -48,8 +52,10 @@ function setImageComplete(actor: ReturnType<typeof createFormActor>) {
 	actor.send({
 		type: "FORM_COMPLETION_CHANGED",
 		materialInfoValid: true,
+		part1TitleValid: true,
 		hasPart1Image: true,
 		part1QuestionsValid: false,
+		part2TitleValid: false,
 		part2QuestionsValid: false,
 	});
 }
@@ -58,8 +64,10 @@ function setPart1QuestionsComplete(actor: ReturnType<typeof createFormActor>) {
 	actor.send({
 		type: "FORM_COMPLETION_CHANGED",
 		materialInfoValid: true,
+		part1TitleValid: true,
 		hasPart1Image: true,
 		part1QuestionsValid: true,
+		part2TitleValid: false,
 		part2QuestionsValid: false,
 	});
 }
@@ -286,6 +294,26 @@ describe("TOEFL speaking form machine - question navigation", () => {
 		for (let i = 0; i < 10; i++) {
 			actor.send({ type: "PREVIOUS_QUESTION" });
 		}
+
+		expect(actor.getSnapshot().context.currentQuestion).toBe(0);
+	});
+
+	it("can jump directly to a part 1 question by index", () => {
+		const actor = createFormActor();
+
+		loadExistingDraft(actor);
+
+		actor.send({ type: "SET_CURRENT_QUESTION", index: 4 });
+
+		expect(actor.getSnapshot().context.currentQuestion).toBe(4);
+	});
+
+	it("ignores direct part 1 question jumps outside the valid range", () => {
+		const actor = createFormActor();
+
+		loadExistingDraft(actor);
+
+		actor.send({ type: "SET_CURRENT_QUESTION", index: 99 });
 
 		expect(actor.getSnapshot().context.currentQuestion).toBe(0);
 	});
@@ -533,8 +561,10 @@ describe("TOEFL speaking form machine - published editing", () => {
 		actor.send({
 			type: "FORM_COMPLETION_CHANGED",
 			materialInfoValid: true,
+			part1TitleValid: true,
 			hasPart1Image: false,
 			part1QuestionsValid: true,
+			part2TitleValid: true,
 			part2QuestionsValid: true,
 		});
 

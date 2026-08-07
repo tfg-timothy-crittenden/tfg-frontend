@@ -35,8 +35,9 @@
  *   reverting              → REVERT_SUCCESS | REVERT_FAILURE
  *
  * --- FORM COMPLETION ---
- * Send FORM_COMPLETION_CHANGED (with materialInfoValid, hasPart1Image,
- * part1QuestionsValid, part2QuestionsValid) whenever form validation state changes.
+ * Send FORM_COMPLETION_CHANGED (with materialInfoValid, part1TitleValid,
+ * hasPart1Image, part1QuestionsValid, part2TitleValid, part2QuestionsValid)
+ * whenever form validation state changes.
  * The machine uses these values to gate NEXT_STEP, PUBLISH, and save guards.
  *
  * --- PUBLISHING ---
@@ -53,8 +54,10 @@ type FormContext = {
 	sectionStatus: SectionStatus;
 
 	materialInfoValid: boolean;
+	part1TitleValid: boolean;
 	hasPart1Image: boolean;
 	part1QuestionsValid: boolean;
+	part2TitleValid: boolean;
 	part2QuestionsValid: boolean;
 
 	currentQuestion: number; // 0–6
@@ -71,16 +74,20 @@ type FormEvent =
 	| {
 			type: "FORM_COMPLETION_CHANGED";
 			materialInfoValid: boolean;
+			part1TitleValid: boolean;
 			hasPart1Image: boolean;
 			part1QuestionsValid: boolean;
+			part2TitleValid: boolean;
 			part2QuestionsValid: boolean;
 	  }
 	| { type: "NEXT_STEP" }
 	| { type: "PREVIOUS_STEP" }
 	| { type: "NEXT_QUESTION" }
 	| { type: "PREVIOUS_QUESTION" }
+	| { type: "SET_CURRENT_QUESTION"; index: number }
 	| { type: "NEXT_PART2_QUESTION" }
 	| { type: "PREVIOUS_PART2_QUESTION" }
+	| { type: "SET_CURRENT_PART2_QUESTION"; index: number }
 	| { type: "FIELD_CHANGED" }
 	| { type: "SAVE_DRAFT" }
 	| { type: "DRAFT_SAVE_SUCCESS"; materialId: number }
@@ -116,9 +123,19 @@ export const toeflSpeakingFormMachine = setup({
 			hasPart1Image: ({ event }) =>
 				event.type === "FORM_COMPLETION_CHANGED" ? event.hasPart1Image : false,
 
+			part1TitleValid: ({ event }) =>
+				event.type === "FORM_COMPLETION_CHANGED"
+					? event.part1TitleValid
+					: false,
+
 			part1QuestionsValid: ({ event }) =>
 				event.type === "FORM_COMPLETION_CHANGED"
 					? event.part1QuestionsValid
+					: false,
+
+			part2TitleValid: ({ event }) =>
+				event.type === "FORM_COMPLETION_CHANGED"
+					? event.part2TitleValid
 					: false,
 
 			part2QuestionsValid: ({ event }) =>
@@ -179,12 +196,22 @@ export const toeflSpeakingFormMachine = setup({
 			currentQuestion: ({ context }) => context.currentQuestion - 1,
 		}),
 
+		setCurrentQuestion: assign({
+			currentQuestion: ({ event }) =>
+				event.type === "SET_CURRENT_QUESTION" ? event.index : 0,
+		}),
+
 		incrementCurrentPart2Question: assign({
 			currentPart2Question: ({ context }) => context.currentPart2Question + 1,
 		}),
 
 		decrementCurrentPart2Question: assign({
 			currentPart2Question: ({ context }) => context.currentPart2Question - 1,
+		}),
+
+		setCurrentPart2Question: assign({
+			currentPart2Question: ({ event }) =>
+				event.type === "SET_CURRENT_PART2_QUESTION" ? event.index : 0,
 		}),
 
 		resetQuestionIndexes: assign({
@@ -199,7 +226,7 @@ export const toeflSpeakingFormMachine = setup({
 		},
 
 		canProceedToPart1Questions: ({ context }) => {
-			return context.hasPart1Image === true;
+			return context.part1TitleValid === true && context.hasPart1Image === true;
 		},
 
 		canProceedToPart2Questions: ({ context }) => {
@@ -214,12 +241,30 @@ export const toeflSpeakingFormMachine = setup({
 			return context.currentQuestion > 0;
 		},
 
+		canSetCurrentQuestion: ({ event }) => {
+			return (
+				event.type === "SET_CURRENT_QUESTION" &&
+				Number.isInteger(event.index) &&
+				event.index >= 0 &&
+				event.index <= 6
+			);
+		},
+
 		canGoToNextPart2Question: ({ context }) => {
 			return context.currentPart2Question < 3;
 		},
 
 		canGoToPreviousPart2Question: ({ context }) => {
 			return context.currentPart2Question > 0;
+		},
+
+		canSetCurrentPart2Question: ({ event }) => {
+			return (
+				event.type === "SET_CURRENT_PART2_QUESTION" &&
+				Number.isInteger(event.index) &&
+				event.index >= 0 &&
+				event.index <= 3
+			);
 		},
 
 		canSaveDraft: ({ context }) => {
@@ -236,8 +281,10 @@ export const toeflSpeakingFormMachine = setup({
 				context.materialId !== null &&
 				context.sectionStatus === "PUBLISHED" &&
 				context.materialInfoValid === true &&
+				context.part1TitleValid === true &&
 				context.hasPart1Image === true &&
 				context.part1QuestionsValid === true &&
+				context.part2TitleValid === true &&
 				context.part2QuestionsValid === true
 			);
 		},
@@ -253,8 +300,10 @@ export const toeflSpeakingFormMachine = setup({
 				context.sectionStatus === "DRAFT" &&
 				context.hasUnsavedFieldChanges === false &&
 				context.materialInfoValid === true &&
+				context.part1TitleValid === true &&
 				context.hasPart1Image === true &&
 				context.part1QuestionsValid === true &&
+				context.part2TitleValid === true &&
 				context.part2QuestionsValid === true
 			);
 		},
@@ -268,8 +317,10 @@ export const toeflSpeakingFormMachine = setup({
 		sectionStatus: null,
 
 		materialInfoValid: false,
+		part1TitleValid: false,
 		hasPart1Image: false,
 		part1QuestionsValid: false,
+		part2TitleValid: false,
 		part2QuestionsValid: false,
 
 		currentQuestion: 0,
@@ -343,6 +394,15 @@ export const toeflSpeakingFormMachine = setup({
 					},
 				},
 
+				SET_CURRENT_QUESTION: {
+					guard: {
+						type: "canSetCurrentQuestion",
+					},
+					actions: {
+						type: "setCurrentQuestion",
+					},
+				},
+
 				NEXT_PART2_QUESTION: {
 					guard: {
 						type: "canGoToNextPart2Question",
@@ -360,6 +420,15 @@ export const toeflSpeakingFormMachine = setup({
 						type: "decrementCurrentPart2Question",
 					},
 				},
+
+				SET_CURRENT_PART2_QUESTION: {
+					guard: {
+						type: "canSetCurrentPart2Question",
+					},
+					actions: {
+						type: "setCurrentPart2Question",
+					},
+				},
 			},
 
 			states: {
@@ -367,6 +436,10 @@ export const toeflSpeakingFormMachine = setup({
 					initial: "materialDetails",
 
 					states: {
+						// History pseudostate — restores the active step when
+						// re-entering idle from savingDraft / publishing / etc.
+						hist: { type: "history" },
+
 						materialDetails: {
 							on: {
 								NEXT_STEP: {
@@ -465,14 +538,14 @@ export const toeflSpeakingFormMachine = setup({
 		savingDraft: {
 			on: {
 				DRAFT_SAVE_SUCCESS: {
-					target: "#Form.idle.persistence.clean",
+					target: ["#Form.idle.step.hist", "#Form.idle.persistence.clean"],
 					actions: {
 						type: "draftSaveSuccess",
 					},
 				},
 
 				DRAFT_SAVE_FAILURE: {
-					target: "#Form.idle.persistence.dirty",
+					target: ["#Form.idle.step.hist", "#Form.idle.persistence.dirty"],
 					actions: {
 						type: "setError",
 					},
@@ -483,14 +556,14 @@ export const toeflSpeakingFormMachine = setup({
 		savingPublishedChanges: {
 			on: {
 				PUBLISHED_SAVE_SUCCESS: {
-					target: "#Form.idle.persistence.clean",
+					target: ["#Form.idle.step.hist", "#Form.idle.persistence.clean"],
 					actions: {
 						type: "publishedSaveSuccess",
 					},
 				},
 
 				PUBLISHED_SAVE_FAILURE: {
-					target: "#Form.idle.persistence.dirty",
+					target: ["#Form.idle.step.hist", "#Form.idle.persistence.dirty"],
 					actions: {
 						type: "setError",
 					},
@@ -501,14 +574,14 @@ export const toeflSpeakingFormMachine = setup({
 		publishing: {
 			on: {
 				PUBLISH_SUCCESS: {
-					target: "#Form.idle.persistence.clean",
+					target: ["#Form.idle.step.hist", "#Form.idle.persistence.clean"],
 					actions: {
 						type: "publishSuccess",
 					},
 				},
 
 				PUBLISH_FAILURE: {
-					target: "idle",
+					target: ["#Form.idle.step.hist", "#Form.idle.persistence.clean"],
 					actions: {
 						type: "setError",
 					},
@@ -519,14 +592,14 @@ export const toeflSpeakingFormMachine = setup({
 		reverting: {
 			on: {
 				REVERT_SUCCESS: {
-					target: "#Form.idle.persistence.clean",
+					target: ["#Form.idle.step.hist", "#Form.idle.persistence.clean"],
 					actions: {
 						type: "revertSuccess",
 					},
 				},
 
 				REVERT_FAILURE: {
-					target: "#Form.idle.persistence.dirty",
+					target: ["#Form.idle.step.hist", "#Form.idle.persistence.dirty"],
 					actions: {
 						type: "setError",
 					},

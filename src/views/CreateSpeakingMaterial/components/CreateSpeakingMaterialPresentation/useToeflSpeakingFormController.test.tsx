@@ -2,6 +2,75 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { useToeflSpeakingFormController } from "./useToeflSpeakingFormController";
 
+const navigateMock = vi.hoisted(() => vi.fn());
+
+vi.mock("react-router-dom", async (importOriginal) => {
+	const actual = await importOriginal<typeof import("react-router-dom")>();
+	return {
+		...actual,
+		useNavigate: () => navigateMock,
+	};
+});
+
+const draftSection = vi.hoisted(() => ({
+	materialId: 123,
+	sectionId: 456,
+	status: "DRAFT" as const,
+	materialTitle: "",
+	materialDescription: "",
+	partTitle: "",
+	partImageStorageKey: "",
+	questions: Array.from({ length: 7 }, (_, index) => ({
+		index,
+		questionNodeId: index + 1,
+		transcriptText: "",
+		config: {},
+		audioStorageKey: "",
+	})),
+	part2Title: "",
+	part2Questions: Array.from({ length: 4 }, (_, index) => ({
+		index,
+		questionNodeId: index + 101,
+		transcriptText: "",
+		config: {},
+		audioStorageKey: "",
+	})),
+}));
+
+const saveDraftMock = vi.hoisted(() =>
+	vi.fn(async () => ({ materialId: 123 })),
+);
+const updateMock = vi.hoisted(() => vi.fn(async () => undefined));
+const publishMock = vi.hoisted(() => vi.fn(async () => undefined));
+
+vi.mock("@/domain/materials/hooks/useSpeakingSectionForEdit", () => ({
+	useSpeakingSectionForEdit: () => ({
+		isSuccess: true,
+		isError: false,
+		data: draftSection,
+		error: null,
+	}),
+}));
+
+vi.mock("@/domain/materials/hooks/useSaveSpeakingSectionDraft", () => ({
+	useSaveSpeakingSectionDraft: () => ({ mutateAsync: saveDraftMock }),
+}));
+
+vi.mock("@/domain/materials/hooks/useUpdateSpeakingSection", () => ({
+	useUpdateSpeakingSection: () => ({ mutateAsync: updateMock }),
+}));
+
+vi.mock("@/domain/materials/hooks/usePublishSpeakingSection", () => ({
+	usePublishSpeakingSection: () => ({ mutateAsync: publishMock }),
+}));
+
+beforeEach(() => {
+	navigateMock.mockClear();
+	saveDraftMock.mockClear();
+	updateMock.mockClear();
+	publishMock.mockClear();
+});
+
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
 const mockAudioFile = new File(["audio"], "q.mp3", { type: "audio/mpeg" });
@@ -12,6 +81,9 @@ function completeAllFields(
 ) {
 	act(() => {
 		result.form.setValue("title", "My material", { shouldDirty: true });
+		result.form.setValue("part1Title", "Campus library", {
+			shouldDirty: true,
+		});
 		result.form.setValue("part1Image", mockImageFile, { shouldDirty: true });
 
 		for (let i = 0; i < 7; i++) {
@@ -28,6 +100,9 @@ function completeAllFields(
 		}
 
 		for (let i = 0; i < 4; i++) {
+			result.form.setValue("part2Title", "Student housing", {
+				shouldDirty: true,
+			});
 			result.form.setValue(
 				`part2Questions.${i}.transcript`,
 				`Part 2 transcript ${i}`,
@@ -55,8 +130,8 @@ describe("useToeflSpeakingFormController — initial state", () => {
 			expect(result.current.state.matches("idle")).toBe(true);
 		});
 
-		expect(result.current.context.materialId).toBe(123);
-		expect(result.current.context.sectionStatus).toBe("DRAFT");
+		expect(result.current.context.materialId).toBeNull();
+		expect(result.current.context.sectionStatus).toBeNull();
 	});
 
 	it("starts at materialDetails step", async () => {
@@ -191,6 +266,9 @@ describe("useToeflSpeakingFormController — form completion", () => {
 
 		act(() => {
 			result.current.form.setValue("title", "My material", {
+				shouldDirty: true,
+			});
+			result.current.form.setValue("part1Title", "Campus library", {
 				shouldDirty: true,
 			});
 			result.current.form.setValue("part1Image", mockImageFile, {
@@ -357,6 +435,35 @@ describe("useToeflSpeakingFormController — saveDraft", () => {
 			expect(result.current.form.formState.isDirty).toBe(false),
 		);
 	});
+
+	it("updates an existing draft instead of creating a new draft", async () => {
+		const { result } = renderHook(() => useToeflSpeakingFormController(123));
+
+		await waitFor(() => expect(result.current.context.materialId).toBe(123));
+
+		act(() => {
+			result.current.form.setValue("title", "Updated draft", {
+				shouldDirty: true,
+			});
+		});
+
+		await waitFor(() =>
+			expect(result.current.state.can({ type: "SAVE_DRAFT" })).toBe(true),
+		);
+
+		await act(() => result.current.saveDraft());
+
+		await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
+
+		expect(updateMock).toHaveBeenCalledWith({
+			materialId: 123,
+			formData: expect.any(FormData),
+		});
+		expect(saveDraftMock).not.toHaveBeenCalled();
+		expect(result.current.context.materialId).toBe(123);
+		expect(result.current.context.sectionStatus).toBe("DRAFT");
+		expect(navigateMock).not.toHaveBeenCalled();
+	});
 });
 
 // ─── publish ──────────────────────────────────────────────────────────────────
@@ -487,6 +594,54 @@ describe("useToeflSpeakingFormController — revert", () => {
 		expect(
 			result.current.state.matches({ idle: { persistence: "clean" } }),
 		).toBe(true);
+	});
+
+	it("restores completion guards after reverting removed Part 1 audio", async () => {
+		const { result } = renderHook(() => useToeflSpeakingFormController());
+
+		await waitFor(() =>
+			expect(result.current.state.matches("idle")).toBe(true),
+		);
+
+		completeAllFields(result.current);
+
+		await waitFor(() =>
+			expect(result.current.state.can({ type: "SAVE_DRAFT" })).toBe(true),
+		);
+
+		await act(() => result.current.saveDraft());
+
+		await waitFor(() =>
+			expect(
+				result.current.state.matches({ idle: { persistence: "clean" } }),
+			).toBe(true),
+		);
+
+		act(() => result.current.nextStep());
+		await waitFor(() => expect(result.current.isPart1Image).toBe(true));
+
+		act(() => result.current.nextStep());
+		await waitFor(() => expect(result.current.isPart1Questions).toBe(true));
+
+		expect(result.current.state.can({ type: "NEXT_STEP" })).toBe(true);
+
+		act(() => {
+			result.current.form.setValue("part1Questions.0.audio", null, {
+				shouldDirty: true,
+				shouldTouch: true,
+				shouldValidate: true,
+			});
+		});
+
+		await waitFor(() =>
+			expect(result.current.state.can({ type: "NEXT_STEP" })).toBe(false),
+		);
+
+		act(() => result.current.revert());
+
+		await waitFor(() =>
+			expect(result.current.state.can({ type: "NEXT_STEP" })).toBe(true),
+		);
 	});
 });
 

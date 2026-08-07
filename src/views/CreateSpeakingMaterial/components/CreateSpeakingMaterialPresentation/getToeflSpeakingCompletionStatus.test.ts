@@ -23,10 +23,14 @@ function makeValues(
 	return {
 		title: "My material",
 		description: "",
+		part1Title: "Campus library",
 		part1Image: new File(["img"], "image.png", { type: "image/png" }),
+		part1ImageSource: null,
 		part1Questions: Array.from({ length: 7 }, (_, i) =>
 			makeCompleteQuestion(i),
 		),
+		part1Highlights: Array.from({ length: 7 }, () => null),
+		part2Title: "Student housing",
 		part2Questions: Array.from({ length: 4 }, (_, i) =>
 			makeCompleteQuestion(i),
 		),
@@ -83,6 +87,22 @@ describe("getToeflSpeakingCompletionStatus — hasPart1Image", () => {
 			makeValues({ part1Image: "https://example.com/image.png" }),
 		);
 		expect(hasPart1Image).toBe(true);
+	});
+});
+
+describe("getToeflSpeakingCompletionStatus — part titles", () => {
+	it("requires a Part 1 title", () => {
+		const { part1TitleValid } = getToeflSpeakingCompletionStatus(
+			makeValues({ part1Title: "" }),
+		);
+		expect(part1TitleValid).toBe(false);
+	});
+
+	it("requires a Part 2 title", () => {
+		const { part2TitleValid } = getToeflSpeakingCompletionStatus(
+			makeValues({ part2Title: "   " }),
+		);
+		expect(part2TitleValid).toBe(false);
 	});
 });
 
@@ -192,8 +212,10 @@ describe("getToeflSpeakingCompletionStatus — combined", () => {
 	it("returns all true for a fully complete form", () => {
 		expect(getToeflSpeakingCompletionStatus(makeValues())).toEqual({
 			materialInfoValid: true,
+			part1TitleValid: true,
 			hasPart1Image: true,
 			part1QuestionsValid: true,
+			part2TitleValid: true,
 			part2QuestionsValid: true,
 		});
 	});
@@ -202,15 +224,21 @@ describe("getToeflSpeakingCompletionStatus — combined", () => {
 		const empty: ToeflSpeakingFormValues = {
 			title: "",
 			description: "",
+			part1Title: "",
 			part1Image: null,
+			part1ImageSource: null,
 			part1Questions: Array.from({ length: 7 }, () => makeQuestion("", null)),
+			part1Highlights: Array.from({ length: 7 }, () => null),
+			part2Title: "",
 			part2Questions: Array.from({ length: 4 }, () => makeQuestion("", null)),
 		};
 
 		expect(getToeflSpeakingCompletionStatus(empty)).toEqual({
 			materialInfoValid: false,
+			part1TitleValid: false,
 			hasPart1Image: false,
 			part1QuestionsValid: false,
+			part2TitleValid: false,
 			part2QuestionsValid: false,
 		});
 	});
@@ -224,8 +252,10 @@ describe("getToeflSpeakingCompletionStatus — combined", () => {
 
 		expect(getToeflSpeakingCompletionStatus(values)).toEqual({
 			materialInfoValid: false,
+			part1TitleValid: true,
 			hasPart1Image: false,
 			part1QuestionsValid: true,
+			part2TitleValid: true,
 			part2QuestionsValid: true,
 		});
 	});

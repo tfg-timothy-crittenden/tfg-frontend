@@ -1,12 +1,10 @@
 import { useParams } from "react-router-dom";
-import CreateSpeakingMaterialPresentation from "@/views/CreateSpeakingMaterial/components/CreateSpeakingMaterialPresentation/CreateSpeakingMaterialPresentationOLD";
-import useSpeakingMaterialContainer from "@/views/CreateSpeakingMaterial/hooks/useSpeakingMaterialContainer";
+import { ToeflSpeakingFormPage } from "@/views/CreateSpeakingMaterial/components/CreateSpeakingMaterialPresentation/ToeflSpeakingFormPage";
 
 const EditSpeakingMaterial = () => {
 	const { id } = useParams();
-	const config = useSpeakingMaterialContainer("edit", id);
 
-	return <CreateSpeakingMaterialPresentation {...config} />;
+	return <ToeflSpeakingFormPage materialId={Number(id)} />;
 };
 
 export default EditSpeakingMaterial;

@@ -6,6 +6,8 @@ export function getToeflSpeakingCompletionStatus(
 	return {
 		materialInfoValid: values.title.trim().length > 0,
 
+		part1TitleValid: values.part1Title.trim().length > 0,
+
 		hasPart1Image: values.part1Image != null,
 
 		part1QuestionsValid: values.part1Questions.every(
@@ -17,5 +19,7 @@ export function getToeflSpeakingCompletionStatus(
 			(question) =>
 				question.transcript.trim().length > 0 && question.audio != null,
 		),
+
+		part2TitleValid: values.part2Title.trim().length > 0,
 	};
 }

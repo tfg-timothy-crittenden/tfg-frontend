@@ -31,6 +31,14 @@ const AudioDropzone = ({
 	// Only show existing audio if the user hasn't explicitly cleared it
 	const displayAudioUrl = audioUrl || (hasUserCleared ? "" : existingAudioUrl);
 
+	useEffect(() => {
+		if (!selectedAudio && !existingAudioUrl) return;
+		setHasUserCleared(false);
+		if (typeof window !== "undefined") {
+			window[`audioCleared_${name.replace(/\./g, "_")}`] = false;
+		}
+	}, [selectedAudio, existingAudioUrl, name]);
+
 	// Keep the native input ref and react-hook-form ref pointed at the same node.
 	const setRefs = (node) => {
 		inputRef.current = node;
