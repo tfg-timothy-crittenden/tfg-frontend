@@ -1,6 +1,7 @@
 import Part1ImageStep from "@/views/CreateSpeakingMaterial/components/Part1ImageStep/Part1ImageStep";
 import Part1QuestionsStep from "@/views/CreateSpeakingMaterial/components/Part1QuestionsStep/Part1QuestionsStep";
 import Part2QuestionsStep from "@/views/CreateSpeakingMaterial/components/Part2QuestionsStep/Part2QuestionsStep";
+import HeaderActions from "@/views/CreateSpeakingMaterial/components/HeaderActions/HeaderActions";
 import { useToeflSpeakingFormController } from "./useToeflSpeakingFormController";
 import styles from "./ToeflSpeakingFormPage.module.css";
 
@@ -20,6 +21,8 @@ export function ToeflSpeakingFormPage({
 
 	return (
 		<form className={styles.page}>
+			<HeaderActions actions={controller.headerActions} />
+
 			<pre className={styles.debugPanel}>
 				{JSON.stringify(state.value, null, 2)}
 			</pre>
@@ -64,35 +67,11 @@ export function ToeflSpeakingFormPage({
 			<div className={styles.globalActions}>
 				<button
 					type="button"
-					className={`${styles.btn} ${styles.btnSecondary}`}
-					onClick={controller.saveDraft}
-					disabled={!state.can({ type: "SAVE_DRAFT" })}
-				>
-					Save Draft
-				</button>
-				<button
-					type="button"
-					className={`${styles.btn} ${styles.btnPrimary}`}
-					onClick={controller.savePublishedChanges}
-					disabled={!state.can({ type: "SAVE_PUBLISHED_CHANGES" })}
-				>
-					Save Changes
-				</button>
-				<button
-					type="button"
 					className={`${styles.btn} ${styles.btnSuccess}`}
 					onClick={controller.publish}
 					disabled={!state.can({ type: "PUBLISH" })}
 				>
 					Publish
-				</button>
-				<button
-					type="button"
-					className={`${styles.btn} ${styles.btnDanger}`}
-					onClick={controller.revert}
-					disabled={!state.can({ type: "REVERT" })}
-				>
-					Revert
 				</button>
 			</div>
 		</form>

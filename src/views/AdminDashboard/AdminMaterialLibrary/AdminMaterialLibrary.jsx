@@ -18,7 +18,7 @@ import { useAllSpeakingSections } from "@/domain/materials/hooks/useAllSpeakingS
 import { useDraftSpeakingSections } from "@/domain/materials/hooks/useDraftSpeakingSections";
 import { useDeleteSpeakingSection } from "@/domain/materials/hooks/useDeleteSpeakingSection";
 import { AdminList } from "@/components/AdminList";
-import { buildRoute } from "@/routes/routeConfig";
+import { buildRoute } from "@/app/routes/routeConfig";
 
 import styles from "./AdminMaterialLibrary.module.css";
 

@@ -2,7 +2,7 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
-import { buildRoute } from "@/routes/routeConfig";
+import { buildRoute } from "@/app/routes/routeConfig";
 import styles from "./NavigationArrows.module.css";
 
 const NavigationArrows = ({

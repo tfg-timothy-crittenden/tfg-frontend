@@ -10,6 +10,7 @@
 		"preview": "vite preview",
 		"generate:classroom-api": "orval --config orval.config.ts --project classroomApi && orval --config orval.config.ts --project classroomApiZod",
 		"generate:material-api": "orval --config orval.config.ts --project materialApi && orval --config orval.config.ts --project materialApiZod",
+		"generate:user-api": "orval --config orval.config.ts --project userApi && orval --config orval.config.ts --project userApiZod",
 		"generate:all": "orval --config orval.config.ts",
 		"test": "vitest",
 		"test:ui": "vitest --ui"
@@ -52,6 +53,8 @@
 		"@vitest/ui": "^4.1.9",
 		"autoprefixer": "^10.4.21",
 		"eslint": "^9.21.0",
+		"eslint-import-resolver-typescript": "^4.4.5",
+		"eslint-plugin-import": "^2.32.0",
 		"eslint-plugin-react-hooks": "^5.1.0",
 		"eslint-plugin-react-refresh": "^0.4.19",
 		"globals": "^15.15.0",

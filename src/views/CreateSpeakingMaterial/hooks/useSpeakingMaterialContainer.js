@@ -12,7 +12,7 @@ import {
 	buildPatchSpeakingSectionFormData,
 	normalizeSectionToFormState,
 } from "@/views/CreateSpeakingMaterial/utils/speakingSectionFormUtils";
-import { buildRoute } from "@/routes/routeConfig";
+import { buildRoute } from "@/app/routes/routeConfig";
 
 const QUESTION_COUNT = 7;
 const PART2_QUESTION_COUNT = 4;

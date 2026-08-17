@@ -2,7 +2,11 @@ import { RotateCcw, Save } from "lucide-react";
 
 import styles from "@/views/CreateSpeakingMaterial/styles/CreateSpeakingMaterial.module.css";
 
-const HeaderActions = ({ form }) => {
+const HeaderActions = (props) => {
+	const { actions } = props ?? {};
+
+	if (!actions) return null;
+
 	const {
 		mode,
 		hasUnsavedFieldChanges,
@@ -15,8 +19,22 @@ const HeaderActions = ({ form }) => {
 		canShowHeaderSaveChangesButton,
 		handleSubmit,
 		handleFormSubmit,
+		handleSaveChanges,
 		saveChangesDisabled,
-	} = form;
+	} = actions;
+
+	const handleSaveChangesClick = () => {
+		if (saveChangesDisabled) return;
+
+		if (handleSaveChanges) {
+			handleSaveChanges();
+			return;
+		}
+
+		if (handleSubmit && handleFormSubmit) {
+			setTimeout(() => handleSubmit(handleFormSubmit)(), 0);
+		}
+	};
 
 	return (
 		<div className={styles.form_header_actions}>
@@ -53,21 +71,7 @@ const HeaderActions = ({ form }) => {
 				<button
 					type="button"
 					className={`${styles.draft_button} ${styles.step_action_button}`}
-					onClick={
-						!saveChangesDisabled
-							? () => {
-									// Force blur on all inputs before submit to flush state
-									if (typeof document !== "undefined") {
-										document
-											.querySelectorAll("input,textarea,select")
-											.forEach((el) => {
-												if (typeof el.blur === "function") el.blur();
-											});
-									}
-									setTimeout(() => handleSubmit(handleFormSubmit)(), 0);
-								}
-							: undefined
-					}
+					onClick={!saveChangesDisabled ? handleSaveChangesClick : undefined}
 					disabled={saveChangesDisabled || isSubmitting || isReverting}
 				>
 					<Save size={16} className={styles.draft_button_icon} />

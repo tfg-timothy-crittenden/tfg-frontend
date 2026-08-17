@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import HeaderItem from "@/components/HeaderItem/HeaderItem";
 import { UsersRound } from "lucide-react";
-import { buildRoute } from "@/routes/routeConfig";
+import { buildRoute } from "@/app/routes/routeConfig";
 
 const JoinCodeButtonContainer = () => {
 	const navigate = useNavigate();

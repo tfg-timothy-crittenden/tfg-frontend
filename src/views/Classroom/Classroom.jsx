@@ -17,7 +17,7 @@ import ViewClassMembers from "@/components/ViewClassMembers/ViewClassMembers";
 import ClassroomHeader from "@/components/ClassroomHeader/ClassroomHeader";
 
 import useResponsiveLayout from "@/hooks/useResponsiveLayout";
-import { routeMatchers, buildRoute } from "@/routes/routeConfig";
+import { routeMatchers, buildRoute } from "@/app/routes/routeConfig";
 
 import style from "./Classroom.module.css";
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { confirmEmail } from "@/api/auth/authAPI";
+import { confirmEmail } from "@/domain/users/api/authApi";
 import { setCredentials } from "@/store/auth/authSlice";
 import styles from "./EmailVerification.module.css";
 

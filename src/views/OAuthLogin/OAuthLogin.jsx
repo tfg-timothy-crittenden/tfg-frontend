@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./OAuthLogin.module.css";
-import { login } from "../../store/auth/authSlice";
-import { ROUTES } from "@/routes/routeConfig";
+import { login } from "@/store/auth/authSlice";
+import { ROUTES } from "@/app/routes/routeConfig";
 
 // Updated to a safe, efficient email regex to prevent ReDoS
 const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

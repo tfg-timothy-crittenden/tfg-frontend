@@ -12,13 +12,16 @@ const PART2_QUESTION_COUNT = 4;
 
 const Part2QuestionsStep = ({ controller }) => {
 	const { form, context } = controller;
+
 	const {
 		register,
 		setValue,
 		watch,
 		formState: { errors },
 	} = form;
+
 	const part2Questions = watch("part2Questions");
+
 	const currentPart2Question = context.currentPart2Question;
 
 	const questionCompletion = part2Questions.map(

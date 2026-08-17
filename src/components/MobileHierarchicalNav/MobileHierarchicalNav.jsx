@@ -6,7 +6,7 @@ import Modal from "@/components/Modal/Modal";
 import useModal from "@/components/Modal/useModal";
 import QuestionToggleSwitch from "@/components/QuestionToggleSwitch/QuestionToggleSwitch";
 import TestSelectionModalBody from "@/components/TestSelectionModalBody/TestSelectionModalBody";
-import { buildRoute } from "@/routes/routeConfig";
+import { buildRoute } from "@/app/routes/routeConfig";
 import { getClassroomMaterialsByRole } from "@/domain/classrooms/api/classroomApi";
 import styles from "./MobileHierarchicalNav.module.css";
 

@@ -27,7 +27,7 @@ const SideNavBarWrapper = ({ children }) => {
 				{React.Children.map(children, (child) =>
 					React.isValidElement(child)
 						? React.cloneElement(child, { isOpen, setIsOpen })
-						: child
+						: child,
 				)}
 			</nav>
 		</>

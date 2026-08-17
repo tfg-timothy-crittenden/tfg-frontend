@@ -1,6 +1,6 @@
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { buildRoute } from "@/routes/routeConfig";
+import { buildRoute } from "@/app/routes/routeConfig";
 
 import { useClassrooms } from "@/domain/classrooms/hooks/useClassrooms";
 import { selectUser } from "@/store/auth/authSlice";

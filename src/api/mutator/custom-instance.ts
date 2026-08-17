@@ -14,9 +14,26 @@ const API_ROUTES = [
 		baseUrl: import.meta.env.VITE_AUTH_API_URL || "/users/api/auth",
 	},
 	{
+		prefix: "/api/auth",
+		envName: "VITE_AUTH_API_URL",
+		baseUrl: import.meta.env.VITE_AUTH_API_URL || "/users/api/auth",
+	},
+	{
 		prefix: "/users/api/users",
 		envName: "VITE_USERS_API_URL",
 		baseUrl: import.meta.env.VITE_USERS_API_URL,
+	},
+	{
+		prefix: "/api/users",
+		envName: "VITE_USERS_API_URL",
+		baseUrl: import.meta.env.VITE_USERS_API_URL || "/users/api/users",
+	},
+	{
+		prefix: "/api/platform-invitations",
+		envName: "VITE_PLATFORM_INVITATIONS_API_URL",
+		baseUrl:
+			import.meta.env.VITE_PLATFORM_INVITATIONS_API_URL ||
+			"/users/api/platform-invitations",
 	},
 	{
 		prefix: "/api/toefl-speaking",

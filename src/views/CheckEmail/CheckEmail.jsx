@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { resendVerificationEmail } from "@/api/auth/authAPI";
-import { ROUTES } from "@/routes/routeConfig";
+import { resendVerificationEmail } from "@/domain/users/api/authApi";
+import { ROUTES } from "@/app/routes/routeConfig";
 import styles from "./CheckEmail.module.css";
 
 const CheckEmail = () => {

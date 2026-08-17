@@ -1,6 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
-import { getAllTeachers } from "@/api/user/user";
-import { getAllClassroomsForAdmin, getClassroomJoinCode } from "@/domain/classrooms/api/classroomApi";
+import { getAllTeachers } from "@/domain/users/api/userApi";
+import {
+	getAllClassroomsForAdmin,
+	getClassroomJoinCode,
+} from "@/domain/classrooms/api/classroomApi";
 import { useAssignTeachersToClassroom } from "@/domain/classrooms/hooks/useAssignTeachersToClassroom";
 import { useDeleteClassroom } from "@/domain/classrooms/hooks/useDeleteClassroom";
 import { useBatchDeleteClassrooms } from "@/domain/classrooms/hooks/useBatchDeleteClassrooms";

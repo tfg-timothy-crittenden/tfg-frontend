@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import httpClient from "@/api/httpClient";
 import styles from "./StudentSignup.module.css";
-import { ROUTES } from "@/routes/routeConfig";
+import { ROUTES } from "@/app/routes/routeConfig";
 
 const extractApiMessage = (payload, fallback) => {
 	if (!payload) return fallback;

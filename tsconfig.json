@@ -3,7 +3,7 @@
 		"target": "ES2020",
 		"useDefineForClassFields": true,
 		"lib": ["DOM", "DOM.Iterable", "ES2020"],
-		"allowJs": true, // Allow JavaScript files to be compiled, thus permitting gradual migration from JavaScript to TypeScript.
+		"allowJs": true,
 		"checkJs": false,
 		"skipLibCheck": true,
 		"esModuleInterop": true,
@@ -20,5 +20,5 @@
 			"@/*": ["./src/*"]
 		}
 	},
-	"include": ["src"]
+	"include": ["src/**/*"]
 }

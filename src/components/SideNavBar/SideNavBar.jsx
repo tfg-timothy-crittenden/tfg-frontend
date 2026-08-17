@@ -2,7 +2,7 @@ import { useEffect, useCallback, useRef, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/store/auth/authSlice";
-import { buildRoute } from "@/routes/routeConfig";
+import { buildRoute } from "@/app/routes/routeConfig";
 import { useClassroomMemberRole } from "@/domain/classrooms/hooks/useClassroomMemberRole";
 
 import ClassroomTeacherMenu from "@/components/ClassroomTeacherMenu/ClassroomTeacherMenu";

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { MapPin } from "lucide-react";
 
 import CropEditor from "@/views/CreateSpeakingMaterial/components/ImageEditor/CropEditor";
