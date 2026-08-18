@@ -1,7 +1,7 @@
 import React from "react";
 import { BookOpen, Headphones, Mic, Info, Brain } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { buildRoute, MODE_SEGMENTS } from "@/routes/routeConfig";
+import { buildRoute, MODE_SEGMENTS } from "@/app/routes/routeConfig";
 
 import styles from "./ToggleSwitch.module.css";
 

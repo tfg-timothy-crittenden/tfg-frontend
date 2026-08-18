@@ -1,7 +1,10 @@
 // src/views/PasswordReset/PasswordResetConfirm/PasswordResetConfirm.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { validateResetToken, confirmPasswordReset } from "@/api/auth/authAPI";
+import {
+	confirmPasswordReset,
+	validateResetToken,
+} from "@/domain/users/api/authApi";
 import styles from "../PasswordReset.module.css";
 
 const PasswordResetConfirm = () => {

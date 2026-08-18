@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, selectHasRole } from "@/store/auth/authSlice";
 import { fetchMe } from "@/store/auth/authSlice";
-import { updateProfile } from "@/api/auth/authAPI";
-import { resetPasswordRequest } from "@/api/auth/authAPI";
+import {
+	resetPasswordRequest,
+	updateProfile,
+} from "@/domain/users/api/authApi";
 import styles from "./Profile.module.css";
 
 export default function Profile() {
@@ -135,9 +137,7 @@ export default function Profile() {
 					{role && (
 						<div className={styles.field}>
 							<label>Role</label>
-							<div className={styles.readonly_value}>
-								{role}
-							</div>
+							<div className={styles.readonly_value}>{role}</div>
 						</div>
 					)}
 

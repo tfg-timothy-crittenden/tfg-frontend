@@ -2,8 +2,8 @@ import { useEffect, useCallback, useRef, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/store/auth/authSlice";
-import { buildRoute } from "@/routes/routeConfig";
-import { getClassroomMemberRole } from "@/api/classes/classesAPI";
+import { buildRoute } from "@/app/routes/routeConfig";
+import { useClassroomMemberRole } from "@/domain/classrooms/hooks/useClassroomMemberRole";
 
 import ClassroomTeacherMenu from "@/components/ClassroomTeacherMenu/ClassroomTeacherMenu";
 import { GraduationCap } from "lucide-react";
@@ -29,76 +29,14 @@ export default function SideNavBar({
 	const navigate = useNavigate();
 	const [showStudentList, setShowStudentList] = useState(true);
 	const [showTeacherList, setShowTeacherList] = useState(false);
-	const [hasTeacherRoleInClassroom, setHasTeacherRoleInClassroom] =
-		useState(false);
-	const classroomRoleCacheRef = useRef(new Map());
 	const user = useSelector(selectUser);
-	const memberIdCandidates = useMemo(() => {
-		const ids = [user?.memberId, user?.userId, user?.id]
-			.map((id) => String(id || "").trim())
-			.filter(Boolean);
-		return [...new Set(ids)];
-	}, [user]);
-	const currentUserCacheKey = useMemo(
-		() => [...memberIdCandidates].sort().join("|"),
-		[memberIdCandidates],
+	const userId = user?.id || user?.userId || user?.memberId;
+
+	const { data: memberRole } = useClassroomMemberRole(
+		Number(classroomId) || undefined,
+		userId,
 	);
-
-	useEffect(() => {
-		let cancelled = false;
-
-		if (!classroomId || memberIdCandidates.length === 0) {
-			setHasTeacherRoleInClassroom(false);
-			return () => {
-				cancelled = true;
-			};
-		}
-
-		const cacheKey = `${classroomId}::${currentUserCacheKey}`;
-		const cachedValue = classroomRoleCacheRef.current.get(cacheKey);
-		if (typeof cachedValue === "boolean") {
-			setHasTeacherRoleInClassroom(cachedValue);
-			return () => {
-				cancelled = true;
-			};
-		}
-
-		(async () => {
-			try {
-				let resolvedRole = null;
-
-				for (const memberId of memberIdCandidates) {
-					try {
-						resolvedRole = await getClassroomMemberRole(classroomId, memberId);
-						if (resolvedRole) break;
-					} catch (error) {
-						const status = error?.response?.status;
-						if (status === 404 || status === 400) {
-							continue;
-						}
-						throw error;
-					}
-				}
-
-				const isTeacher = resolvedRole === "TEACHER";
-				classroomRoleCacheRef.current.set(cacheKey, isTeacher);
-
-				if (!cancelled) {
-					setHasTeacherRoleInClassroom(isTeacher);
-				}
-			} catch (error) {
-				classroomRoleCacheRef.current.set(cacheKey, false);
-				if (!cancelled) {
-					setHasTeacherRoleInClassroom(false);
-				}
-				console.error("Failed to resolve classroom teacher membership:", error);
-			}
-		})();
-
-		return () => {
-			cancelled = true;
-		};
-	}, [classroomId, memberIdCandidates, currentUserCacheKey]);
+	const hasTeacherRoleInClassroom = memberRole === "TEACHER";
 
 	const { student: studentTaskSummaries, teacher: teacherTaskSummaries } =
 		useTaskSummaries(classroomId, hasTeacherRoleInClassroom);

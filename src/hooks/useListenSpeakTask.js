@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import {
-	getToeflSpeakingMaterialQuestion,
+	getQuestion,
 	getMaterialNodeAssets,
-	getPresignedUrl,
-} from "@/api/material/materialAPI";
+	generatePresignedUrl,
+} from "@/domain/materials/api/materialApi";
 
 const modeEnum = Object.freeze({
 	LISTEN: "LISTEN",
@@ -41,12 +41,7 @@ const getResolvedAssetUrl = async (asset) => {
 	}
 
 	const bucket = asset.bucket || "toefl";
-	const signedUrlResponse = await getPresignedUrl({
-		bucket,
-		objectKey,
-		expirationSeconds: 3600,
-	});
-
+	const signedUrlResponse = await generatePresignedUrl(bucket, objectKey, 3600);
 	if (typeof signedUrlResponse === "string") {
 		return signedUrlResponse;
 	}
@@ -116,10 +111,10 @@ const useListenSpeakTask = () => {
 					setSharedImageUrl(null);
 				}
 
-				const questionNode = await getToeflSpeakingMaterialQuestion(
-					sectionId,
-					partNumber,
-					questionNumber,
+				const questionNode = await getQuestion(
+					Number(sectionId),
+					Number(partNumber),
+					Number(questionNumber),
 				);
 
 				if (cancelled) return;
@@ -160,7 +155,9 @@ const useListenSpeakTask = () => {
 				setQuestionAudioUrl(resolvedQuestionAudioUrl);
 
 				if (resolvedPartId && (!isPartImageCacheHit || !sharedImageUrl)) {
-					const partAssetsData = await getMaterialNodeAssets(resolvedPartId);
+					const partAssetsData = await getMaterialNodeAssets(
+						Number(resolvedPartId),
+					);
 					if (cancelled) return;
 
 					const partAssets = Array.isArray(partAssetsData)

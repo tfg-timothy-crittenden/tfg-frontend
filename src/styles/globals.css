@@ -1,41 +1,6 @@
 /* src/styles/globals.css */
 /* Global CSS Variables - TOEFL Speaking App Color System */
 :root {
-	/* Primary Brand Colors */
-	/* --color-primary: #5d92c0;
-	--color-primary-hover: #4a7ba0;
-	--color-primary-light: #e3f2fd;
-	--color-primary-dark: #3d6180; */
-
-	/* Secondary Colors */
-	/* --color-secondary: #6080ac;
-	--color-secondary-hover: #4d6b95; */
-
-	/* Status Colors */
-	/* --color-success: #4caf50;
-	--color-success-hover: #45a049;
-	--color-success-light: #e8f5e8; */
-
-	/* --color-error: #dc3545;
-	--color-error-hover: #c82333;
-	--color-error-light: #f8d7da;
-	--color-error-dark: #721c24; */
-
-	/* --color-warning: #ff9800;
-	--color-warning-hover: #f57c00;
-	--color-warning-light: #fff3e0; */
-
-	/* --color-info: #2196f3;
-	--color-info-hover: #1976d2;
-	--color-info-light: #e3f2fd; */
-
-	/* Text Colors */
-	/* --color-text: #333;
-	--color-text-secondary: #666;
-	--color-text-muted: #999;
-	--color-text-light: #6b7280;
-	--color-text-disabled: #adadad; */
-
 	/* Shared design tokens (centralized) */
 	--text_dark: #666666;
 	--text_light: #adadad;

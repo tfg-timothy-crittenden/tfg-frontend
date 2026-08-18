@@ -1,7 +1,8 @@
-import { createClassroom } from "@/api/classes/classesAPI";
+import { useCreateClassroom } from "@/domain/classrooms/hooks/useCreateClassroom";
 import { BatchForm } from "@/components/AdminList";
 
 const BatchCreateClasses = ({ onClassCreated }) => {
+	const createMutation = useCreateClassroom(undefined);
 	const handleSubmit = async (classes) => {
 		const results = [];
 		const failedIndexes = [];
@@ -20,9 +21,9 @@ const BatchCreateClasses = ({ onClassCreated }) => {
 			}
 
 			try {
-				await createClassroom({
+				await createMutation.mutateAsync({
 					name: cls.name.trim(),
-					subject: cls.subject?.trim() || "",
+					description: cls.subject?.trim() || undefined,
 				});
 				results.push({
 					status: "success",

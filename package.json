@@ -5,9 +5,15 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build",
+		"build": "tsc && vite build",
 		"lint": "eslint .",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"generate:classroom-api": "orval --config orval.config.ts --project classroomApi && orval --config orval.config.ts --project classroomApiZod",
+		"generate:material-api": "orval --config orval.config.ts --project materialApi && orval --config orval.config.ts --project materialApiZod",
+		"generate:user-api": "orval --config orval.config.ts --project userApi && orval --config orval.config.ts --project userApiZod",
+		"generate:all": "orval --config orval.config.ts",
+		"test": "vitest",
+		"test:ui": "vitest --ui"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
@@ -16,6 +22,8 @@
 		"@mui/icons-material": "^7.0.1",
 		"@prisma/client": "^6.14.0",
 		"@reduxjs/toolkit": "^2.8.2",
+		"@tanstack/react-query": "^5.101.1",
+		"@xstate/react": "^6.1.0",
 		"axios": "^1.10.0",
 		"exceljs": "^4.4.0",
 		"lucide-react": "^0.536.0",
@@ -28,26 +36,40 @@
 		"react-router-dom": "^7.6.3",
 		"react-select": "^5.10.2",
 		"react-transition-group": "^4.4.5",
-		"uuid": "^11.1.0"
+		"uuid": "^11.1.0",
+		"xstate": "^5.32.2",
+		"zod": "^4.4.3"
 	},
 	"devDependencies": {
 		"@csstools/postcss-global-data": "^3.0.0",
 		"@eslint/js": "^9.21.0",
-		"@types/react": "^19.0.10",
-		"@types/react-dom": "^19.0.4",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@testing-library/react": "^16.3.2",
+		"@testing-library/user-event": "^14.6.1",
+		"@types/node": "^26.0.1",
+		"@types/react": "^19.2.17",
+		"@types/react-dom": "^19.2.3",
 		"@vitejs/plugin-react": "^4.3.4",
+		"@vitest/ui": "^4.1.9",
 		"autoprefixer": "^10.4.21",
 		"eslint": "^9.21.0",
+		"eslint-import-resolver-typescript": "^4.4.5",
+		"eslint-plugin-import": "^2.32.0",
 		"eslint-plugin-react-hooks": "^5.1.0",
 		"eslint-plugin-react-refresh": "^0.4.19",
 		"globals": "^15.15.0",
+		"jsdom": "^29.1.1",
+		"msw": "^2.14.6",
+		"orval": "^7.13.2",
 		"postcss": "^8.5.6",
 		"postcss-custom-media": "^11.0.6",
 		"postcss-import": "^16.1.1",
 		"postcss-nested": "^7.0.2",
 		"postcss-nesting": "^13.0.2",
 		"prisma": "^6.14.0",
+		"typescript": "^6.0.3",
 		"vite": "^6.2.0",
-		"vite-plugin-svgr": "^4.5.0"
+		"vite-plugin-svgr": "^4.5.0",
+		"vitest": "^4.1.9"
 	}
 }

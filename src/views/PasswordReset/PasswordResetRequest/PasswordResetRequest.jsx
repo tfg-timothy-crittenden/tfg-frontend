@@ -1,7 +1,7 @@
 // src/views/PasswordReset/PasswordResetRequest.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { resetPasswordRequest } from "@/api/auth/authAPI";
+import { resetPasswordRequest } from "@/domain/users/api/authApi";
 import styles from "../PasswordReset.module.css";
 
 const PasswordResetRequest = () => {
@@ -20,11 +20,11 @@ const PasswordResetRequest = () => {
 			const result = await resetPasswordRequest(email);
 			setMessage(
 				result.message ||
-					"If an account with this email exists, you'll receive reset instructions."
+					"If an account with this email exists, you'll receive reset instructions.",
 			);
 		} catch (err) {
 			setError(
-				err.response?.data?.error || "Something went wrong. Please try again."
+				err.response?.data?.error || "Something went wrong. Please try again.",
 			);
 		} finally {
 			setIsLoading(false);

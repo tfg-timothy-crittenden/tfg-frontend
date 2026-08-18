@@ -1,37 +1,14 @@
-import { useEffect, useState } from "react";
-
-import { getAllSpeakingSectionsSummaries } from "@/api/material/materialAPI";
+import { useAllSpeakingSections } from "@/domain/materials/hooks/useAllSpeakingSections";
 
 import { normalizeMaterialForUI } from "./materialUtils";
 
 const useMaterialLibrary = () => {
-	const [libraryMaterials, setLibraryMaterials] = useState([]);
-	const [materialsLoaded, setMaterialsLoaded] = useState(false);
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const materialListResponse = await getAllSpeakingSectionsSummaries();
-				const normalizedMaterials = Array.isArray(materialListResponse)
-					? materialListResponse
-							.map((item) => normalizeMaterialForUI(item))
-							.filter(Boolean)
-					: [];
-
-				setLibraryMaterials(normalizedMaterials);
-				setMaterialsLoaded(true);
-			} catch (err) {
-				console.error("Error fetching speaking tests:", err);
-				setMaterialsLoaded(true);
-			}
-		};
-
-		fetchData();
-	}, []);
+	const { data = [], isLoading } = useAllSpeakingSections();
+	const libraryMaterials = data.map(normalizeMaterialForUI).filter(Boolean);
 
 	return {
 		libraryMaterials,
-		materialsLoaded,
+		materialsLoaded: !isLoading,
 	};
 };
 

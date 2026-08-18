@@ -1,12 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
-import { getAllTeachers } from "@/api/user/user";
+import { getAllTeachers } from "@/domain/users/api/userApi";
 import {
-	getAllClassroomSummaries,
-	assignTeachersToClass,
-	deleteClassroom,
-	batchDeleteClassrooms,
+	getAllClassroomsForAdmin,
 	getClassroomJoinCode,
-} from "@/api/classes/classesAPI";
+} from "@/domain/classrooms/api/classroomApi";
+import { useAssignTeachersToClassroom } from "@/domain/classrooms/hooks/useAssignTeachersToClassroom";
+import { useDeleteClassroom } from "@/domain/classrooms/hooks/useDeleteClassroom";
+import { useBatchDeleteClassrooms } from "@/domain/classrooms/hooks/useBatchDeleteClassrooms";
 import { AdminList, ListItem } from "@/components/AdminList";
 import { ClassItem } from "@/components/ClassItem";
 import AdminDeleteModal from "@/components/AdminDeleteModal";
@@ -27,18 +27,19 @@ const AdminClasses = () => {
 	// Modal for class code display
 	const { modalRef, isOpen, openModal, closeModal } = useModal();
 
+	const deleteMutation = useDeleteClassroom(undefined);
+	const batchDeleteMutation = useBatchDeleteClassrooms(undefined);
+	const assignTeachersMutation = useAssignTeachersToClassroom();
+
 	// Use the admin list hook
 	const adminList = useAdminList({
 		loadItems: async () => {
-			const classes = await getAllClassroomSummaries();
+			const classes = await getAllClassroomsForAdmin();
 			return Array.isArray(classes) ? classes : [];
 		},
-		deleteItem: async (classItem) => {
-			await deleteClassroom(classItem.id);
-		},
-		deleteMultipleItems: async (classroomIds) => {
-			await batchDeleteClassrooms(classroomIds);
-		},
+		deleteItem: (classItem) => deleteMutation.mutateAsync(classItem.id),
+		deleteMultipleItems: (classroomIds) =>
+			batchDeleteMutation.mutateAsync(classroomIds),
 		itemName: "class",
 		itemNamePlural: "classes",
 	});
@@ -56,7 +57,10 @@ const AdminClasses = () => {
 					};
 				})
 				.filter(Boolean);
-			await assignTeachersToClass(classId, formatted);
+			await assignTeachersMutation.mutateAsync({
+				classroomId: classId,
+				teachers: formatted,
+			});
 			await adminList.refreshItems();
 		},
 		[adminList],

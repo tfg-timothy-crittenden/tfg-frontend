@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { GraduationCap, MailOpen } from "lucide-react";
-import { getAllTeachers, removeTeacherRole } from "@/api/user/user";
 import {
-	getPendingTeacherInvitations,
 	batchDeletePlatformInvitations,
+	getAllTeachers,
+	getPendingTeacherInvitations,
+	removeTeacherRole,
 	resendPlatformInvitation,
-} from "@/api/platformInvitation/platformInvitationAPI";
+} from "@/domain/users/api/userApi";
 
 import BatchInviteTeachers from "./BatchInviteTeachersNew";
 import AdminDeleteModal from "@/components/AdminDeleteModal";

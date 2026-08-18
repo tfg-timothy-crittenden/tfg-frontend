@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import styles from "./ClassroomTeacherMenu.module.css";
+import styles from "@/components/ClassroomTeacherMenu/ClassroomTeacherMenu.module.css";
 import { ChevronUp, ChevronDown, Library, UsersRound } from "lucide-react";
-import Modal from "../Modal/Modal";
-import useModal from "../Modal/useModal";
-import ClassInvite from "../ClassInvite/ClassInvite";
-import JoinCodeBar from "../JoinCodeBar/JoinCodeBar";
-import { buildRoute, routeMatchers } from "@/routes/routeConfig"; // <-- added
+import Modal from "@/components/Modal/Modal";
+import useModal from "@/components/Modal/useModal";
+import ClassInvite from "@/components/ClassInvite/ClassInvite";
+import JoinCodeBar from "@/components/JoinCodeBar/JoinCodeBar";
+import { buildRoute, routeMatchers } from "@/app/routes/routeConfig"; // <-- added
 
 const ClassroomTeacherMenu = ({
 	classrooms = [],

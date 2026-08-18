@@ -761,6 +761,7 @@
 	margin-bottom: 0.75rem;
 }
 .listen_repeat_container {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 
@@ -774,6 +775,22 @@
 	margin-right: auto;
 	max-height: 90vh;
 	overflow-y: auto;
+}
+
+/* Overlay shown while the section is loading (initial edit-mode load).
+   Sits above all form content without unmounting it, preserving form state
+   and preventing layout shift. The `inert` attribute on the form content
+   blocks pointer and keyboard interaction while the overlay is active. */
+.loading_overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.25);
+	backdrop-filter: blur(2px);
+	border-radius: inherit;
 }
 
 @media (--mobile-only) {

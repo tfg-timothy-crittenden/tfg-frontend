@@ -2,11 +2,11 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 
 import {
-	getClassroomTeachers,
 	getClassroomStudents,
-	removeStudentsFromClass,
-	removeStudentFromClass,
-} from "@/api/classes/classesAPI";
+	getClassroomTeachers,
+} from "@/domain/classrooms/api/classroomApi";
+
+import { useRemoveMemberFromClassroom } from "@/domain/classrooms/hooks/useRemoveMemberFromClassroom";
 
 import { Users, GraduationCap } from "lucide-react";
 
@@ -36,7 +36,7 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 		setLoading(true);
 		setErr("");
 
-		Promise.all([getClassroomTeachers(classroomId)])
+		Promise.all([getClassroomTeachers(Number(classroomId))])
 			.then(([teachersRes]) => {
 				console.log("teachers:", teachersRes);
 				if (!mounted) return;
@@ -52,29 +52,40 @@ const ViewClassMembers = ({ classroomId: propId }) => {
 		};
 	}, [classroomId]);
 
+	const removeMember = useRemoveMemberFromClassroom();
+
 	// Memoize API loaders so useAdminList doesn't see a new function each render
 	const loadStudents = useCallback(
-		async () => await getClassroomStudents(classroomId),
+		async () => await getClassroomStudents(Number(classroomId)),
 		[classroomId],
 	);
 
-	// Single delete wraps API expecting array
 	const deleteOneStudent = useCallback(
 		async (student) => {
-			const id = typeof student === "object" ? student?.id : student;
-			if (!id) return;
-			await removeStudentFromClass(classroomId, [id]);
+			const userId = typeof student === "object" ? student?.id : student;
+			if (!userId) return;
+			await removeMember.mutateAsync({
+				classroomId: Number(classroomId),
+				userId,
+			});
 		},
-		[classroomId],
+		[classroomId, removeMember],
 	);
 
 	const deleteManyStudents = useCallback(
 		async (ids) => {
 			const valid = (ids || []).filter(Boolean);
 			if (!valid.length) return;
-			await removeStudentsFromClass(classroomId, valid);
+			await Promise.all(
+				valid.map((userId) =>
+					removeMember.mutateAsync({
+						classroomId: Number(classroomId),
+						userId,
+					}),
+				),
+			);
 		},
-		[classroomId],
+		[classroomId, removeMember],
 	);
 
 	const studentAdmin = useAdminList({

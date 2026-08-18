@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { updateClassroomMaterials } from "@/api/classes/classesAPI";
+import { useUpdateClassroomMaterials } from "@/domain/classrooms/hooks/useUpdateClassroomMaterials";
 
 import { createAssignmentsPayload } from "./classroomAssignmentUtils";
 
@@ -11,6 +11,8 @@ const useClassroomAssignmentSave = ({
 	selectedTeacherItemIds,
 	onSaved,
 }) => {
+	const updateMaterials = useUpdateClassroomMaterials();
+
 	const handleSave = useCallback(async () => {
 		try {
 			const assignments = createAssignmentsPayload(
@@ -26,7 +28,10 @@ const useClassroomAssignmentSave = ({
 				studentCount: selectedStudentItemIds.size,
 			});
 
-			await updateClassroomMaterials(selectedClassId, assignments);
+			await updateMaterials.mutateAsync({
+				classroomId: Number(selectedClassId),
+				materials: assignments,
+			});
 			onSaved();
 			alert("Materials assigned successfully.");
 		} catch (err) {
@@ -39,6 +44,7 @@ const useClassroomAssignmentSave = ({
 		selectedTeacherItemIds,
 		selectedStudentItemIds,
 		onSaved,
+		updateMaterials,
 	]);
 
 	return { handleSave };

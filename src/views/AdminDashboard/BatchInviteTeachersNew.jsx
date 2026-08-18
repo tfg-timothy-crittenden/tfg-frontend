@@ -1,4 +1,4 @@
-import { inviteTeacherToPlatform } from "@/api/auth/authAPI";
+import { inviteTeacherToPlatform } from "@/domain/users/api/authApi";
 import { BatchForm } from "@/components/AdminList";
 
 const BatchInviteTeachers = ({ onInviteComplete }) => {

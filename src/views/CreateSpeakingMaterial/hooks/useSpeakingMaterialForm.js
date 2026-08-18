@@ -111,7 +111,7 @@ const useSpeakingMaterialForm = ({
 	// Debug: log the default values RHF is using
 	if (typeof window !== "undefined") {
 		window.__RHF_DEFAULT_VALUES__ = resolvedInitialValues;
-		// eslint-disable-next-line no-console
+		 
 		console.log("[RHF DEBUG] defaultValues:", resolvedInitialValues);
 	}
 
@@ -252,7 +252,7 @@ const useSpeakingMaterialForm = ({
 			hasUnsavedFieldChanges,
 		};
 		// Also log to console for immediate feedback
-		// eslint-disable-next-line no-console
+		 
 		console.log(
 			"[RHF DEBUG] isDirty:",
 			isDirty,

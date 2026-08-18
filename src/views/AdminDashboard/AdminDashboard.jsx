@@ -15,7 +15,7 @@ import {
 	_importAdminClasses,
 	_importAdminMaterial,
 	_importAdminMaterialLibrary,
-} from "@/routes/lazyRoutes";
+} from "@/app/routes/lazyRoutes";
 
 const AdminDashboard = () => {
 	return (

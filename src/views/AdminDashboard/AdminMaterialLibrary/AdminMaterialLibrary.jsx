@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 const formatDate = (value) => {
 	if (!value) return null;
@@ -14,142 +14,56 @@ const formatDate = (value) => {
 import { Link } from "react-router-dom";
 import { Pencil, Trash2 } from "lucide-react";
 
-import {
-	deleteSpeakingMaterial,
-	getAllSpeakingSectionsSummaries,
-	getDraftSpeakingSectionsSummaries,
-} from "@/api/material/materialAPI";
+import { useAllSpeakingSections } from "@/domain/materials/hooks/useAllSpeakingSections";
+import { useDraftSpeakingSections } from "@/domain/materials/hooks/useDraftSpeakingSections";
+import { useDeleteSpeakingSection } from "@/domain/materials/hooks/useDeleteSpeakingSection";
 import { AdminList } from "@/components/AdminList";
-import { buildRoute } from "@/routes/routeConfig";
+import { buildRoute } from "@/app/routes/routeConfig";
 
 import styles from "./AdminMaterialLibrary.module.css";
 
-const normalizeSummary = (summary, idx) => {
-	const sectionId =
-		summary?.sectionId || summary?.section?.id || summary?.section_id || null;
-	const materialId =
-		summary?.materialId ||
-		summary?.material_id ||
-		summary?.material?.materialId ||
-		summary?.material?.id ||
-		(summary?.id && !sectionId ? summary.id : null) ||
-		null;
-
-	if (!materialId) {
-		return {
-			id: `summary-${idx}`,
-			materialId: null,
-			sectionId: sectionId ? String(sectionId) : null,
-			sectionTitle: "",
-			part1Title: "",
-			part2Title: "",
-			description: "",
-			status: null,
-			createdAt: null,
-			updatedAt: null,
-		};
-	}
-
-	return {
-		id: String(materialId),
-		materialId: String(materialId),
-		sectionId: sectionId ? String(sectionId) : null,
-		sectionTitle: summary?.sectionTitle || "",
-		part1Title: summary?.part1Title || "",
-		part2Title: summary?.part2Title || "",
-		status: summary?.status ? String(summary.status) : null,
-		createdAt: summary?.createdAt || summary?.created_at || null,
-		updatedAt: summary?.updatedAt || summary?.updated_at || null,
-	};
-};
-
-const toSummaryList = (response) =>
-	Array.isArray(response)
-		? response
-		: Array.isArray(response?.items)
-			? response.items
-			: Array.isArray(response?.content)
-				? response.content
-				: [];
-
 const AdminMaterialLibrary = () => {
-	const [publishedSections, setPublishedSections] = useState([]);
-	const [draftSections, setDraftSections] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const { data: allSections = [], isLoading: isLoadingAll } =
+		useAllSpeakingSections();
+	const { data: draftsFromEndpoint = [], isLoading: isLoadingDrafts } =
+		useDraftSpeakingSections();
+	const deleteMutation = useDeleteSpeakingSection();
+
+	const loading = isLoadingAll || isLoadingDrafts;
+
+	// Derive published/draft from the "all" endpoint (which returns both statuses),
+	// and merge any additional drafts from the dedicated drafts endpoint (deduped).
+	const publishedSections = useMemo(
+		() => allSections.filter((s) => s.status === "PUBLISHED"),
+		[allSections],
+	);
+	const draftSections = useMemo(() => {
+		const fromAll = allSections.filter((s) => s.status === "DRAFT");
+		const seen = new Set(fromAll.map((d) => d.materialId));
+		const extra = draftsFromEndpoint.filter((d) => !seen.has(d.materialId));
+		return [...fromAll, ...extra];
+	}, [allSections, draftsFromEndpoint]);
+
 	const [currentSort, setCurrentSort] = useState("updated-desc");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [statusFilter, setStatusFilter] = useState("all");
-	const [deletingMaterialId, setDeletingMaterialId] = useState("");
-	const isMountedRef = useRef(true);
 
-	const loadSections = async () => {
-		if (!isMountedRef.current) return;
-		setLoading(true);
-		try {
-			const [publishedResponse, draftsResponse] = await Promise.all([
-				getAllSpeakingSectionsSummaries(),
-				getDraftSpeakingSectionsSummaries(),
-			]);
-			if (!isMountedRef.current) return;
+	const handleDelete = (item) => {
+		if (
+			!window.confirm(
+				`Delete material ${item.materialId}? This cannot be undone.`,
+			)
+		)
+			return;
 
-			const publishedList = toSummaryList(publishedResponse)
-				.map(normalizeSummary)
-				.filter(Boolean);
-			const draftsList = toSummaryList(draftsResponse)
-				.map((item, idx) =>
-					normalizeSummary(
-						{
-							...item,
-							status: item?.status || "draft",
-						},
-						idx,
-					),
-				)
-				.filter(Boolean);
-
-			setPublishedSections(publishedList);
-			setDraftSections(draftsList);
-		} catch (error) {
-			console.error("Failed to load speaking section summaries:", error);
-			if (isMountedRef.current) {
-				setPublishedSections([]);
-				setDraftSections([]);
-			}
-		} finally {
-			if (isMountedRef.current) setLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		isMountedRef.current = true;
-		loadSections();
-
-		return () => {
-			isMountedRef.current = false;
-		};
-	}, []);
-
-	const handleDelete = async (item) => {
-		const materialId = item?.materialId;
-		if (!materialId) return;
-
-		const shouldDelete = window.confirm(
-			`Delete material ${materialId}? This cannot be undone.`,
-		);
-		if (!shouldDelete) return;
-
-		setDeletingMaterialId(String(materialId));
-		try {
-			await deleteSpeakingMaterial(materialId);
-			await loadSections();
-		} catch (error) {
-			alert(
-				"Failed to delete material: " +
-					(error?.response?.data?.message || error.message),
-			);
-		} finally {
-			setDeletingMaterialId("");
-		}
+		deleteMutation.mutate(item.materialId, {
+			onError: (error) => {
+				alert(
+					"Failed to delete material: " +
+						(error?.response?.data?.message || error.message),
+				);
+			},
+		});
 	};
 
 	const sortOptions = [
@@ -234,11 +148,10 @@ const AdminMaterialLibrary = () => {
 	const showDrafts = statusFilter === "all" || statusFilter === "draft";
 
 	const renderItem = (item) => {
-		const canEdit = !!item.materialId;
-		const canDelete = !!item.materialId;
-		const statusKey = String(item.status || "").toLowerCase();
+		const statusKey = item.status.toLowerCase();
 		const editLabel = statusKey === "draft" ? "Continue" : "Edit";
-		const isDeleting = String(item.materialId || "") === deletingMaterialId;
+		const isDeleting =
+			deleteMutation.isPending && deleteMutation.variables === item.materialId;
 
 		return (
 			<div className={styles.row}>
@@ -273,27 +186,21 @@ const AdminMaterialLibrary = () => {
 				</div>
 
 				<div className={styles.actionsCol}>
-					{canEdit ? (
-						<Link
-							className={`action_button ${styles.editButton}`}
-							to={buildRoute.editSpeakingMaterial(item.materialId)}
-						>
-							<Pencil size={16} aria-hidden="true" /> {editLabel}
-						</Link>
-					) : (
-						<span className={styles.disabledEdit}>Unavailable</span>
-					)}
-					{canDelete && (
-						<button
-							type="button"
-							className={`action_button ${styles.deleteButton}`}
-							onClick={() => handleDelete(item)}
-							disabled={isDeleting}
-						>
-							<Trash2 size={16} aria-hidden="true" />
-							{isDeleting ? " Deleting..." : " Delete"}
-						</button>
-					)}
+					<Link
+						className={`action_button ${styles.editButton}`}
+						to={buildRoute.editSpeakingMaterial(item.materialId)}
+					>
+						<Pencil size={16} aria-hidden="true" /> {editLabel}
+					</Link>
+					<button
+						type="button"
+						className={`action_button ${styles.deleteButton}`}
+						onClick={() => handleDelete(item)}
+						disabled={isDeleting}
+					>
+						<Trash2 size={16} aria-hidden="true" />
+						{isDeleting ? " Deleting..." : " Delete"}
+					</button>
 				</div>
 			</div>
 		);

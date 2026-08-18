@@ -1,6 +1,6 @@
 // QuestionToggleSwitch.jsx
 import { NavLink, useLocation, useParams } from "react-router-dom";
-import { buildRoute, routeMatchers } from "@/routes/routeConfig";
+import { buildRoute, routeMatchers } from "@/app/routes/routeConfig";
 import styles from "./QuestionToggleSwitch.module.css";
 
 const QuestionToggleSwitch = () => {

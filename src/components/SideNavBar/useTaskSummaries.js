@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getClassroomMaterialListByRole } from "@/api/classes/classesAPI";
+import { getClassroomMaterialsByRole } from "@/domain/classrooms/api/classroomApi";
 
 const normalizeTaskSummary = (task = {}) => {
 	const testId = task.id ?? task.materialId;
@@ -35,9 +35,9 @@ export function useTaskSummaries(classroomId, hasTeacherRole) {
 
 		(async () => {
 			try {
-				const data = await getClassroomMaterialListByRole(
-					classroomId,
-					"student",
+				const data = await getClassroomMaterialsByRole(
+					Number(classroomId),
+					"STUDENT",
 				);
 				if (!cancelled) setStudent(normalizeTaskSummaryList(data));
 			} catch (e) {
@@ -51,9 +51,9 @@ export function useTaskSummaries(classroomId, hasTeacherRole) {
 				return;
 			}
 			try {
-				const data = await getClassroomMaterialListByRole(
-					classroomId,
-					"teacher",
+				const data = await getClassroomMaterialsByRole(
+					Number(classroomId),
+					"TEACHER",
 				);
 				if (!cancelled) setTeacher(normalizeTaskSummaryList(data));
 			} catch (e) {

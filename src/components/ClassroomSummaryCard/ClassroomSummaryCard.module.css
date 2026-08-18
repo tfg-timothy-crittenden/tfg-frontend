@@ -1,0 +1,73 @@
+.classroom_card {
+	background: var(--button_background_cancel);
+	border: 1px solid var(--card_border);
+	border-radius: 14px;
+	padding: 16px 18px;
+	cursor: pointer;
+	min-height: 150px;
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease,
+		transform 0.06s ease;
+}
+
+.classroom_card:hover {
+	border-color: var(--actionable_text_active);
+	box-shadow: var(--shadow-md);
+}
+
+.classroom_card:active {
+	transform: translateY(1px);
+}
+
+.card_header {
+	margin-bottom: 12px;
+}
+
+.card_title {
+	font-weight: 700;
+	font-size: 1.6rem;
+	line-height: 1;
+	letter-spacing: 0.01em;
+	color: var(--text_dark);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.card_subject {
+	color: var(--text_light);
+	font-size: 0.8rem;
+	margin-top: 4px;
+}
+
+.card_meta {
+	margin: 12px 0 8px;
+}
+
+.meta_row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.9rem;
+	margin-top: 6px;
+}
+
+.meta_label {
+	color: var(--text_light);
+}
+
+.meta_value {
+	color: var(--text_dark);
+}
+
+.meta_code {
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.card_cta {
+	margin-top: 6px;
+	color: var(--actionable_text_active);
+	font-weight: 600;
+	font-size: 0.8rem;
+}

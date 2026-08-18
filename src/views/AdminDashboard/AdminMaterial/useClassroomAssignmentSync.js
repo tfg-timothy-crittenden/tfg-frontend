@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 
-import { getClassroomMaterialListByRole } from "@/api/classes/classesAPI";
+import { getClassroomMaterialsByRole } from "@/domain/classrooms/api/classroomApi";
 
 // Fetches classes from the API
 
@@ -15,8 +15,8 @@ const useClassroomAssignmentSync = ({
 
 			try {
 				const [teacherResponse, studentResponse] = await Promise.all([
-					getClassroomMaterialListByRole(classId, "TEACHER"),
-					getClassroomMaterialListByRole(classId, "STUDENT"),
+					getClassroomMaterialsByRole(Number(classId), "TEACHER"),
+					getClassroomMaterialsByRole(Number(classId), "STUDENT"),
 				]);
 
 				loadAssignments(teacherResponse, studentResponse);
