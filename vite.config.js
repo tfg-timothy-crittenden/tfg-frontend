@@ -6,6 +6,18 @@ import svgr from "vite-plugin-svgr";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const createDevProxy = (target) => ({
+	target,
+	changeOrigin: true,
+	secure: false,
+	configure: (proxy) => {
+		proxy.on("proxyReq", (proxyReq) => {
+			proxyReq.removeHeader("origin");
+			proxyReq.removeHeader("cookie");
+		});
+	},
+});
+
 export default defineConfig({
 	plugins: [react(), svgr()],
 	base: "/", // Use relative paths for assets
@@ -18,21 +30,9 @@ export default defineConfig({
 		port: 5173, // Dev server port
 		historyApiFallback: true, // esto es crítico para SPA routin	g
 		proxy: {
-			"/users/api": {
-				target: "http://localhost:8080",
-				changeOrigin: true,
-				secure: false,
-			},
-			"/materials/api": {
-				target: "http://localhost:8080",
-				changeOrigin: true,
-				secure: false,
-			},
-			"/classrooms/api": {
-				target: "http://localhost:8080",
-				changeOrigin: true,
-				secure: false,
-			},
+			"/users/api": createDevProxy("http://localhost:8080"),
+			"/materials/api": createDevProxy("http://localhost:8080"),
+			"/classrooms/api": createDevProxy("http://localhost:8080"),
 		},
 	},
 	preview: {

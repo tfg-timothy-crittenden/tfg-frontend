@@ -4,7 +4,7 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import type { MemberDto } from './memberDto';
+import type { MembershipDto } from './membershipDto';
 import type { MaterialReferenceDto } from './materialReferenceDto';
 
 export interface ClassroomDto {
@@ -14,7 +14,7 @@ export interface ClassroomDto {
   description?: string;
   createdAt: string;
   updatedAt: string;
-  members: MemberDto[];
+  members: MembershipDto[];
   materials: MaterialReferenceDto[];
   studentCount: number;
 }

@@ -6,7 +6,7 @@
 	background: var(--button_background_cancel);
 	border-bottom: 1px solid var(--card_border_mid);
 	box-shadow: var(--shadow-sm);
-	height: 68px;
+	height: 60px;
 	position: sticky;
 	top: 0;
 	z-index: 1;
@@ -172,7 +172,7 @@
 /* Progressive enhancement for tablets - USING POSTCSS! */
 @media (--tablet-up) {
 	.header {
-		height: 88px;
+		height: 60px;
 	}
 
 	.header_inner {
@@ -224,7 +224,7 @@
 /* Desktop enhancements */
 @media (--desktop-up) {
 	.header {
-		height: 96px;
+		height: 60px;
 	}
 
 	.header_inner {

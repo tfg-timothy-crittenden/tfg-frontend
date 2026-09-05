@@ -40,7 +40,6 @@ import {
 	getRoleInClassroomResponse,
 	updateClassroomMaterialsParams,
 	updateClassroomMaterialsBody,
-	updateClassroomMaterialsResponse,
 	getMaterialsByClassroomAndRoleParams,
 	getMaterialsByClassroomAndRoleResponse,
 	syncTeachersParams,
@@ -68,16 +67,29 @@ import {
 
 const ctrl = getClassroomController();
 
+function normalizeClassroomSummaryResponse<
+	T extends {
+		description?: string | null;
+		teachers?: Array<{ name?: string | null; surname?: string | null }>;
+	},
+>(items: T[]) {
+	return items.map((item) => ({
+		...item,
+		description: item.description ?? undefined,
+		teachers: item.teachers?.map((teacher) => ({
+			...teacher,
+			name: teacher.name ?? "Unknown",
+			surname: teacher.surname ?? "Teacher",
+		})),
+	}));
+}
+
 export async function fetchClassroomsForUser(
 	userId: number,
 ): Promise<ClassroomSummary[]> {
 	const raw = await ctrl.getClassroomSummariesByMember(userId);
 
-	// Backend may send nullable description; normalize to undefined for schema compatibility.
-	const normalized = raw.map((item) => ({
-		...item,
-		description: item.description ?? undefined,
-	}));
+	const normalized = normalizeClassroomSummaryResponse(raw);
 
 	const dto = getClassroomSummariesByMemberResponse.parse(normalized);
 	return toClassroomSummaries(dto);
@@ -117,11 +129,7 @@ export async function getAllClassroomsForAdmin(): Promise<ClassroomSummary[]> {
 	// Fetch raw DTO array from the backend (admin endpoint — returns all classrooms).
 	const raw = await ctrl.getAllClassroomSummaries();
 
-	// Backend may return description as null; coerce to undefined so Zod accepts it.
-	const normalized = raw.map((item) => ({
-		...item,
-		description: item.description ?? undefined,
-	}));
+	const normalized = normalizeClassroomSummaryResponse(raw);
 
 	// Validate the normalized response shape at the ACL boundary.
 	const dto = getAllClassroomSummariesResponse.parse(normalized);
@@ -169,12 +177,10 @@ export async function getClassroomMemberRole(
 export async function updateClassroomMaterials(
 	classroomId: number,
 	materials: ClassroomMaterialAssignment[],
-): Promise<ClassroomMaterialReference[]> {
+): Promise<void> {
 	const params = updateClassroomMaterialsParams.parse({ classroomId });
 	const body = updateClassroomMaterialsBody.parse({ materials });
-	const raw = await ctrl.updateClassroomMaterials(params.classroomId, body);
-	const dto = updateClassroomMaterialsResponse.parse(raw);
-	return toClassroomMaterialReferences(dto);
+	await ctrl.updateClassroomMaterials(params.classroomId, body);
 }
 
 export async function getClassroomMaterialsByRole(
