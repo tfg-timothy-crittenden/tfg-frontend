@@ -2,7 +2,7 @@ import type {
 	getClassroomSummariesByMemberResponse,
 	getStudentsByClassroomResponse,
 	getTeachersByClassroomResponse,
-	updateClassroomMaterialsResponse,
+	getMaterialsByClassroomAndRoleResponse,
 	joinClassroomResponse,
 } from "@/generated/classroom-api/classroom-controller/classroom-controller.zod";
 import type { z } from "zod";
@@ -43,40 +43,51 @@ export function toClassroomSummaries(
 }
 
 type ClassroomStudentsDto = z.infer<typeof getStudentsByClassroomResponse>;
+type ClassroomTeachersDto = z.infer<typeof getTeachersByClassroomResponse>;
+type ClassroomMemberDto =
+	| ClassroomStudentsDto[number]
+	| ClassroomTeachersDto[number];
+
+function toClassroomMembers(
+	dto: ClassroomMemberDto[],
+	defaultRole: ClassroomMember["role"],
+): ClassroomMember[] {
+	return dto
+		.filter((item) => typeof item.userId === "number")
+		.map((item) => ({
+			userId: item.userId as number,
+			role: item.role ?? defaultRole,
+			name: item.firstName ?? "Unknown",
+			surname: item.lastName ?? "",
+		}));
+}
 
 export function toClassroomStudents(
 	dto: ClassroomStudentsDto,
 ): ClassroomMember[] {
-	return dto.map((item) => ({
-		userId: item.userId,
-		role: item.role,
-		name: item.name,
-		surname: item.surname,
-	}));
+	return toClassroomMembers(dto, "STUDENT");
 }
 
-type ClassroomTeachersDto = z.infer<typeof getTeachersByClassroomResponse>;
-type ClassroomMaterialsDto = z.infer<typeof updateClassroomMaterialsResponse>;
+type ClassroomMaterialsDto = z.infer<
+	typeof getMaterialsByClassroomAndRoleResponse
+>;
 
 export function toClassroomTeachers(
 	dto: ClassroomTeachersDto,
 ): ClassroomMember[] {
-	return dto.map((item) => ({
-		userId: item.userId,
-		role: item.role,
-		name: item.name,
-		surname: item.surname,
-	}));
+	return toClassroomMembers(dto, "TEACHER");
 }
 
 export function toClassroomMaterialReferences(
 	dto: ClassroomMaterialsDto,
 ): ClassroomMaterialReference[] {
-	return dto.map((item) => ({
-		materialId: item.materialId,
-		name: item.name,
-		description: item.description ?? undefined,
-		part1Title: item.part1Title,
-		part2Title: item.part2Title,
-	}));
+	return dto
+		.filter((item) => typeof item.materialId === "number")
+		.map((item) => ({
+			materialId: item.materialId as number,
+			name: item.name ?? "Untitled material",
+			description: item.description ?? undefined,
+			part1Title: item.part1Title ?? "",
+			part2Title: item.part2Title ?? "",
+		}));
 }

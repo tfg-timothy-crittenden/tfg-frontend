@@ -2,7 +2,7 @@
 	display: flex;
 	flex-direction: column;
 	height: 100dvh; /* Use full viewport height */
-	width: min(100%, var(--content-max-width));
+	width: 100%;
 	margin: 0 auto;
 	overflow: hidden; /* Prevent overall scrolling */
 }
@@ -15,7 +15,7 @@
 	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
-	max-width: var(--content-max-width);
+	max-width: 1440px;
 	width: 100%;
 	margin: 0 auto;
 	padding: 10px;
@@ -49,7 +49,7 @@
 		position: fixed;
 		left: 0;
 		right: 0;
-		width: min(100%, var(--content-max-width));
+		width: 100%;
 		margin: 0 auto;
 		height: 100vh; /* Use vh instead of dvh for desktop */
 		overflow: hidden; /* Prevent overall scroll, let content areas handle it */
@@ -67,7 +67,7 @@
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-		max-width: var(--content-max-width);
+		max-width: 1440px;
 		margin: 0 auto;
 		max-height: calc(100dvh - 116px);
 	}

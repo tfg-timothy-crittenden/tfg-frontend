@@ -7,6 +7,8 @@
 
 export * from './apiErrorResponse';
 export * from './classroomDto';
+export * from './classroomMemberDto';
+export * from './classroomMemberDtoRole';
 export * from './classroomSummaryDto';
 export * from './classroomSummaryDtoDescription';
 export * from './createClassroomRequest';
@@ -20,8 +22,16 @@ export * from './materialAccessCheckResponse';
 export * from './materialAssignmentDto';
 export * from './materialAssignmentDtoAssignedToRole';
 export * from './materialReferenceDto';
+export * from './materialReferenceWithDetailsDto';
+export * from './materialReferenceWithDetailsDtoAssignedToRole';
+export * from './materialReferenceWithDetailsDtoDescription';
+export * from './materialReferenceWithDetailsDtoName';
+export * from './materialReferenceWithDetailsDtoPart1Title';
+export * from './materialReferenceWithDetailsDtoPart2Title';
 export * from './memberDto';
 export * from './memberDtoRole';
+export * from './membershipDto';
+export * from './membershipDtoRole';
 export * from './roleCheckDto';
 export * from './roleCheckDtoRole';
 export * from './syncTeachersRequest';

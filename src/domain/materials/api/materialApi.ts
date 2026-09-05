@@ -208,33 +208,62 @@ export async function deleteSpeakingSection(materialId: number): Promise<void> {
 	await ctrl.deleteSpeakingSection(params.materialId);
 }
 
-const presignedUrlCache = new Map<
-	string,
-	{ data: string; expiresAt: number }
->();
+type PresignedUrlCacheEntry = {
+	data?: string;
+	promise?: Promise<string>;
+	expiresAt: number;
+};
+
+const PRESIGNED_URL_EXPIRY_BUFFER_SECONDS = 60;
+const presignedUrlCache = new Map<string, PresignedUrlCacheEntry>();
+
+const getPresignedUrlCacheKey = (bucket: string, objectKey: string) =>
+	`${bucket.trim()}:${objectKey.trim()}`;
 
 export async function generatePresignedUrl(
 	bucket: string,
 	objectKey: string,
 	expirationSeconds = 3600,
 ): Promise<string> {
-	const cacheKey = `${bucket}:${objectKey}`;
+	const cacheKey = getPresignedUrlCacheKey(bucket, objectKey);
 	const cached = presignedUrlCache.get(cacheKey);
-	if (cached && cached.expiresAt > Date.now()) {
+	if (cached?.data && cached.expiresAt > Date.now()) {
 		return cached.data;
 	}
+	if (cached?.promise) {
+		return cached.promise;
+	}
 
-	const url = await customInstance<string>({
+	const request = customInstance<string>({
 		url: "/api/storage/presigned-url",
 		method: "GET",
-		params: { bucket, objectKey, expirationSeconds },
-	});
+		params: {
+			bucket: bucket.trim(),
+			objectKey: objectKey.trim(),
+			expirationSeconds,
+		},
+	})
+		.then((url) => {
+			presignedUrlCache.set(cacheKey, {
+				data: url,
+				expiresAt:
+					Date.now() +
+					Math.max(expirationSeconds - PRESIGNED_URL_EXPIRY_BUFFER_SECONDS, 0) *
+						1000,
+			});
+			return url;
+		})
+		.catch((error) => {
+			if (presignedUrlCache.get(cacheKey)?.promise === request) {
+				presignedUrlCache.delete(cacheKey);
+			}
+			throw error;
+		});
 
-	// Cache with a 60-second safety buffer before actual expiry
 	presignedUrlCache.set(cacheKey, {
-		data: url,
-		expiresAt: Date.now() + (expirationSeconds - 60) * 1000,
+		promise: request,
+		expiresAt: Number.POSITIVE_INFINITY,
 	});
 
-	return url;
+	return request;
 }

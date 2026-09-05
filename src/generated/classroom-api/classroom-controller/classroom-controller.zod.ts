@@ -29,8 +29,6 @@ export const syncTeachersBody = zod.object({
 
 
 
-
-
 export const syncTeachersResponse = zod.object({
   "id": zod.number(),
   "name": zod.string().min(1),
@@ -39,9 +37,7 @@ export const syncTeachersResponse = zod.object({
   "updatedAt": zod.iso.datetime({}),
   "members": zod.array(zod.object({
   "userId": zod.number(),
-  "role": zod.enum(['TEACHER', 'STUDENT']),
-  "name": zod.string().min(1),
-  "surname": zod.string().min(1)
+  "role": zod.enum(['TEACHER', 'STUDENT'])
 })),
   "materials": zod.array(zod.object({
   "materialId": zod.number(),
@@ -96,20 +92,6 @@ export const updateClassroomMaterialsBody = zod.object({
 
 
 
-export const updateClassroomMaterialsResponseItem = zod.object({
-  "materialId": zod.number(),
-  "name": zod.string().min(1),
-  "description": zod.string().optional(),
-  "part1Title": zod.string().min(1),
-  "part2Title": zod.string().min(1)
-})
-export const updateClassroomMaterialsResponse = zod.array(updateClassroomMaterialsResponseItem)
-
-
-
-
-
-
 export const getAllClassroomSummariesResponseItem = zod.object({
   "id": zod.number(),
   "name": zod.string().min(1),
@@ -155,8 +137,6 @@ export const assignTeacherBody = zod.object({
 
 
 
-
-
 export const assignTeacherResponse = zod.object({
   "id": zod.number(),
   "name": zod.string().min(1),
@@ -165,9 +145,7 @@ export const assignTeacherResponse = zod.object({
   "updatedAt": zod.iso.datetime({}),
   "members": zod.array(zod.object({
   "userId": zod.number(),
-  "role": zod.enum(['TEACHER', 'STUDENT']),
-  "name": zod.string().min(1),
-  "surname": zod.string().min(1)
+  "role": zod.enum(['TEACHER', 'STUDENT'])
 })),
   "materials": zod.array(zod.object({
   "materialId": zod.number(),
@@ -212,15 +190,12 @@ export const getTeachersByClassroomParams = zod.object({
   "classroomId": zod.number()
 })
 
-
-
-
-
 export const getTeachersByClassroomResponseItem = zod.object({
-  "userId": zod.number(),
-  "role": zod.enum(['TEACHER', 'STUDENT']),
-  "name": zod.string().min(1),
-  "surname": zod.string().min(1)
+  "membershipId": zod.number().optional(),
+  "userId": zod.number().optional(),
+  "role": zod.enum(['TEACHER', 'STUDENT']).optional(),
+  "firstName": zod.string().optional(),
+  "lastName": zod.string().optional()
 })
 export const getTeachersByClassroomResponse = zod.array(getTeachersByClassroomResponseItem)
 
@@ -228,15 +203,12 @@ export const getStudentsByClassroomParams = zod.object({
   "classroomId": zod.number()
 })
 
-
-
-
-
 export const getStudentsByClassroomResponseItem = zod.object({
-  "userId": zod.number(),
-  "role": zod.enum(['TEACHER', 'STUDENT']),
-  "name": zod.string().min(1),
-  "surname": zod.string().min(1)
+  "membershipId": zod.number().optional(),
+  "userId": zod.number().optional(),
+  "role": zod.enum(['TEACHER', 'STUDENT']).optional(),
+  "firstName": zod.string().optional(),
+  "lastName": zod.string().optional()
 })
 export const getStudentsByClassroomResponse = zod.array(getStudentsByClassroomResponseItem)
 
@@ -245,17 +217,13 @@ export const getMaterialsByClassroomAndRoleParams = zod.object({
   "role": zod.enum(['TEACHER', 'STUDENT'])
 })
 
-
-
-
-
-
 export const getMaterialsByClassroomAndRoleResponseItem = zod.object({
   "materialId": zod.number(),
-  "name": zod.string().min(1),
-  "description": zod.string().optional(),
-  "part1Title": zod.string().min(1),
-  "part2Title": zod.string().min(1)
+  "assignedToRole": zod.enum(['TEACHER', 'STUDENT']),
+  "name": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "part1Title": zod.string().nullish(),
+  "part2Title": zod.string().nullish()
 })
 export const getMaterialsByClassroomAndRoleResponse = zod.array(getMaterialsByClassroomAndRoleResponseItem)
 
@@ -301,8 +269,6 @@ export const getClassroomsByMemberParams = zod.object({
 
 
 
-
-
 export const getClassroomsByMemberResponseItem = zod.object({
   "id": zod.number(),
   "name": zod.string().min(1),
@@ -311,9 +277,7 @@ export const getClassroomsByMemberResponseItem = zod.object({
   "updatedAt": zod.iso.datetime({}),
   "members": zod.array(zod.object({
   "userId": zod.number(),
-  "role": zod.enum(['TEACHER', 'STUDENT']),
-  "name": zod.string().min(1),
-  "surname": zod.string().min(1)
+  "role": zod.enum(['TEACHER', 'STUDENT'])
 })),
   "materials": zod.array(zod.object({
   "materialId": zod.number(),

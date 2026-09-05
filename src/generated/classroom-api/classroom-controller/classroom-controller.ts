@@ -5,276 +5,196 @@
  * OpenAPI spec version: v0
  */
 import type {
-	ClassroomDto,
-	ClassroomSummaryDto,
-	CreateClassroomRequest,
-	DeleteClassroomsRequest,
-	JoinClassroomRequest,
-	JoinClassroomResponse,
-	MaterialReferenceDto,
-	MemberDto,
-	RoleCheckDto,
-	SyncTeachersRequest,
-	TeacherDto,
-	UpdateClassroomMaterialsRequest,
-} from ".././model";
+  ClassroomDto,
+  ClassroomMemberDto,
+  ClassroomSummaryDto,
+  CreateClassroomRequest,
+  DeleteClassroomsRequest,
+  JoinClassroomRequest,
+  JoinClassroomResponse,
+  MaterialReferenceDto,
+  MaterialReferenceWithDetailsDto,
+  RoleCheckDto,
+  SyncTeachersRequest,
+  TeacherDto,
+  UpdateClassroomMaterialsRequest
+} from '.././model';
 
-import { customInstance } from "../../../api/mutator/custom-instance";
-import type { BodyType } from "../../../api/mutator/custom-instance";
+import { customInstance } from '../../../api/mutator/custom-instance';
+import type { BodyType } from '../../../api/mutator/custom-instance';
 
-export const getClassroomController = () => {
-	const syncTeachers = (
-		classroomId: number,
-		syncTeachersRequest: BodyType<SyncTeachersRequest>,
-	) => {
-		return customInstance<ClassroomDto>({
-			url: `/api/classrooms/${classroomId}/teachers`,
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			data: syncTeachersRequest,
-		});
-	};
-	const getMaterialsByClassroom = (classroomId: number) => {
-		return customInstance<MaterialReferenceDto[]>({
-			url: `/api/classrooms/${classroomId}/materials`,
-			method: "GET",
-		});
-	};
-	const updateClassroomMaterials = (
-		classroomId: number,
-		updateClassroomMaterialsRequest: BodyType<UpdateClassroomMaterialsRequest>,
-	) => {
-		return customInstance<MaterialReferenceDto[]>({
-			url: `/api/classrooms/${classroomId}/materials`,
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			data: updateClassroomMaterialsRequest,
-		});
-	};
-	const getAllClassroomSummaries = () => {
-		return customInstance<ClassroomSummaryDto[]>({
-			url: `/api/classrooms`,
-			method: "GET",
-		});
-	};
-	const createClassroom = (
-		createClassroomRequest: BodyType<CreateClassroomRequest>,
-	) => {
-		return customInstance<void>({
-			url: `/api/classrooms`,
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			data: createClassroomRequest,
-		});
-	};
-	const assignTeacher = (
-		classroomId: number,
-		teacherDto: BodyType<TeacherDto>,
-	) => {
-		return customInstance<ClassroomDto>({
-			url: `/api/classrooms/${classroomId}/assign-teacher`,
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			data: teacherDto,
-		});
-	};
-	const joinClassroom = (
-		joinClassroomRequest: BodyType<JoinClassroomRequest>,
-	) => {
-		return customInstance<JoinClassroomResponse>({
-			url: `/api/classrooms/join`,
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			data: joinClassroomRequest,
-		});
-	};
-	const getRoleInClassroom = (classroomId: number, userId: number) => {
-		return customInstance<RoleCheckDto>({
-			url: `/api/classrooms/${classroomId}/members/${userId}/role`,
-			method: "GET",
-		});
-	};
-	const getTeachersByClassroom = (classroomId: number) => {
-		return customInstance<MemberDto[]>({
-			url: `/api/classrooms/${classroomId}/members/teachers`,
-			method: "GET",
-		});
-	};
-	const getStudentsByClassroom = (classroomId: number) => {
-		return customInstance<MemberDto[]>({
-			url: `/api/classrooms/${classroomId}/members/students`,
-			method: "GET",
-		});
-	};
-	const getMaterialsByClassroomAndRole = (
-		classroomId: number,
-		role: "TEACHER" | "STUDENT",
-	) => {
-		return customInstance<MaterialReferenceDto[]>({
-			url: `/api/classrooms/${classroomId}/materials/role/${role}`,
-			method: "GET",
-		});
-	};
-	const getJoinCode = (classroomId: number) => {
-		return customInstance<string>({
-			url: `/api/classrooms/${classroomId}/join-code`,
-			method: "GET",
-		});
-	};
-	const getClassroomSummariesByMember = (userId: number) => {
-		return customInstance<ClassroomSummaryDto[]>({
-			url: `/api/classrooms/summary/member/${userId}`,
-			method: "GET",
-		});
-	};
-	const getClassroomsByMember = (userId: number) => {
-		return customInstance<ClassroomDto[]>({
-			url: `/api/classrooms/member/${userId}`,
-			method: "GET",
-		});
-	};
-	const deleteClassroom = (classroomId: number) => {
-		return customInstance<void>({
-			url: `/api/classrooms/${classroomId}`,
-			method: "DELETE",
-		});
-	};
-	const removeMemberFromClassroom = (classroomId: number, userId: number) => {
-		return customInstance<void>({
-			url: `/api/classrooms/${classroomId}/members/${userId}`,
-			method: "DELETE",
-		});
-	};
-	const deleteClassroomsBatch = (
-		deleteClassroomsRequest: BodyType<DeleteClassroomsRequest>,
-	) => {
-		return customInstance<void>({
-			url: `/api/classrooms/batch`,
-			method: "DELETE",
-			headers: { "Content-Type": "application/json" },
-			data: deleteClassroomsRequest,
-		});
-	};
-	return {
-		syncTeachers,
-		getMaterialsByClassroom,
-		updateClassroomMaterials,
-		getAllClassroomSummaries,
-		createClassroom,
-		assignTeacher,
-		joinClassroom,
-		getRoleInClassroom,
-		getTeachersByClassroom,
-		getStudentsByClassroom,
-		getMaterialsByClassroomAndRole,
-		getJoinCode,
-		getClassroomSummariesByMember,
-		getClassroomsByMember,
-		deleteClassroom,
-		removeMemberFromClassroom,
-		deleteClassroomsBatch,
-	};
-};
-export type SyncTeachersResult = NonNullable<
-	Awaited<ReturnType<ReturnType<typeof getClassroomController>["syncTeachers"]>>
->;
-export type GetMaterialsByClassroomResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<typeof getClassroomController>["getMaterialsByClassroom"]
-		>
-	>
->;
-export type UpdateClassroomMaterialsResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<typeof getClassroomController>["updateClassroomMaterials"]
-		>
-	>
->;
-export type GetAllClassroomSummariesResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<typeof getClassroomController>["getAllClassroomSummaries"]
-		>
-	>
->;
-export type CreateClassroomResult = NonNullable<
-	Awaited<
-		ReturnType<ReturnType<typeof getClassroomController>["createClassroom"]>
-	>
->;
-export type AssignTeacherResult = NonNullable<
-	Awaited<
-		ReturnType<ReturnType<typeof getClassroomController>["assignTeacher"]>
-	>
->;
-export type JoinClassroomResult = NonNullable<
-	Awaited<
-		ReturnType<ReturnType<typeof getClassroomController>["joinClassroom"]>
-	>
->;
-export type GetRoleInClassroomResult = NonNullable<
-	Awaited<
-		ReturnType<ReturnType<typeof getClassroomController>["getRoleInClassroom"]>
-	>
->;
-export type GetTeachersByClassroomResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<typeof getClassroomController>["getTeachersByClassroom"]
-		>
-	>
->;
-export type GetStudentsByClassroomResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<typeof getClassroomController>["getStudentsByClassroom"]
-		>
-	>
->;
-export type GetMaterialsByClassroomAndRoleResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<
-				typeof getClassroomController
-			>["getMaterialsByClassroomAndRole"]
-		>
-	>
->;
-export type GetJoinCodeResult = NonNullable<
-	Awaited<ReturnType<ReturnType<typeof getClassroomController>["getJoinCode"]>>
->;
-export type GetClassroomSummariesByMemberResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<typeof getClassroomController>["getClassroomSummariesByMember"]
-		>
-	>
->;
-export type GetClassroomsByMemberResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<typeof getClassroomController>["getClassroomsByMember"]
-		>
-	>
->;
-export type DeleteClassroomResult = NonNullable<
-	Awaited<
-		ReturnType<ReturnType<typeof getClassroomController>["deleteClassroom"]>
-	>
->;
-export type RemoveMemberFromClassroomResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<typeof getClassroomController>["removeMemberFromClassroom"]
-		>
-	>
->;
-export type DeleteClassroomsBatchResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<typeof getClassroomController>["deleteClassroomsBatch"]
-		>
-	>
->;
+
+
+  export const getClassroomController = () => {
+const syncTeachers = (
+    classroomId: number,
+    syncTeachersRequest: BodyType<SyncTeachersRequest>,
+ ) => {
+      return customInstance<ClassroomDto>(
+      {url: `/api/classrooms/${classroomId}/teachers`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: syncTeachersRequest
+    },
+      );
+    }
+  const getMaterialsByClassroom = (
+    classroomId: number,
+ ) => {
+      return customInstance<MaterialReferenceDto[]>(
+      {url: `/api/classrooms/${classroomId}/materials`, method: 'GET'
+    },
+      );
+    }
+  const updateClassroomMaterials = (
+    classroomId: number,
+    updateClassroomMaterialsRequest: BodyType<UpdateClassroomMaterialsRequest>,
+ ) => {
+      return customInstance<void>(
+      {url: `/api/classrooms/${classroomId}/materials`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateClassroomMaterialsRequest
+    },
+      );
+    }
+  const getAllClassroomSummaries = (
+    
+ ) => {
+      return customInstance<ClassroomSummaryDto[]>(
+      {url: `/api/classrooms`, method: 'GET'
+    },
+      );
+    }
+  const createClassroom = (
+    createClassroomRequest: BodyType<CreateClassroomRequest>,
+ ) => {
+      return customInstance<void>(
+      {url: `/api/classrooms`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createClassroomRequest
+    },
+      );
+    }
+  const assignTeacher = (
+    classroomId: number,
+    teacherDto: BodyType<TeacherDto>,
+ ) => {
+      return customInstance<ClassroomDto>(
+      {url: `/api/classrooms/${classroomId}/assign-teacher`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: teacherDto
+    },
+      );
+    }
+  const joinClassroom = (
+    joinClassroomRequest: BodyType<JoinClassroomRequest>,
+ ) => {
+      return customInstance<JoinClassroomResponse>(
+      {url: `/api/classrooms/join`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: joinClassroomRequest
+    },
+      );
+    }
+  const getRoleInClassroom = (
+    classroomId: number,
+    userId: number,
+ ) => {
+      return customInstance<RoleCheckDto>(
+      {url: `/api/classrooms/${classroomId}/members/${userId}/role`, method: 'GET'
+    },
+      );
+    }
+  const getTeachersByClassroom = (
+    classroomId: number,
+ ) => {
+      return customInstance<ClassroomMemberDto[]>(
+      {url: `/api/classrooms/${classroomId}/members/teachers`, method: 'GET'
+    },
+      );
+    }
+  const getStudentsByClassroom = (
+    classroomId: number,
+ ) => {
+      return customInstance<ClassroomMemberDto[]>(
+      {url: `/api/classrooms/${classroomId}/members/students`, method: 'GET'
+    },
+      );
+    }
+  const getMaterialsByClassroomAndRole = (
+    classroomId: number,
+    role: 'TEACHER' | 'STUDENT',
+ ) => {
+      return customInstance<MaterialReferenceWithDetailsDto[]>(
+      {url: `/api/classrooms/${classroomId}/materials/role/${role}`, method: 'GET'
+    },
+      );
+    }
+  const getJoinCode = (
+    classroomId: number,
+ ) => {
+      return customInstance<string>(
+      {url: `/api/classrooms/${classroomId}/join-code`, method: 'GET'
+    },
+      );
+    }
+  const getClassroomSummariesByMember = (
+    userId: number,
+ ) => {
+      return customInstance<ClassroomSummaryDto[]>(
+      {url: `/api/classrooms/summary/member/${userId}`, method: 'GET'
+    },
+      );
+    }
+  const getClassroomsByMember = (
+    userId: number,
+ ) => {
+      return customInstance<ClassroomDto[]>(
+      {url: `/api/classrooms/member/${userId}`, method: 'GET'
+    },
+      );
+    }
+  const deleteClassroom = (
+    classroomId: number,
+ ) => {
+      return customInstance<void>(
+      {url: `/api/classrooms/${classroomId}`, method: 'DELETE'
+    },
+      );
+    }
+  const removeMemberFromClassroom = (
+    classroomId: number,
+    userId: number,
+ ) => {
+      return customInstance<void>(
+      {url: `/api/classrooms/${classroomId}/members/${userId}`, method: 'DELETE'
+    },
+      );
+    }
+  const deleteClassroomsBatch = (
+    deleteClassroomsRequest: BodyType<DeleteClassroomsRequest>,
+ ) => {
+      return customInstance<void>(
+      {url: `/api/classrooms/batch`, method: 'DELETE',
+      headers: {'Content-Type': 'application/json', },
+      data: deleteClassroomsRequest
+    },
+      );
+    }
+  return {syncTeachers,getMaterialsByClassroom,updateClassroomMaterials,getAllClassroomSummaries,createClassroom,assignTeacher,joinClassroom,getRoleInClassroom,getTeachersByClassroom,getStudentsByClassroom,getMaterialsByClassroomAndRole,getJoinCode,getClassroomSummariesByMember,getClassroomsByMember,deleteClassroom,removeMemberFromClassroom,deleteClassroomsBatch}};
+export type SyncTeachersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['syncTeachers']>>>
+export type GetMaterialsByClassroomResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['getMaterialsByClassroom']>>>
+export type UpdateClassroomMaterialsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['updateClassroomMaterials']>>>
+export type GetAllClassroomSummariesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['getAllClassroomSummaries']>>>
+export type CreateClassroomResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['createClassroom']>>>
+export type AssignTeacherResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['assignTeacher']>>>
+export type JoinClassroomResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['joinClassroom']>>>
+export type GetRoleInClassroomResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['getRoleInClassroom']>>>
+export type GetTeachersByClassroomResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['getTeachersByClassroom']>>>
+export type GetStudentsByClassroomResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['getStudentsByClassroom']>>>
+export type GetMaterialsByClassroomAndRoleResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['getMaterialsByClassroomAndRole']>>>
+export type GetJoinCodeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['getJoinCode']>>>
+export type GetClassroomSummariesByMemberResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['getClassroomSummariesByMember']>>>
+export type GetClassroomsByMemberResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['getClassroomsByMember']>>>
+export type DeleteClassroomResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['deleteClassroom']>>>
+export type RemoveMemberFromClassroomResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['removeMemberFromClassroom']>>>
+export type DeleteClassroomsBatchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getClassroomController>['deleteClassroomsBatch']>>>
