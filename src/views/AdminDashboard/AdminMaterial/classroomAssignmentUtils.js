@@ -38,7 +38,7 @@ export const buildAssignedMaterialsLookup = (...itemGroups) => {
 };
 
 const getAssignmentMaterial = (materialId, libraryMaterialsMap) => {
-	const material = libraryMaterialsMap.get(materialId);
+	const material = libraryMaterialsMap.get(String(materialId));
 	const resolvedMaterialId =
 		material?.id ?? material?.materialId ?? material?.material_id ?? materialId;
 	const materialName =
