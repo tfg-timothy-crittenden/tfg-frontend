@@ -39,7 +39,6 @@ import {
 	getRoleInClassroomParams,
 	getRoleInClassroomResponse,
 	updateClassroomMaterialsParams,
-	updateClassroomMaterialsBody,
 	getMaterialsByClassroomAndRoleParams,
 	getMaterialsByClassroomAndRoleResponse,
 	syncTeachersParams,
@@ -47,6 +46,7 @@ import {
 	getJoinCodeParams,
 	getJoinCodeResponse,
 } from "@/generated/classroom-api/classroom-controller/classroom-controller.zod";
+import { z } from "zod";
 
 import type { ClassroomMember } from "../types/ClassroomMember";
 import type {
@@ -66,6 +66,15 @@ import {
 } from "../mappers/classroomMapper";
 
 const ctrl = getClassroomController();
+
+const updateClassroomMaterialsBody = z.object({
+	materials: z.array(
+		z.object({
+			materialId: z.number(),
+			assignedToRole: z.enum(["TEACHER", "STUDENT"]),
+		}),
+	),
+});
 
 function normalizeClassroomSummaryResponse<
 	T extends {
@@ -180,7 +189,10 @@ export async function updateClassroomMaterials(
 ): Promise<void> {
 	const params = updateClassroomMaterialsParams.parse({ classroomId });
 	const body = updateClassroomMaterialsBody.parse({ materials });
-	await ctrl.updateClassroomMaterials(params.classroomId, body);
+	await ctrl.updateClassroomMaterials(
+		params.classroomId,
+		body as unknown as Parameters<typeof ctrl.updateClassroomMaterials>[1],
+	);
 }
 
 export async function getClassroomMaterialsByRole(

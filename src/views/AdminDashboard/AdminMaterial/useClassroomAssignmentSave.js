@@ -18,7 +18,6 @@ const useClassroomAssignmentSave = ({
 			const assignments = createAssignmentsPayload(
 				selectedTeacherItemIds,
 				selectedStudentItemIds,
-				libraryMaterials,
 			);
 
 			console.log("Save payload:", {
@@ -40,7 +39,6 @@ const useClassroomAssignmentSave = ({
 		}
 	}, [
 		selectedClassId,
-		libraryMaterials,
 		selectedTeacherItemIds,
 		selectedStudentItemIds,
 		onSaved,
