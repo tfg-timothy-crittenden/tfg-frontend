@@ -37,59 +37,27 @@ export const buildAssignedMaterialsLookup = (...itemGroups) => {
 	return lookup;
 };
 
-const getAssignmentMaterial = (materialId, libraryMaterialsMap) => {
-	const material = libraryMaterialsMap.get(String(materialId));
-	const resolvedMaterialId =
-		material?.id ?? material?.materialId ?? material?.material_id ?? materialId;
-	const materialName =
-		material?.sectionTitle ||
-		material?.name ||
-		material?.title ||
-		`Material ${materialId}`;
-	const materialDescription =
-		material?.description || material?.name || material?.title || materialName;
-	const part1Title = material?.part1Title ?? null;
-	const part2Title = material?.part2Title ?? null;
-
+const getAssignmentMaterial = (materialId) => {
 	return {
-		materialId: Number.isNaN(Number(resolvedMaterialId))
-			? resolvedMaterialId
-			: Number(resolvedMaterialId),
-		name: materialName,
-		description: materialDescription,
-		part1Title,
-		part2Title,
+		materialId: Number(materialId),
 	};
 };
 
 // Transforms the current teacher and student ID Sets into the API payload format.
-// The classroom service expects an array of material records with a role per entry.
-export const createAssignmentsPayload = (
-	teacherIds,
-	studentIds,
-	libraryMaterials,
-) => {
-	const libraryMaterialsMap = new Map(
-		(libraryMaterials || [])
-			.map((item) => {
-				const key = item?.id ?? getMaterialId(item);
-				return [key === null || key === undefined ? null : String(key), item];
-			})
-			.filter(([materialId]) => materialId !== null),
-	);
-
+// The classroom service expects material IDs with a role per entry.
+export const createAssignmentsPayload = (teacherIds, studentIds) => {
 	const assignments = [];
 
 	teacherIds.forEach((materialId) =>
 		assignments.push({
-			...getAssignmentMaterial(materialId, libraryMaterialsMap),
+			...getAssignmentMaterial(materialId),
 			assignedToRole: "TEACHER",
 		}),
 	);
 
 	studentIds.forEach((materialId) =>
 		assignments.push({
-			...getAssignmentMaterial(materialId, libraryMaterialsMap),
+			...getAssignmentMaterial(materialId),
 			assignedToRole: "STUDENT",
 		}),
 	);
